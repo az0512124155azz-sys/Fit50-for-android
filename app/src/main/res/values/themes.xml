@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.Fit50" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">#1C2A22</item>
+        <item name="android:navigationBarColor">#1C2A22</item>
+        <item name="android:windowBackground">#FAF7F2</item>
+    </style>
+</resources>
