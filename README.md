@@ -4,24 +4,25 @@ Native Android version of **Fit50+**, built with Kotlin + Jetpack Compose.
 
 ## Included
 
-- Fit50+ branding and supplied logo
-- Email/password sign-in and registration with Firebase Auth
-- Password reset email
-- Google Sign-In using Android Credential Manager + Firebase Auth
-- Guest mode so the rest of the app can be tested before Firebase is configured
+- Fit50+ branding and the supplied logo
+- Email/password sign-in and registration with Firebase Authentication
+- Password reset email ("Forgot password")
+- Google Sign-In using Android Credential Manager + Firebase Authentication
+- Guest mode so the complete fitness flow can be tested before Firebase is configured
 - 7-step onboarding questionnaire
 - Home dashboard
-- Working exercise flow with per-exercise timers, pause/resume and rest screens
+- Working exercise session with per-exercise timers, pause/resume and rest screens
 - Progress counters persisted locally
+- Android share sheet for progress sharing
 - Morning / afternoon / evening stretching routines
 - Settings, logout and questionnaire reset
-- RTL Hebrew UI
-- GitHub Actions Android build
+- Full RTL Hebrew UI
+- GitHub Actions debug APK build
 
 ## Firebase / Google configuration
 
-The repository intentionally does **not** contain Firebase secrets/config from a private Firebase project.
-Set these Gradle properties in `~/.gradle/gradle.properties` locally, or as GitHub Actions secrets:
+Firebase/Google credentials belong to your Firebase project and are intentionally not hard-coded into this public repository.
+Set these Gradle properties locally, or use matching GitHub Actions secrets:
 
 ```properties
 FIT50_FIREBASE_API_KEY=...
@@ -32,15 +33,22 @@ FIT50_GOOGLE_WEB_CLIENT_ID=...
 
 In Firebase Console:
 
-1. Create/add Android app with package `com.fit50.app`.
+1. Add an Android app with package `com.fit50.app`.
 2. Enable **Email/Password** and **Google** under Authentication providers.
-3. Add the app signing SHA-1/SHA-256 fingerprints.
-4. Use the **Web client ID** for `FIT50_GOOGLE_WEB_CLIENT_ID`.
+3. Add the signing SHA-1 and SHA-256 fingerprints.
+4. Add the four values above as local Gradle properties or GitHub Actions secrets.
+5. Use the Firebase/Google **Web client ID** for `FIT50_GOOGLE_WEB_CLIENT_ID`.
 
-No `google-services.json` is required by this source tree because Firebase is initialized explicitly from Gradle properties. This keeps the public repository buildable without committing project-specific configuration.
+The app initializes Firebase from these build properties, so `google-services.json` is not committed to the repository.
 
 ## Build
 
-Open the repository in current stable Android Studio and run the `app` configuration.
+- Android Gradle Plugin: 9.1.1
+- Gradle CI: 9.3.1
+- JDK: 17
+- compileSdk: 37
+- targetSdk: 36
+- minSdk: 26
+- Compose BOM: 2026.09.00
 
-Command-line CI uses Gradle 9.6 and AGP 9.4.0.
+Open the repository in a current Android Studio version and run the `app` configuration, or use the GitHub Actions **Android Build** workflow to obtain the debug APK artifact.
