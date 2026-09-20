@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:drawable="@drawable/fit50_logo"
-        android:gravity="center"
-        android:width="92dp"
-        android:height="50dp" />
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- stylized 5 -->
+    <path
+        android:fillColor="#E85A2C"
+        android:pathData="M21,31 H49 V41 H32 V49 H45 C49,49 52,52 52,56 V70 C52,76 48,80 42,80 H21 V69 H39 C41,69 42,68 42,66 V61 C42,59 41,58 39,58 H21 Z" />
+
+    <!-- stylized 0 -->
+    <path
+        android:fillColor="#E85A2C"
+        android:fillType="evenOdd"
+        android:pathData="M58,31 C51,31 48,36 48,43 V68 C48,76 52,80 59,80 H70 C77,80 81,76 81,68 V43 C81,35 77,31 70,31 Z M59,42 H69 C71,42 72,44 72,46 V65 C72,68 71,69 69,69 H59 C57,69 57,67 57,65 V46 C57,44 57,42 59,42 Z" />
+
+    <!-- plus -->
+    <path
+        android:fillColor="#FAF7F2"
+        android:pathData="M84,40 H90 V48 H98 V54 H90 V62 H84 V54 H76 V48 H84 Z" />
+</vector>
