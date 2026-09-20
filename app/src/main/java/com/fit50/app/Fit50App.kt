@@ -22,7 +22,7 @@ fun Fit50App() {
     val auth = remember { AuthManager(context) }
     var screen by remember {
         mutableStateOf(
-            if (auth.isSignedIn() || prefs.guest) {
+            if (prefs.accountSignedIn || prefs.guest) {
                 if (prefs.onboardingDone) Screen.HOME else Screen.QUESTIONNAIRE
             } else {
                 Screen.AUTH
@@ -37,10 +37,12 @@ fun Fit50App() {
                     auth = auth,
                     onAuthenticated = {
                         prefs.guest = false
+                        prefs.accountSignedIn = true
                         screen = if (prefs.onboardingDone) Screen.HOME else Screen.QUESTIONNAIRE
                     },
                     onGuest = {
                         prefs.guest = true
+                        prefs.accountSignedIn = false
                         screen = if (prefs.onboardingDone) Screen.HOME else Screen.QUESTIONNAIRE
                     }
                 )
@@ -112,6 +114,7 @@ fun Fit50App() {
                                     onLogout = {
                                         auth.signOut()
                                         prefs.guest = false
+                                        prefs.accountSignedIn = false
                                         screen = Screen.AUTH
                                     }
                                 )
