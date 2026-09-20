@@ -10,7 +10,8 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthManager(private val context: Context) {
     private var firebaseAuth: FirebaseAuth? = null
@@ -84,41 +85,34 @@ class AuthManager(private val context: Context) {
         val auth = ensureFirebase()
             ?: return done(false, initializationError ?: "Firebase עדיין לא הוגדר בפרויקט")
 
-        val normalized = email.trim()
+        val normalized = email.trim().lowercase()
         if (!normalized.contains("@")) {
             return done(false, "כתובת אימייל אינה תקינה")
         }
 
-        runCatching {
-            FirebaseFunctions.getInstance()
-                .getHttpsCallable("requestPasswordReset")
-                .call(mapOf("email" to normalized))
-                .addOnSuccessListener { result ->
-                    val data = result.data as? Map<*, *>
-                    val message = data?.get("message")?.toString()
-                        ?: "אם קיים חשבון עם האימייל הזה, קישור האיפוס נשלח."
-                    done(true, message)
-                }
-                .addOnFailureListener {
-                    auth.sendPasswordResetEmail(normalized)
-                        .addOnCompleteListener { fallback ->
-                            if (fallback.isSuccessful) {
-                                done(true, "בקשת האיפוס אושרה על ידי Firebase. בדוק גם ספאם וקידומי מכירות.")
-                            } else {
-                                done(false, fallback.exception?.localizedMessage ?: "שליחת קישור האיפוס נכשלה")
-                            }
-                        }
-                }
-        }.getOrElse {
-            auth.sendPasswordResetEmail(normalized)
-                .addOnCompleteListener { fallback ->
+        auth.sendPasswordResetEmail(normalized)
+            .addOnCompleteListener { task ->
+                val db = runCatching { FirebaseFirestore.getInstance() }.getOrNull()
+
+                val logData = hashMapOf<String, Any?>(
+                    "email" to normalized,
+                    "source" to "app",
+                    "status" to if (task.isSuccessful) "firebase_accepted" else "send_error",
+                    "createdAt" to FieldValue.serverTimestamp(),
+                    "error" to (task.exception?.localizedMessage ?: "")
+                )
+
+                db?.collection("passwordResetRequests")?.add(logData)
+
+                if (task.isSuccessful) {
                     done(
-                        fallback.isSuccessful,
-                        if (fallback.isSuccessful) "בקשת האיפוס אושרה על ידי Firebase."
-                        else fallback.exception?.localizedMessage ?: "שליחת קישור האיפוס נכשלה"
+                        true,
+                        "Firebase אישר את בקשת האיפוס. אם קיים חשבון עם האימייל הזה, יישלח אליו קישור. בדוק גם ספאם וקידומי מכירות."
                     )
+                } else {
+                    done(false, task.exception?.localizedMessage ?: "שליחת קישור האיפוס נכשלה")
                 }
-        }
+            }
     }
 
     suspend fun signInWithGoogle(activity: Activity, done: (Boolean, String?) -> Unit) {
