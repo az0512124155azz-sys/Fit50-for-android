@@ -507,6 +507,9 @@ $('privacyLink').onclick = () => toast('מדיניות הפרטיות תיפתח
 
 <script>
 (function(){
+  var googleWatchdog=null;
+  var googleButtonHtml='';
+
   function nativeCall(name){
     if(!window.Fit50Native || typeof window.Fit50Native[name] !== 'function') return false;
     var args=[].slice.call(arguments,1);
@@ -514,6 +517,10 @@ $('privacyLink').onclick = () => toast('מדיניות הפרטיות תיפתח
   }
 
   window.fit50NativeResult=function(action,ok,message,destination){
+    if(action==='google'){
+      clearTimeout(googleWatchdog);
+      googleWatchdog=null;
+    }
     var t=document.getElementById('toast');
     if(t){
       t.textContent=message||'';
@@ -523,7 +530,11 @@ $('privacyLink').onclick = () => toast('מדיניות הפרטיות תיפתח
     var loginBtn=document.getElementById('loginBtn');
     if(loginBtn){loginBtn.disabled=false;loginBtn.innerHTML='<span>התחברות</span>';}
     var googleBtn=document.getElementById('googleBtn');
-    if(googleBtn){googleBtn.disabled=false;}
+    if(googleBtn){
+      googleBtn.disabled=false;
+      googleBtn.classList.remove('loading');
+      if(googleButtonHtml) googleBtn.innerHTML=googleButtonHtml;
+    }
     if(ok && (action==='login'||action==='google')){
       var next=(destination==='home'?'home':'questionnaire')+'.html';
       setTimeout(function(){location.href=next},350);
@@ -551,8 +562,18 @@ $('privacyLink').onclick = () => toast('מדיניות הפרטיות תיפתח
     if(googleBtn) googleBtn.addEventListener('click',function(e){
       e.preventDefault();e.stopImmediatePropagation();
       if(!window.Fit50Native) return toast('Google Sign-In אינו זמין',true);
+      googleButtonHtml=googleBtn.innerHTML;
       googleBtn.disabled=true;
-      nativeCall('googleSignIn');
+      googleBtn.classList.add('loading');
+      googleBtn.innerHTML='<span class="spinner"></span><span>פותח את Google...</span>';
+      if(!nativeCall('googleSignIn')){
+        window.fit50NativeResult('google',false,'לא ניתן לפתוח כרגע את החיבור עם Google');
+        return;
+      }
+      clearTimeout(googleWatchdog);
+      googleWatchdog=setTimeout(function(){
+        window.fit50NativeResult('google',false,'Google לא הגיב. בדקו ש-Google Play Services מעודכן ונסו שוב.');
+      },30000);
     },true);
 
     if(forgotBtn) forgotBtn.addEventListener('click',function(e){

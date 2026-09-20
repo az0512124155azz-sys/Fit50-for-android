@@ -2,10 +2,16 @@ package com.fit50.app
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import androidx.credentials.exceptions.GetCredentialCancellationException
+import androidx.credentials.exceptions.GetCredentialInterruptedException
+import androidx.credentials.exceptions.GetCredentialProviderConfigurationException
+import androidx.credentials.exceptions.GetCredentialUnsupportedException
+import androidx.credentials.exceptions.NoCredentialException
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -14,6 +20,10 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthManager(private val context: Context) {
+    companion object {
+        private const val TAG = "Fit50GoogleAuth"
+    }
+
     private var firebaseAuth: FirebaseAuth? = null
     var initializationError: String? = null
         private set
@@ -120,10 +130,12 @@ class AuthManager(private val context: Context) {
         }
 
         try {
-            val googleOption = GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(false)
-                .setServerClientId(BuildConfig.GOOGLE_WEB_CLIENT_ID)
-                .setAutoSelectEnabled(false)
+            // This request originates from an explicit Google button. The dedicated
+            // option also supports adding/re-authenticating an account and avoids a
+            // known account-picker failure on some Android 14+ devices.
+            val googleOption = GetSignInWithGoogleOption.Builder(
+                BuildConfig.GOOGLE_WEB_CLIENT_ID
+            )
                 .build()
 
             val request = GetCredentialRequest.Builder()
@@ -146,8 +158,22 @@ class AuthManager(private val context: Context) {
             } else {
                 done(false, "לא התקבל חשבון Google תקין")
             }
+        } catch (error: GetCredentialCancellationException) {
+            done(false, "החיבור עם Google בוטל. אפשר לנסות שוב.")
+        } catch (error: NoCredentialException) {
+            done(false, "לא נמצא חשבון Google זמין. הוסיפו חשבון Google למכשיר ונסו שוב.")
+        } catch (error: GetCredentialProviderConfigurationException) {
+            Log.w(TAG, "Google credential provider is unavailable", error)
+            done(false, "שירות ההתחברות של Google אינו זמין. עדכנו את Google Play Services ונסו שוב.")
+        } catch (error: GetCredentialUnsupportedException) {
+            Log.w(TAG, "Credential Manager is unsupported", error)
+            done(false, "המכשיר אינו תומך כרגע בחיבור Google. עדכנו את Android ואת Google Play Services.")
+        } catch (error: GetCredentialInterruptedException) {
+            Log.w(TAG, "Google sign-in was interrupted", error)
+            done(false, "החיבור עם Google הופסק. נסו שוב.")
         } catch (error: Throwable) {
-            done(false, error.localizedMessage ?: "Google Sign-In נכשל")
+            Log.w(TAG, "Google sign-in failed", error)
+            done(false, error.localizedMessage ?: "החיבור עם Google נכשל. נסו שוב.")
         }
     }
 

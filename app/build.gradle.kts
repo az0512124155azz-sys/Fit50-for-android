@@ -15,8 +15,8 @@ android {
         applicationId = "com.fit50.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 12
-        versionName = "1.2.2"
+        versionCode = 13
+        versionName = "1.2.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", fit50Prop("FIT50_GOOGLE_WEB_CLIENT_ID", "1570044363-5jone06j0rr5affoi0c2hb94p6ngjttb.apps.googleusercontent.com").asBuildConfigString())
@@ -58,8 +58,8 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.mlkit:translate:17.0.3")
 
-    implementation("androidx.credentials:credentials:1.3.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 
     debugImplementation("androidx.compose.ui:ui-tooling")

@@ -19,6 +19,14 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.3.1'
+      - name: Install stable debug signing key
+        shell: bash
+        env:
+          FIT50_DEBUG_KEYSTORE_BASE64: ${{ secrets.FIT50_DEBUG_KEYSTORE_BASE64 }}
+        run: |
+          test -n "$FIT50_DEBUG_KEYSTORE_BASE64"
+          mkdir -p "$HOME/.android"
+          printf '%s' "$FIT50_DEBUG_KEYSTORE_BASE64" | base64 --decode > "$HOME/.android/debug.keystore"
       - name: Build debug APK
         env:
           ORG_GRADLE_PROJECT_FIT50_FIREBASE_API_KEY: ${{ secrets.FIT50_FIREBASE_API_KEY }}
