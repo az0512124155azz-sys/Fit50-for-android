@@ -886,25 +886,34 @@ function shareTo(platform) {
   closeShare();
   const p = state.progress || {};
   const text =
-    'Fit50+ · ההתקדמות שלי\n' +
-    'אימונים: ' + (p.total || 0) + '\n' +
+    'Fit50+ · המסע שלי\n' +
+    'אימונים שהושלמו: ' + (p.total || 0) + '\n' +
     'דקות תנועה: ' + (p.mins || 0) + '\n' +
-    'רצף: ' + (p.streak || 0) + ' ימים\n' +
+    'רצף נוכחי: ' + (p.streak || 0) + ' ימים\n' +
     'השבוע: ' + (p.week || 0) + ' אימונים';
 
-  if (window.Fit50Native && typeof window.Fit50Native.shareText === 'function') {
+  if (window.Fit50Native && typeof window.Fit50Native.shareJourney === 'function') {
     try {
-      window.Fit50Native.shareText(text);
+      const nativePlatform =
+        platform === 'הועתק' ? 'copy' :
+        platform === 'נשמר' ? 'generic' :
+        platform;
+      window.Fit50Native.shareJourney(nativePlatform, text);
       return;
     } catch (e) {}
   }
 
   if (navigator.share) {
-    navigator.share({ title: 'Fit50+', text }).catch(() => {});
+    navigator.share({ title: 'Fit50+ · המסע שלי', text }).catch(() => {});
     return;
   }
 
-  toast('לא ניתן לפתוח את חלון השיתוף במכשיר הזה');
+  if (navigator.clipboard && platform === 'הועתק') {
+    navigator.clipboard.writeText(text).then(() => toast('ההתקדמות הועתקה ללוח'));
+    return;
+  }
+
+  toast('שיתוף אינו זמין כרגע');
 }
 
 $('backBtn').onclick = () => toast('חזרה למסך הבית');
@@ -963,16 +972,34 @@ render();
 
   window.shareTo = function(platform){
     closeShare();
-    var p=state.progress;
-    var text='Fit50+ · ההתקדמות שלי\n' +
-      'אימונים: ' + p.total + '\n' +
-      'דקות תנועה: ' + p.mins + '\n' +
-      'רצף: ' + p.streak + ' ימים';
-    if(window.Fit50Native && typeof window.Fit50Native.shareText==='function'){
-      window.Fit50Native.shareText(text);
-    } else {
-      setTimeout(function(){toast('שיתוף אינו זמין כרגע')},200);
+    var p=state.progress || {};
+    var text='Fit50+ · המסע שלי\n' +
+      'אימונים שהושלמו: ' + (p.total || 0) + '\n' +
+      'דקות תנועה: ' + (p.mins || 0) + '\n' +
+      'רצף נוכחי: ' + (p.streak || 0) + ' ימים\n' +
+      'השבוע: ' + (p.week || 0) + ' אימונים';
+
+    if(window.Fit50Native && typeof window.Fit50Native.shareJourney==='function'){
+      var nativePlatform =
+        platform === 'הועתק' ? 'copy' :
+        platform === 'נשמר' ? 'generic' :
+        platform;
+      try{
+        window.Fit50Native.shareJourney(nativePlatform,text);
+        return;
+      }catch(e){}
     }
+
+    if(navigator.share){
+      navigator.share({title:'Fit50+ · המסע שלי',text:text}).catch(function(){});
+      return;
+    }
+
+    toast('שיתוף אינו זמין כרגע');
+  };
+
+  window.fit50ShareResult=function(ok,message){
+    if(typeof toast==='function' && message) toast(message,!ok);
   };
 
   function loadRealProgress(){
