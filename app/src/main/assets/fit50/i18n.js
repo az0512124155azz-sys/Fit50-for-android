@@ -298,7 +298,7 @@
   function packFor(lang){
     if(lang==='he') return {};
     if(lang==='en') return EN;
-    return Object.assign({},EN,QUICK[lang]||{});
+    return QUICK[lang]||{};
   }
 
   function translateCore(value){
