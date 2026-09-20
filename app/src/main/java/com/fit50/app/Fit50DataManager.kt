@@ -136,6 +136,43 @@ class Fit50DataManager(private val context: Context) {
         }
     }
 
+
+    fun getWorkoutPlan(done: (Boolean, String?, JSONObject?) -> Unit) {
+        val user = auth.currentUser ?: return done(false, "אין משתמש מחובר", null)
+        val ref = userDoc() ?: return done(false, "אין משתמש מחובר", null)
+
+        fun fromQuestionnaire(q: Map<*, *>?) {
+            runCatching {
+                WorkoutPlanEngine.generate(q, user.uid)
+            }.onSuccess { done(true, null, it) }
+             .onFailure { done(false, it.localizedMessage, null) }
+        }
+
+        ref.get()
+            .addOnSuccessListener { snap ->
+                val q = snap.get("questionnaire") as? Map<*, *>
+                if (q != null) {
+                    fromQuestionnaire(q)
+                } else {
+                    val cached = prefs.getString("questionnaire", null)
+                    if (cached != null) {
+                        val obj = JSONObject(cached)
+                        fromQuestionnaire(jsonObjectToMap(obj))
+                    } else {
+                        fromQuestionnaire(emptyMap<String, Any?>())
+                    }
+                }
+            }
+            .addOnFailureListener {
+                val cached = prefs.getString("questionnaire", null)
+                if (cached != null) {
+                    fromQuestionnaire(jsonObjectToMap(JSONObject(cached)))
+                } else {
+                    fromQuestionnaire(emptyMap<String, Any?>())
+                }
+            }
+    }
+
     fun getProgress(done: (Boolean, String?, JSONObject?) -> Unit) {
         val cached = prefs.getString("progress", null)
         if (cached != null) runCatching { done(true, null, JSONObject(cached)) }
