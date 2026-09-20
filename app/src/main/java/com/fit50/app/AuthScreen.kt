@@ -30,6 +30,7 @@ fun AuthScreen(auth: AuthManager, onAuthenticated: () -> Unit, onGuest: () -> Un
     var mode by remember { mutableStateOf(AuthMode.LOGIN) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var age by remember { mutableStateOf("") }
     var loading by remember { mutableStateOf(false) }
     var message by remember { mutableStateOf<String?>(null) }
 
@@ -75,6 +76,17 @@ fun AuthScreen(auth: AuthManager, onAuthenticated: () -> Unit, onGuest: () -> Un
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation()
                     )
+                } else {
+                    Spacer(Modifier.height(10.dp))
+                    OutlinedTextField(
+                        value = age,
+                        onValueChange = { value ->
+                            age = value.filter(Char::isDigit).take(3)
+                        },
+                        label = { Text("הגיל שלך") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
                 }
                 message?.let {
                     Spacer(Modifier.height(10.dp))
@@ -88,8 +100,13 @@ fun AuthScreen(auth: AuthManager, onAuthenticated: () -> Unit, onGuest: () -> Un
                 Spacer(Modifier.height(18.dp))
                 Button(
                     onClick = {
+                        val parsedAge = age.toIntOrNull()
                         if (email.isBlank() || (mode != AuthMode.FORGOT && password.length < 6)) {
                             message = "בדקו אימייל וסיסמה של לפחות 6 תווים"
+                            return@Button
+                        }
+                        if (mode == AuthMode.FORGOT && (parsedAge == null || parsedAge !in 40..120)) {
+                            message = "נא להזין גיל תקין"
                             return@Button
                         }
                         loading = true
@@ -103,9 +120,13 @@ fun AuthScreen(auth: AuthManager, onAuthenticated: () -> Unit, onGuest: () -> Un
                                 loading = false
                                 if (ok) onAuthenticated() else message = err ?: "ההרשמה נכשלה"
                             }
-                            AuthMode.FORGOT -> auth.resetPassword(email) { ok, err ->
+                            AuthMode.FORGOT -> auth.resetPassword(email, parsedAge!!) { ok, result ->
                                 loading = false
-                                message = if (ok) "נשלח קישור איפוס לאימייל" else err ?: "שליחת הקישור נכשלה"
+                                message = result ?: if (ok) {
+                                    "אם הפרטים תואמים לחשבון, יישלח קישור איפוס לאימייל."
+                                } else {
+                                    "לא הצלחנו ליצור בקשת איפוס"
+                                }
                             }
                         }
                     },
