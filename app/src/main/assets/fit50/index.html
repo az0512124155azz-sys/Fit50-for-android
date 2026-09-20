@@ -14,16 +14,50 @@ html,body{margin:0;width:100%;min-height:100%;background:#FAF7F2;overflow:hidden
 }
 #boot{
   position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
-  background:#1F2B24;color:#FAF7F2;font-family:Arial,sans-serif;z-index:2;
-  transition:opacity .22s ease;
+  background:#1F2B24;color:#FAF7F2;font-family:Arial,sans-serif;z-index:999999;
+  transition:opacity .45s ease,visibility .45s ease;
+  direction:ltr;
 }
-#boot.hide{opacity:0;pointer-events:none}
-#bootLogo{font-size:34px;font-weight:800;letter-spacing:-1.2px}
-#bootLogo b{color:#E85A2C}
+#boot.hide{opacity:0;visibility:hidden;pointer-events:none}
+#bootLogo{
+  display:flex;align-items:flex-start;justify-content:center;
+  direction:ltr;unicode-bidi:isolate;
+  line-height:.84;letter-spacing:-2px;
+  transform-origin:center;
+}
+#bootLogo .fit{
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:64px;font-weight:700;color:#FAF7F2;
+  opacity:0;transform:translateX(-38px) scale(.92);
+  animation:fitIn .62s cubic-bezier(.2,.9,.25,1) .10s forwards;
+}
+#bootLogo .fifty{
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:82px;font-weight:900;color:#E85A2C;
+  opacity:0;transform:scale(.55) rotate(-7deg);
+  animation:fiftyPop .72s cubic-bezier(.18,1.35,.32,1) .34s forwards;
+}
+#bootLogo .plus{
+  font-size:38px;font-weight:900;color:#FAF7F2;
+  margin-left:5px;margin-top:2px;
+  opacity:0;transform:translateY(-20px) scale(.4);
+  animation:plusPop .46s cubic-bezier(.18,1.45,.3,1) .78s forwards;
+}
+#boot::after{
+  content:'';position:absolute;width:210px;height:210px;border-radius:50%;
+  background:radial-gradient(circle,rgba(232,90,44,.18),transparent 67%);
+  transform:scale(.3);opacity:0;
+  animation:bootGlow 1.25s ease-out .22s forwards;
+  pointer-events:none;
+}
+@keyframes fitIn{to{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes fiftyPop{65%{opacity:1;transform:scale(1.08) rotate(1deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes plusPop{70%{opacity:1;transform:translateY(3px) scale(1.18)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes bootGlow{35%{opacity:1;transform:scale(.9)}100%{opacity:0;transform:scale(1.45)}}
 </style>
 </head>
 <body>
-<div id="boot"><div id="bootLogo">Fit<b>50+</b></div></div>
+<div id="boot"><div id="bootLogo" aria-label="Fit50+"><span class="fit">Fit</span><span class="fifty">50</span><span class="plus">+</span></div></div>
 <iframe id="appFrame" title="Fit50+"></iframe>
 
 <script>
@@ -142,6 +176,17 @@ const ORIGINAL_NAV_CSS = "\n.nav{\n  position:fixed !important;\n  bottom:16px !
 const frame = document.getElementById('appFrame');
 const boot = document.getElementById('boot');
 let currentPage = 'login';
+
+// FIT50_BOOT_WATCHDOG: Android WebView may not dispatch iframe load reliably.
+const FIT50_BOOT_WATCHDOG = setTimeout(() => {
+  try { boot.classList.add('hide'); } catch (_) {}
+}, 2400);
+
+window.addEventListener('error', () => {
+  setTimeout(() => {
+    try { boot.classList.add('hide'); } catch (_) {}
+  }, 400);
+});
 
 function navigate(name, replace=false){
   if(!PAGES[name]) return;
@@ -265,7 +310,10 @@ function wirePage(){
   }
 
   // Hide splash after the first real page is ready.
-  requestAnimationFrame(() => boot.classList.add('hide'));
+  requestAnimationFrame(() => {
+    clearTimeout(FIT50_BOOT_WATCHDOG);
+    boot.classList.add('hide');
+  });
 }
 
 frame.addEventListener('load', wirePage);
