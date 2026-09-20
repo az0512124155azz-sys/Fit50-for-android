@@ -1,6 +1,5 @@
 package com.fit50.app
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,8 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,12 +24,7 @@ fun HomeScreen(name: String, prefs: Fit50Prefs, onStart: () -> Unit) {
                 Text("שלום, $name", fontSize = 14.sp, color = Muted)
                 Text("המסע שלך", fontSize = 32.sp, fontWeight = FontWeight.Black)
             }
-            Image(
-                painterResource(R.drawable.fit50_logo),
-                contentDescription = "Fit50+",
-                modifier = Modifier.size(72.dp),
-                contentScale = ContentScale.Fit
-            )
+            Fit50Logo(compact = true)
         }
         Spacer(Modifier.height(18.dp))
         Card(colors = CardDefaults.cardColors(containerColor = Forest), shape = RoundedCornerShape(28.dp)) {
