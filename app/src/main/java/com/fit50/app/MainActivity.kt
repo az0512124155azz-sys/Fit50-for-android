@@ -1,7 +1,6 @@
 package com.fit50.app
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebChromeClient
@@ -31,42 +30,14 @@ class MainActivity : ComponentActivity() {
             settings.displayZoomControls = false
 
             webChromeClient = WebChromeClient()
-            webViewClient = object : WebViewClient() {
-                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                    super.onPageStarted(view, url, favicon)
-                    setBackgroundColor(android.graphics.Color.rgb(31, 43, 36))
-                }
-
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
-
-                    // Android WebView can occasionally miss iframe/srcdoc load events.
-                    // Never allow the branded boot screen to remain forever.
-                    postDelayed({
-                        evaluateJavascript(
-                            """
-                            (function(){
-                              try {
-                                var b=document.getElementById('boot');
-                                if(b){b.classList.add('hide');}
-                                var f=document.getElementById('appFrame');
-                                if(f && !f.srcdoc && typeof navigate==='function'){navigate('login',true);}
-                              } catch(e) {}
-                            })();
-                            """.trimIndent(),
-                            null
-                        )
-                        setBackgroundColor(android.graphics.Color.rgb(250, 247, 242))
-                    }, 2600)
-                }
-            }
+            webViewClient = WebViewClient()
 
             addJavascriptInterface(
                 Fit50WebBridge(this@MainActivity, this),
                 "Fit50Native"
             )
 
-            loadUrl("file:///android_asset/fit50/index.html")
+            loadUrl("file:///android_asset/fit50/splash.html")
         }
 
         setContentView(webView)
