@@ -429,6 +429,13 @@
       </div>
     </div>
 
+    <div class="field">
+      <label>הגיל שלך</label>
+      <div class="field-input-wrap">
+        <input type="number" id="ageIn" placeholder="לדוגמה 52" min="40" max="120" inputmode="numeric">
+      </div>
+    </div>
+
     <button class="btn-primary" id="resetBtn">
       <span>שלח קישור לאיפוס</span>
     </button>
@@ -437,7 +444,7 @@
       <button class="link" id="backLogin">חזרה להתחברות</button>
     </div>
 
-    <div class="legal">נשלח קישור רק אחרי שהשרת מאשר את בקשת האיפוס. הסיסמה הנוכחית לעולם אינה מוצגת או נשלחת.</div>
+    <div class="legal">הגיל משמש כשכבת אימות נוספת בלבד. קישור האיפוס נשלח רק לתיבת האימייל של בעל החשבון, והסיסמה הנוכחית לעולם אינה מוצגת.</div>
   </div>
 </div>
 
@@ -465,10 +472,12 @@ window.fit50NativeResult=function(action,ok,message){
 $('backLogin').onclick=()=>location.href='login.html';
 $('resetBtn').onclick=function(){
   const email=$('emailIn').value.trim();
+  const age=parseInt($('ageIn').value,10);
   if(!email.includes('@')) return toast('נא להזין כתובת אימייל תקינה',true);
+  if(!Number.isInteger(age) || age<40 || age>120) return toast('נא להזין גיל תקין',true);
   if(!window.Fit50Native || typeof window.Fit50Native.resetPassword!=='function') return toast('שירות איפוס הסיסמה אינו זמין',true);
-  this.disabled=true;this.innerHTML='<span class="spinner"></span><span>שולח...</span>';
-  try{ window.Fit50Native.resetPassword(email); }
+  this.disabled=true;this.innerHTML='<span class="spinner"></span><span>מאמת פרטים...</span>';
+  try{ window.Fit50Native.resetPassword(email,age); }
   catch(e){ this.disabled=false;this.innerHTML='<span>שלח קישור לאיפוס</span>';toast('שליחת האיפוס נכשלה',true); }
 };
 </script>
