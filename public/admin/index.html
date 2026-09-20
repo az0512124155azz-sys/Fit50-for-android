@@ -71,10 +71,10 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:12px 8px;
       <div style="overflow:auto;margin-top:14px">
         <table>
           <thead>
-            <tr><th>זמן</th><th>אימייל</th><th>מקור</th><th>מצב</th><th>שגיאה</th></tr>
+            <tr><th>זמן</th><th>אימייל</th><th>מקור</th><th>Firebase</th><th>Gmail</th><th>שגיאה</th></tr>
           </thead>
           <tbody id="requestsBody">
-            <tr><td colspan="5" class="empty">ממתין לנתונים...</td></tr>
+            <tr><td colspan="6" class="empty">ממתין לנתונים...</td></tr>
           </tbody>
         </table>
       </div>
@@ -158,7 +158,8 @@ function render(items){
       '<td dir="ltr">'+esc(x.email)+'</td>'+
       '<td>'+esc(x.source)+'</td>'+
       '<td><span class="badge '+esc(x.status)+'">'+esc(x.status)+'</span></td>'+
-      '<td>'+esc(x.error||'—')+'</td>'+
+      '<td><span class="badge '+esc(x.gmailStatus||'pending')+'">'+esc(x.gmailStatus||'pending')+'</span></td>'+
+      '<td>'+esc(x.gmailError||x.error||'—')+'</td>'+
     '</tr>';
   }).join('');
 }
