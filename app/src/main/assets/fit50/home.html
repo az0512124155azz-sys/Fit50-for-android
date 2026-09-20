@@ -870,35 +870,65 @@ function getPausedWorkoutForToday() {
 
 function setHero() {
   const today = new Date().getDay();
-  const workout = WORKOUTS[today];
+  const staticWorkout = WORKOUTS[today];
   const key = 'w1d' + (today + 1) + '-' + todayStr();
   const isDone = state.progress.done[key];
+  const paused = getPausedWorkoutForToday();
+  const dynamicPlan = window.__fit50Plan || null;
 
-  if (workout && workout.cat !== 'rest') {
-    $('heroLabelText').textContent = isDone ? 'הושלם היום' : 'האימון של היום';
-    const dot = $('heroLabel').querySelector('.dot');
+  const dot = $('heroLabel').querySelector('.dot');
+
+  if (paused && paused.workout) {
+    const workout = paused.workout;
+    $('heroLabelText').textContent = 'אימון מושהה';
+    dot.style.background = 'var(--accent)';
+    dot.style.boxShadow = '0 0 12px var(--accent)';
+    $('heroTitle').innerHTML =
+      (workout.title || 'האימון שלך') +
+      (workout.sub ? '<br><em>' + workout.sub + '</em>' : '');
+    $('metaEx').textContent = (workout.exercises ? workout.exercises.length : 0) + ' תרגילים';
+    $('metaDur').textContent = (workout.dur || '—') + ' דקות';
+    $('startBtnText').textContent = 'המשך אימון';
+    $('startBtn').dataset.resume = '1';
+    return;
+  }
+
+  if (dynamicPlan && dynamicPlan.exercises && dynamicPlan.exercises.length) {
+    $('heroLabelText').textContent = isDone ? 'הושלם היום' : 'האימון המותאם שלך';
     const color = isDone ? 'var(--accent)' : 'var(--lime)';
     dot.style.background = color;
     dot.style.boxShadow = '0 0 12px ' + color;
-    $('heroTitle').innerHTML = workout.title + '<br><em>' + workout.sub + '</em>';
-    $('metaEx').textContent = workout.exercises.length + ' תרגילים';
-    $('metaDur').textContent = workout.dur + ' דקות';
-    const pausedWorkout = getPausedWorkoutForToday();
-    if (pausedWorkout) {
-      $('heroLabelText').textContent = 'אימון מושהה';
-      $('startBtnText').textContent = 'המשך אימון';
-      $('startBtn').dataset.resume = '1';
-    } else {
-      $('startBtnText').textContent = isDone ? 'חזור על האימון' : 'התחל אימון';
-      $('startBtn').dataset.resume = '0';
-    }
-  } else {
+    $('heroTitle').innerHTML =
+      dynamicPlan.title +
+      (dynamicPlan.sub ? '<br><em>' + dynamicPlan.sub + '</em>' : '');
+    $('metaEx').textContent = dynamicPlan.exercises.length + ' תרגילים';
+    $('metaDur').textContent = dynamicPlan.dur + ' דקות';
+    $('startBtnText').textContent = isDone ? 'חזור על האימון' : 'התחל אימון';
+    $('startBtn').dataset.resume = '0';
+    return;
+  }
+
+  if (staticWorkout && staticWorkout.cat === 'rest') {
     $('heroLabelText').textContent = 'יום מנוחה';
+    dot.style.background = 'var(--lime)';
+    dot.style.boxShadow = '0 0 12px var(--lime)';
     $('heroTitle').innerHTML = 'תנוח היום<em>.</em>';
     $('metaEx').textContent = '—';
     $('metaDur').textContent = '—';
     $('startBtnText').textContent = 'תן לגוף להתאושש';
+    $('startBtn').dataset.resume = '0';
+    return;
   }
+
+  // Do not show a second, temporary workout while the personalized plan is loading.
+  $('heroLabelText').textContent = 'מכין את האימון שלך';
+  dot.style.background = 'var(--lime)';
+  dot.style.boxShadow = '0 0 12px var(--lime)';
+  $('heroTitle').innerHTML = 'רגע אחד<em>…</em>';
+  $('metaEx').textContent = '—';
+  $('metaDur').textContent = '—';
+  $('startBtnText').textContent = 'טוען אימון…';
+  $('startBtn').dataset.resume = '0';
 }
 
 /* ============ WEEK STRIP ============ */
@@ -1265,12 +1295,8 @@ setWeek();
   window.fit50WorkoutPlanResult=function(ok,message,plan){
     if(!ok || !plan || !plan.exercises) return;
     try{
-      var count=plan.exercises.length;
-      if(document.getElementById('heroLabelText')) document.getElementById('heroLabelText').textContent='האימון המותאם שלך';
-      if(document.getElementById('heroTitle')) document.getElementById('heroTitle').innerHTML=plan.title+'<br><em>'+plan.sub+'</em>';
-      if(document.getElementById('metaEx')) document.getElementById('metaEx').textContent=count+' תרגילים';
-      if(document.getElementById('metaDur')) document.getElementById('metaDur').textContent=plan.dur+' דקות';
       window.__fit50Plan=plan;
+      setHero();
     }catch(e){}
   };
   function loadPlan(){
