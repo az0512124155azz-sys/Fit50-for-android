@@ -60,29 +60,18 @@ class Fit50WebBridge(
         if (authNavigationInProgress) return
         authNavigationInProgress = true
 
-        val handler = Handler(Looper.getMainLooper())
-        var navigated = false
-
-        val fallback = Runnable {
-            if (!navigated) {
-                navigated = true
-                val destination = data.localStartPage()
-                authCallback(action, true, message, destination)
-                navigateTo(destination)
-                data.bootstrapUser { _, _ -> }
-            }
+        val localDestination = data.localStartPage()
+        if (localDestination == "home") {
+            authCallback(action, true, message, "home")
+            navigateTo("home")
+            data.bootstrapUser { _, _ -> }
+            return
         }
-
-        handler.postDelayed(fallback, 1800)
 
         data.resolveStartPage { destination ->
             activity.runOnUiThread {
-                if (!navigated) {
-                    navigated = true
-                    handler.removeCallbacks(fallback)
-                    authCallback(action, true, message, destination)
-                    navigateTo(destination)
-                }
+                authCallback(action, true, message, destination)
+                navigateTo(destination)
                 data.bootstrapUser { _, _ -> }
             }
         }
