@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1F2B24">
+<title>Fit50+ — הגדרות</title>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#1F2B24;
+  --forest-2:#2D3D33;
+  --cream:#FAF7F2;
+  --cream-2:#F2EDE4;
+  --cream-3:#E8E1D5;
+  --ink:#1A1A1A;
+  --ink-2:#4A4A4A;
+  --ink-3:#8A8A8A;
+  --line:rgba(26,26,26,.12);
+  --accent:#E85A2C;
+  --accent-2:#C44A22;
+  --lime:#D4E85C;
+  --lime-dark:#7A9E10;
+  --danger:#D9342B;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  font-family:'Assistant',-apple-system,sans-serif;
+  background:var(--cream);color:var(--ink);
+  direction:rtl;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;user-select:none;
+}
+.screen{
+  max-width:480px;margin:0 auto;
+  min-height:100vh;display:flex;flex-direction:column;
+  background:var(--cream);padding-bottom:110px;
+}
+
+.top{
+  padding:24px 24px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.top-back,.top-action{
+  width:44px;height:44px;background:transparent;border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--ink-2);border-radius:50%;
+  transition:background .15s;
+}
+.top-back:hover,.top-action:hover{background:var(--cream-2)}
+.top-back svg,.top-action svg{
+  width:22px;height:22px;stroke:currentColor;fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.top-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.01em;
+}
+
+.hero{padding:8px 24px 24px}
+.hero-eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:16px;
+}
+.hero-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:52px;font-weight:700;line-height:1;letter-spacing:-.03em;
+  color:var(--ink);margin-bottom:12px;
+}
+.hero-title em{font-style:normal;color:var(--accent)}
+
+.profile-wrap{padding:0 24px 32px}
+.profile-card{
+  background:#FFFFFF;
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:24px;
+  display:flex;gap:18px;align-items:center;
+  cursor:pointer;transition:all .15s;
+  box-shadow:0 4px 16px -8px rgba(0,0,0,.06);
+}
+.profile-card:hover{
+  border-color:var(--forest);
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px -12px rgba(31,43,36,.2);
+}
+.avatar{
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,var(--forest) 0%,var(--forest-2) 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:26px;font-weight:700;color:var(--lime);
+  flex-shrink:0;
+}
+.profile-info{flex:1;text-align:right;min-width:0}
+.profile-name{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:22px;font-weight:700;
+  letter-spacing:-.02em;color:var(--ink);
+  margin-bottom:4px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+}
+.profile-email{
+  font-size:13px;color:var(--ink-3);
+  direction:ltr;text-align:right;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.profile-arrow{
+  width:24px;height:24px;
+  stroke:var(--ink-3);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  flex-shrink:0;
+}
+
+.section{padding:0 24px 24px}
+.section-head{margin-bottom:12px;padding:0 4px}
+.section-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:20px;font-weight:700;letter-spacing:-.01em;
+  color:var(--ink);
+}
+
+.list{
+  background:#FFFFFF;
+  border:1px solid var(--line);
+  border-radius:18px;overflow:hidden;
+  box-shadow:0 2px 8px -4px rgba(0,0,0,.04);
+}
+
+.list-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 20px;min-height:60px;
+  border-bottom:1px solid var(--line);
+  background:transparent;border-left:none;border-right:none;border-top:none;
+  font-family:inherit;color:var(--ink);
+  font-size:15px;font-weight:500;
+  cursor:pointer;text-align:right;width:100%;
+  transition:background .15s;
+}
+.list-row:last-child{border-bottom:none}
+.list-row:hover{background:var(--cream-2)}
+.list-row:active{background:var(--cream-3)}
+
+.list-row-left{display:flex;align-items:center;gap:14px}
+.list-icon{
+  width:32px;height:32px;border-radius:10px;
+  background:var(--cream-2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.list-icon svg{
+  width:16px;height:16px;stroke:var(--ink);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.list-icon.coral{background:rgba(232,90,44,.12)}
+.list-icon.coral svg{stroke:var(--accent)}
+.list-icon.danger{background:rgba(217,52,43,.12)}
+.list-icon.danger svg{stroke:var(--danger)}
+.list-icon.lime{background:rgba(212,232,92,.2)}
+.list-icon.lime svg{stroke:var(--lime-dark)}
+
+.list-label{
+  font-size:15px;font-weight:600;color:var(--ink);
+  letter-spacing:-.01em;
+}
+.list-label small{
+  display:block;font-size:12px;font-weight:500;
+  color:var(--ink-3);margin-top:2px;letter-spacing:.01em;
+}
+.list-arrow{
+  width:18px;height:18px;
+  stroke:var(--ink-3);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  flex-shrink:0;
+}
+
+.toggle{position:relative;width:48px;height:28px;flex-shrink:0;cursor:pointer}
+.toggle input{position:absolute;opacity:0;width:0;height:0}
+.toggle-track{
+  position:absolute;inset:0;
+  background:var(--cream-3);border-radius:100px;
+  transition:background .2s;
+}
+.toggle-track::before{
+  content:'';position:absolute;
+  top:3px;right:3px;
+  width:22px;height:22px;border-radius:50%;
+  background:#FFFFFF;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  transition:transform .2s;
+}
+.toggle input:checked + .toggle-track{background:var(--forest)}
+.toggle input:checked + .toggle-track::before{transform:translateX(-20px)}
+
+.danger-section{padding:0 24px 40px}
+.danger-btn{
+  width:100%;padding:18px 24px;min-height:58px;
+  background:#FFFFFF;color:var(--danger);
+  border:1px solid rgba(217,52,43,.2);
+  border-radius:18px;
+  font-family:inherit;font-size:15px;font-weight:700;
+  letter-spacing:.01em;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.danger-btn:hover{
+  background:rgba(217,52,43,.05);
+  border-color:rgba(217,52,43,.35);
+}
+.danger-btn svg{
+  width:18px;height:18px;stroke:currentColor;fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+
+.footer{
+  text-align:center;padding:16px 24px 32px;
+  color:var(--ink-3);font-size:12px;line-height:1.6;
+  letter-spacing:.02em;
+}
+.footer strong{
+  font-weight:600;color:var(--ink-2);
+  display:block;margin-bottom:4px;
+}
+.footer-version{
+  font-family:'Fraunces',serif;
+  font-size:11px;font-weight:700;
+  letter-spacing:.14em;color:var(--ink-3);
+}
+
+/* ============================================================
+   NEW NAVIGATION BAR
+   Active item: coral filled circle behind icon + coral text
+   ============================================================ */
+.nav{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 40px);max-width:428px;
+  background:var(--forest);
+  border-radius:28px;
+  padding:10px;
+  display:flex;justify-content:space-around;
+  box-shadow:0 20px 48px -16px rgba(31,43,36,.7);
+  z-index:50;
+}
+.nav-item{
+  flex:1;
+  background:none;border:none;
+  padding:8px 4px 6px;
+  border-radius:20px;
+  font-family:inherit;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  transition:all .2s cubic-bezier(.22,1,.36,1);
+  position:relative;
+}
+.nav-icon-wrap{
+  width:44px;height:44px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .25s cubic-bezier(.22,1,.36,1);
+  position:relative;
+}
+.nav-item svg{
+  width:22px;height:22px;
+  stroke:rgba(250,247,242,.5);
+  fill:none;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  transition:all .25s;
+  position:relative;
+  z-index:1;
+}
+.nav-item span{
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.05em;
+  color:rgba(250,247,242,.45);
+  transition:all .25s;
+}
+/* Active state */
+.nav-item.on .nav-icon-wrap{
+  background:var(--accent);
+  box-shadow:0 6px 20px -4px rgba(232,90,44,.6);
+  transform:translateY(-2px);
+}
+.nav-item.on svg{
+  stroke:#FFFFFF;
+  stroke-width:2.2;
+}
+.nav-item.on span{
+  color:var(--accent);
+  font-weight:700;
+}
+
+/* ============================================================
+   SHEET
+   ============================================================ */
+.sheet-overlay{
+  position:fixed;inset:0;background:rgba(15,22,18,.6);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.sheet-overlay.on{opacity:1;pointer-events:auto}
+.sheet{
+  position:fixed;left:50%;bottom:0;
+  transform:translateX(-50%) translateY(100%);
+  width:100%;max-width:480px;background:var(--cream);
+  border-radius:28px 28px 0 0;z-index:301;
+  transition:transform .4s cubic-bezier(.22,1,.36,1);
+  max-height:92vh;
+  display:flex;
+  flex-direction:column;
+}
+.sheet.on{transform:translateX(-50%) translateY(0)}
+.sheet-handle{
+  width:44px;height:4px;background:var(--line);
+  border-radius:100px;margin:12px auto 4px;
+  flex-shrink:0;
+}
+.sheet-head{
+  padding:16px 24px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--line);
+  flex-shrink:0;
+  background:var(--cream);
+  border-radius:28px 28px 0 0;
+}
+.sheet-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:22px;font-weight:700;letter-spacing:-.02em;
+}
+.sheet-close{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--cream-2);border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .15s;
+}
+.sheet-close:hover{background:var(--cream-3)}
+.sheet-close svg{
+  width:18px;height:18px;stroke:var(--ink-2);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.sheet-body{
+  padding:24px;
+  overflow-y:auto;
+  flex:1;
+}
+.sheet-body.no-pad{padding:0}
+
+/* ============================================================
+   HEALTH SCREENING FORM
+   ============================================================ */
+.health-intro{
+  padding:24px 24px 20px;
+  border-bottom:1px solid var(--line);
+  background:var(--cream-2);
+}
+.health-intro-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:20px;font-weight:700;
+  letter-spacing:-.02em;
+  color:var(--ink);
+  margin-bottom:8px;
+}
+.health-intro-sub{
+  font-size:14px;
+  color:var(--ink-2);
+  line-height:1.55;
+}
+.health-intro-progress{
+  margin-top:16px;
+  display:flex;align-items:center;gap:12px;
+}
+.health-progress-bar{
+  flex:1;
+  height:4px;
+  background:var(--cream-3);
+  border-radius:100px;
+  overflow:hidden;
+}
+.health-progress-fill{
+  height:100%;
+  background:var(--accent);
+  border-radius:100px;
+  width:0%;
+  transition:width .4s cubic-bezier(.22,1,.36,1);
+}
+.health-progress-text{
+  font-family:'Fraunces',serif;
+  font-size:13px;
+  font-weight:700;
+  color:var(--ink-2);
+  direction:ltr;
+}
+
+.q-card{
+  padding:22px 24px;
+  border-bottom:1px solid var(--line);
+  background:var(--cream);
+}
+.q-head{
+  display:flex;gap:14px;align-items:flex-start;
+  margin-bottom:18px;
+}
+.q-num{
+  flex-shrink:0;
+  width:28px;height:28px;
+  border-radius:8px;
+  background:var(--accent);
+  color:#FFFFFF;
+  font-family:'Fraunces',serif;
+  font-size:14px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  direction:ltr;
+}
+.q-text{
+  font-size:15px;
+  font-weight:600;
+  line-height:1.5;
+  color:var(--ink);
+  letter-spacing:-.01em;
+}
+.q-options{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.q-option{
+  padding:14px 16px;
+  background:var(--cream-2);
+  border:1.5px solid transparent;
+  border-radius:12px;
+  font-family:inherit;
+  font-size:15px;font-weight:600;
+  color:var(--ink-2);
+  cursor:pointer;
+  transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.q-option:hover{
+  background:var(--cream-3);
+  color:var(--ink);
+}
+.q-option .mark{
+  width:14px;height:14px;
+  border-radius:50%;
+  border:2px solid currentColor;
+  flex-shrink:0;
+  transition:all .15s;
+}
+/* Yes selected */
+.q-option.yes.on{
+  background:rgba(232,90,44,.12);
+  border-color:var(--accent);
+  color:var(--accent);
+}
+.q-option.yes.on .mark{
+  background:var(--accent);
+  border-color:var(--accent);
+  box-shadow:inset 0 0 0 2px var(--cream);
+}
+/* No selected */
+.q-option.no.on{
+  background:rgba(31,43,36,.1);
+  border-color:var(--forest);
+  color:var(--forest);
+}
+.q-option.no.on .mark{
+  background:var(--forest);
+  border-color:var(--forest);
+  box-shadow:inset 0 0 0 2px var(--cream);
+}
+
+.health-footer{
+  padding:20px 24px 24px;
+  background:var(--cream-2);
+  border-top:1px solid var(--line);
+}
+.ack-line{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  padding:14px;
+  background:#FFFFFF;
+  border-radius:12px;
+  margin-bottom:16px;
+  cursor:pointer;
+  border:1.5px solid transparent;
+  transition:all .15s;
+}
+.ack-line:hover{border-color:var(--line)}
+.ack-line input{
+  appearance:none;
+  width:22px;height:22px;
+  border:2px solid var(--ink-3);
+  border-radius:6px;
+  cursor:pointer;
+  flex-shrink:0;
+  margin-top:2px;
+  position:relative;
+  transition:all .15s;
+}
+.ack-line input:checked{
+  background:var(--forest);
+  border-color:var(--forest);
+}
+.ack-line input:checked::after{
+  content:'';
+  position:absolute;
+  left:6px;top:2px;
+  width:6px;height:11px;
+  border:solid var(--cream);
+  border-width:0 2.5px 2.5px 0;
+  transform:rotate(45deg);
+}
+.ack-text{
+  font-size:13px;
+  line-height:1.5;
+  color:var(--ink-2);
+}
+.health-save{
+  width:100%;
+  padding:18px 24px;
+  background:var(--forest);
+  color:var(--cream);
+  border:none;
+  border-radius:14px;
+  font-family:inherit;
+  font-size:16px;font-weight:700;
+  letter-spacing:.02em;
+  cursor:pointer;
+  transition:all .15s;
+}
+.health-save:disabled{
+  opacity:.35;
+  cursor:not-allowed;
+}
+.health-save:not(:disabled):hover{background:var(--forest-2)}
+
+/* Legal (kept from before, condensed) */
+.legal{font-size:15px;line-height:1.7;color:var(--ink-2)}
+.legal-meta{
+  font-size:12px;color:var(--ink-3);
+  padding-bottom:16px;margin-bottom:20px;
+  border-bottom:1px solid var(--line);
+}
+.legal h3{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:19px;font-weight:700;
+  color:var(--ink);margin-top:28px;margin-bottom:12px;
+}
+.legal h3:first-of-type{margin-top:0}
+.legal h4{
+  font-size:15px;font-weight:700;
+  color:var(--ink);margin-top:16px;margin-bottom:8px;
+}
+.legal p{margin-bottom:14px}
+.legal ul{margin-right:20px;margin-bottom:14px}
+.legal li{margin-bottom:8px}
+.legal strong{color:var(--ink);font-weight:700}
+.legal-note{
+  background:var(--cream-2);
+  border-radius:12px;padding:16px;
+  margin:20px 0;font-size:13px;
+  line-height:1.6;color:var(--ink-2);
+  border-right:3px solid var(--accent);
+}
+
+/* Form */
+.form-field{margin-bottom:20px}
+.form-field label{
+  display:block;font-size:12px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:8px;
+}
+.form-field input{
+  width:100%;padding:14px 16px;
+  background:var(--cream-2);
+  border:1.5px solid transparent;
+  border-radius:14px;
+  font-family:inherit;font-size:16px;
+  color:var(--ink);transition:all .15s;
+}
+.form-field input:focus{
+  outline:none;background:#FFFFFF;
+  border-color:var(--forest);
+  box-shadow:0 0 0 4px rgba(31,43,36,.08);
+}
+.sheet-primary{
+  width:100%;min-height:56px;
+  padding:18px 24px;
+  background:var(--forest);color:var(--cream);
+  border:none;border-radius:16px;
+  font-family:inherit;font-size:16px;font-weight:700;
+  cursor:pointer;transition:all .15s;
+  letter-spacing:.02em;
+}
+.sheet-primary:hover{background:var(--forest-2)}
+
+.dialog-overlay{
+  position:fixed;inset:0;
+  background:rgba(15,22,18,.85);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  z-index:400;
+  display:none;align-items:center;justify-content:center;
+  padding:24px;
+}
+.dialog-overlay.on{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.dialog-box{
+  background:var(--cream);border-radius:22px;
+  padding:32px 24px 24px;
+  width:100%;max-width:380px;text-align:center;
+  animation:popIn .3s cubic-bezier(.22,1.4,.4,1);
+}
+@keyframes popIn{
+  0%{transform:scale(.9);opacity:0}
+  60%{transform:scale(1.03)}
+  100%{transform:scale(1);opacity:1}
+}
+.dialog-icon{
+  width:64px;height:64px;border-radius:50%;
+  background:rgba(217,52,43,.12);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+}
+.dialog-icon svg{
+  width:28px;height:28px;stroke:var(--danger);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.dialog-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:26px;font-weight:700;
+  color:var(--ink);letter-spacing:-.02em;
+  margin-bottom:8px;
+}
+.dialog-sub{
+  font-size:15px;color:var(--ink-3);
+  line-height:1.55;margin-bottom:28px;
+}
+.dialog-actions{display:flex;flex-direction:column;gap:10px}
+.dialog-btn{
+  width:100%;padding:16px 20px;
+  border-radius:14px;
+  font-family:inherit;font-size:16px;font-weight:700;
+  cursor:pointer;transition:all .15s;border:none;
+}
+.dialog-btn.danger{background:var(--danger);color:#FFFFFF}
+.dialog-btn.danger:hover{background:#B8291F}
+.dialog-btn.cancel{background:var(--cream-2);color:var(--ink-2)}
+.dialog-btn.cancel:hover{background:var(--cream-3)}
+
+.toast{
+  position:fixed;bottom:120px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--forest);color:var(--cream);
+  padding:14px 24px;border-radius:100px;
+  font-size:14px;font-weight:600;
+  box-shadow:0 12px 32px -8px rgba(0,0,0,.4);
+  z-index:1000;opacity:0;
+  transition:all .35s cubic-bezier(.22,1.4,.4,1);
+  pointer-events:none;max-width:calc(100% - 48px);text-align:center;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-height:700px){
+  .hero-title{font-size:40px}
+}
+</style>
+</head>
+<body>
+
+<div class="screen">
+
+  <div class="top">
+    <button class="top-back" id="backBtn">
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <span class="top-title">הגדרות</span>
+    <div style="width:44px"></div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-eyebrow">הפרופיל שלך</div>
+    <h1 class="hero-title">הגדרות <em>אישיות</em></h1>
+  </div>
+
+  <div class="profile-wrap">
+    <div class="profile-card" id="profileCard">
+      <div class="avatar" id="avatarLetter">ד</div>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName">דניאל כהן</div>
+        <div class="profile-email" id="profileEmail">daniel@fit50.app</div>
+      </div>
+      <svg class="profile-arrow" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2 class="section-title">חשבון</h2></div>
+    <div class="list">
+      <button class="list-row" data-action="editProfile">
+        <div class="list-row-left">
+          <div class="list-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div><div class="list-label">עריכת פרופיל<small>שם, אימייל, תמונת פרופיל</small></div></div>
+        </div>
+        <svg class="list-arrow" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+
+      <button class="list-row" data-action="email">
+        <div class="list-row-left">
+          <div class="list-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
+          </div>
+          <div><div class="list-label">כתובת אימייל<small id="emailSub">daniel@fit50.app</small></div></div>
+        </div>
+        <svg class="list-arrow" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+
+      <button class="list-row" data-action="password">
+        <div class="list-row-left">
+          <div class="list-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div><div class="list-label">שינוי סיסמה<small>עדכן את הסיסמה שלך</small></div></div>
+        </div>
+        <svg class="list-arrow" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2 class="section-title">העדפות</h2></div>
+    <div class="list">
+      <div class="list-row" style="cursor:default">
+        <div class="list-row-left">
+          <div class="list-icon lime">
+            <svg viewBox="0 0 24 24"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>
+          </div>
+          <div><div class="list-label">תזכורות אימון<small>קבל התראה לפני אימון</small></div></div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggleReminders" checked>
+          <div class="toggle-track"></div>
+        </label>
+      </div>
+
+      <div class="list-row" style="cursor:default">
+        <div class="list-row-left">
+          <div class="list-icon lime">
+            <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg>
+          </div>
+          <div><div class="list-label">רטט עדין<small>משוב הפטי בתרגילים</small></div></div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggleHaptics" checked>
+          <div class="toggle-track"></div>
+        </label>
+      </div>
+
+      <div class="list-row" style="cursor:default">
+        <div class="list-row-left">
+          <div class="list-icon lime">
+            <svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          </div>
+          <div><div class="list-label">צלילי טיימר<small>צלילים בסיום סטים</small></div></div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggleSound" checked>
+          <div class="toggle-track"></div>
+        </label>
+      </div>
+
+      <button class="list-row" data-action="language">
+        <div class="list-row-left">
+          <div class="list-icon lime">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div><div class="list-label">שפה<small>עברית</small></div></div>
+        </div>
+        <svg class="list-arrow" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2 class="section-title">בריאות ובטיחות</h2></div>
+    <div class="list">
+      <button class="list-row" data-action="healthScreening">
+        <div class="list-row-left">
+          <div class="list-icon coral">
+            <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div><div class="list-label">שאלון בטיחות<small id="healthStatus">הושלם</small></div></div>
+        </div>
+        <svg class="list-arrow" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+
+      <button class="list-row" data-action="safety">
+        <div class="list-row-left">
+          <div class="list-icon coral">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div><div class="list-label">הנחיות בטיחות<small>כללים חשובים לאימון נכון</small></div></div>
+        </div>
+        <svg class="list-arrow" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2 class="section-title">משפטי ואודות</h2></div>
+    <div class="list">
+      <button class="list-row" data-action="privacy">
+        <div class="list-row-left">
+          <div class="list-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div><div class="list-label">מדיניות פרטיות</div></div>
+        </div>
+        <svg class="list-arrow" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+
+      <button class="list-row" data-action="terms">
+        <div class="list-row-left">
+          <div class="list-icon">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div><div class="list-label">תנאי שימוש</div></div>
+        </div>
+        <svg class="list-arrow" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+
+      <button class="list-row" data-action="contact">
+        <div class="list-row-left">
+          <div class="list-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div><div class="list-label">צור קשר<small>נשמח לשמוע ממך</small></div></div>
+        </div>
+        <svg class="list-arrow" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+
+      <button class="list-row" data-action="rate">
+        <div class="list-row-left">
+          <div class="list-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+          </div>
+          <div><div class="list-label">דרג את האפליקציה<small>עזור לנו להשתפר</small></div></div>
+        </div>
+        <svg class="list-arrow" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="danger-section">
+    <button class="danger-btn" id="logoutBtn">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <span>התנתקות</span>
+    </button>
+    <button class="danger-btn" id="deleteBtn" style="margin-top:10px">
+      <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      <span>מחיקת חשבון</span>
+    </button>
+  </div>
+
+  <div class="footer">
+    <strong>Fit50+</strong>
+    <div class="footer-version">גרסה 1.0.0</div>
+    <div style="margin-top:8px">נבנה באהבה לגיל 50+</div>
+  </div>
+
+</div>
+
+<!-- ============ NEW NAV ============ -->
+<nav class="nav">
+  <button class="nav-item" data-nav="home">
+    <div class="nav-icon-wrap">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <span>בית</span>
+  </button>
+  <button class="nav-item" data-nav="stretch">
+    <div class="nav-icon-wrap">
+      <svg viewBox="0 0 24 24"><path d="M12 3v6M12 21v-6M3 12h6M21 12h-6M5.6 5.6l4.2 4.2M19.4 5.6l-4.2 4.2M5.6 18.4l4.2-4.2M19.4 18.4l-4.2-4.2"/></svg>
+    </div>
+    <span>מתיחות</span>
+  </button>
+  <button class="nav-item" data-nav="progress">
+    <div class="nav-icon-wrap">
+      <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+    </div>
+    <span>התקדמות</span>
+  </button>
+  <button class="nav-item on" data-nav="settings">
+    <div class="nav-icon-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </div>
+    <span>עוד</span>
+  </button>
+</nav>
+
+<div class="sheet-overlay" id="sheetOverlay"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <div class="sheet-title" id="sheetTitle">כותרת</div>
+    <button class="sheet-close" id="sheetClose">
+      <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body" id="sheetBody"></div>
+</div>
+
+<div class="dialog-overlay" id="deleteDialog">
+  <div class="dialog-box">
+    <div class="dialog-icon">
+      <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    </div>
+    <div class="dialog-title">למחוק את החשבון?</div>
+    <div class="dialog-sub">פעולה זו אינה ניתנת לביטול.<br>כל הנתונים, ההתקדמות והשיאים יימחקו לתמיד.</div>
+    <div class="dialog-actions">
+      <button class="dialog-btn danger" id="deleteConfirm">מחק לצמיתות</button>
+      <button class="dialog-btn cancel" id="deleteCancel">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<div class="dialog-overlay" id="logoutDialog">
+  <div class="dialog-box">
+    <div class="dialog-icon">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </div>
+    <div class="dialog-title">להתנתק?</div>
+    <div class="dialog-sub">תוכל לחזור ולהתחבר בכל זמן.<br>ההתקדמות שלך נשמרת.</div>
+    <div class="dialog-actions">
+      <button class="dialog-btn danger" id="logoutConfirm">התנתק</button>
+      <button class="dialog-btn cancel" id="logoutCancel">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const $$ = s => document.querySelectorAll(s);
+
+const state = {
+  user: { name: 'דניאל כהן', email: 'daniel@fit50.app' },
+  preferences: { reminders: true, haptics: true, sound: true },
+  healthAnswers: {
+    0: null, 1: null, 2: null, 3: null, 4: null
+  },
+  healthAck: false
+};
+
+let toastT;
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast on';
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('on'), 2200);
+}
+
+function openSheet(title, html, onSave, noPad) {
+  $('sheetTitle').textContent = title;
+  $('sheetBody').innerHTML = html;
+  $('sheetBody').className = 'sheet-body' + (noPad ? ' no-pad' : '');
+  $('sheetOverlay').classList.add('on');
+  $('sheet').classList.add('on');
+  document.body.style.overflow = 'hidden';
+  const saveBtn = document.getElementById('sheetSaveBtn');
+  if (saveBtn && onSave) saveBtn.onclick = onSave;
+}
+function closeSheet() {
+  $('sheetOverlay').classList.remove('on');
+  $('sheet').classList.remove('on');
+  document.body.style.overflow = '';
+}
+$('sheetClose').onclick = closeSheet;
+$('sheetOverlay').onclick = closeSheet;
+
+/* ============================================
+   HEALTH SCREENING - NOW WORKING
+   ============================================ */
+const HEALTH_QS = [
+  'האם אתה חווה כאבים בחזה בזמן פעילות גופנית?',
+  'האם איבדת הכרה לאחרונה או חווית סחרחורת חריפה?',
+  'האם רופא המליץ לך להגביל פעילות גופנית?',
+  'האם יש לך פציעה חריפה, ניתוח לאחרונה או כאב חזק?',
+  'האם יש סיבה נוספת להתייעץ עם איש מקצוע?'
+];
+
+function openHealthScreening() {
+  const qsHtml = HEALTH_QS.map((q, i) => {
+    const cur = state.healthAnswers[i];
+    return '<div class="q-card" data-q="' + i + '">' +
+      '<div class="q-head">' +
+        '<div class="q-num">' + (i + 1) + '</div>' +
+        '<div class="q-text">' + q + '</div>' +
+      '</div>' +
+      '<div class="q-options">' +
+        '<button class="q-option no' + (cur === false ? ' on' : '') + '" data-val="0">' +
+          '<span class="mark"></span>' +
+          '<span>לא</span>' +
+        '</button>' +
+        '<button class="q-option yes' + (cur === true ? ' on' : '') + '" data-val="1">' +
+          '<span class="mark"></span>' +
+          '<span>כן</span>' +
+        '</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  const html =
+    '<div class="health-intro">' +
+      '<div class="health-intro-title">רגע לפני שמתחילים</div>' +
+      '<div class="health-intro-sub">נשמח לוודא שהאימונים בטוחים עבורך. כל השאלות דרושות תשובה.</div>' +
+      '<div class="health-intro-progress">' +
+        '<div class="health-progress-bar">' +
+          '<div class="health-progress-fill" id="healthProgress"></div>' +
+        '</div>' +
+        '<div class="health-progress-text"><span id="healthDone">0</span>/5</div>' +
+      '</div>' +
+    '</div>' +
+    qsHtml +
+    '<div class="health-footer">' +
+      '<label class="ack-line">' +
+        '<input type="checkbox" id="healthAck"' + (state.healthAck ? ' checked' : '') + ' />' +
+        '<span class="ack-text">אני מבין/ה ש-Fit50+ מספקת הדרכה כללית בלבד ואינה מהווה ייעוץ רפואי. אני מתחייב/ת לעצור אם ארגיש כאב, סחרחורת או קוצר נשימה.</span>' +
+      '</label>' +
+      '<button class="health-save" id="healthSave" disabled>שמור תשובות</button>' +
+    '</div>';
+
+  openSheet('שאלון בטיחות', html, null, true);
+
+  // Attach handlers
+  $$('.q-card').forEach(card => {
+    const qIdx = parseInt(card.dataset.q, 10);
+    card.querySelectorAll('.q-option').forEach(btn => {
+      btn.onclick = () => {
+        const val = btn.dataset.val === '1';
+        state.healthAnswers[qIdx] = val;
+        card.querySelectorAll('.q-option').forEach(b => b.classList.remove('on'));
+        btn.classList.add('on');
+        updateHealthProgress();
+      };
+    });
+  });
+
+  $('healthAck').onchange = (e) => {
+    state.healthAck = e.target.checked;
+    updateHealthProgress();
+  };
+
+  $('healthSave').onclick = () => {
+    const hasRisk = Object.values(state.healthAnswers).some(v => v === true);
+    closeSheet();
+    if (hasRisk) {
+      setTimeout(() => {
+        if (confirm('על פי תשובותיך, מומלץ להתייעץ עם איש מקצוע לפני תחילת תוכנית אימונים.\n\nלהמשיך בכל זאת?')) {
+          toast('התשובות נשמרו');
+          $('healthStatus').textContent = 'הושלם';
+        }
+      }, 300);
+    } else {
+      toast('השאלון הושלם ✓');
+      $('healthStatus').textContent = 'הושלם';
+    }
+  };
+
+  updateHealthProgress();
+}
+
+function updateHealthProgress() {
+  const answered = Object.values(state.healthAnswers).filter(v => v !== null).length;
+  const fill = $('healthProgress');
+  const done = $('healthDone');
+  const save = $('healthSave');
+  if (fill) fill.style.width = (answered / 5 * 100) + '%';
+  if (done) done.textContent = answered;
+  if (save) save.disabled = !(answered === 5 && state.healthAck);
+}
+
+/* ============ EDIT PROFILE ============ */
+function openEditProfile() {
+  const html =
+    '<div class="form-field">' +
+      '<label>שם מלא</label>' +
+      '<input type="text" id="editName" value="' + state.user.name + '" />' +
+    '</div>' +
+    '<div class="form-field">' +
+      '<label>כתובת אימייל</label>' +
+      '<input type="email" id="editEmail" value="' + state.user.email + '" dir="ltr" />' +
+    '</div>' +
+    '<button class="sheet-primary" id="sheetSaveBtn">שמור שינויים</button>';
+
+  openSheet('עריכת פרופיל', html, () => {
+    const newName = document.getElementById('editName').value.trim();
+    const newEmail = document.getElementById('editEmail').value.trim();
+    if (!newName) return toast('שם לא יכול להיות ריק');
+    if (!newEmail.includes('@')) return toast('אימייל לא תקין');
+    state.user.name = newName;
+    state.user.email = newEmail;
+    updateProfileUI();
+    closeSheet();
+    toast('הפרופיל עודכן ✓');
+  });
+}
+
+function updateProfileUI() {
+  $('profileName').textContent = state.user.name;
+  $('profileEmail').textContent = state.user.email;
+  $('emailSub').textContent = state.user.email;
+  $('avatarLetter').textContent = state.user.name[0] || 'ד';
+}
+
+/* ============ EMAIL CHANGE ============ */
+function openEmailChange() {
+  const html =
+    '<div class="form-field">' +
+      '<label>כתובת אימייל חדשה</label>' +
+      '<input type="email" id="newEmail" placeholder="you@example.com" dir="ltr" />' +
+    '</div>' +
+    '<p style="font-size:13px;color:var(--ink-3);line-height:1.5;margin-bottom:20px">' +
+      'נשלח לך מייל אימות לכתובת החדשה. האימייל יוחלף רק לאחר אימות.' +
+    '</p>' +
+    '<button class="sheet-primary" id="sheetSaveBtn">שלח אימות</button>';
+
+  openSheet('שינוי אימייל', html, () => {
+    const newEmail = document.getElementById('newEmail').value.trim();
+    if (!newEmail.includes('@')) return toast('אימייל לא תקין');
+    closeSheet();
+    toast('נשלח מייל אימות ל-' + newEmail);
+  });
+}
+
+/* ============ PASSWORD CHANGE ============ */
+function openPasswordChange() {
+  const html =
+    '<div class="form-field">' +
+      '<label>סיסמה נוכחית</label>' +
+      '<input type="password" id="curPass" placeholder="••••••••" dir="ltr" />' +
+    '</div>' +
+    '<div class="form-field">' +
+      '<label>סיסמה חדשה</label>' +
+      '<input type="password" id="newPass" placeholder="לפחות 6 תווים" dir="ltr" />' +
+    '</div>' +
+    '<div class="form-field">' +
+      '<label>אימות סיסמה חדשה</label>' +
+      '<input type="password" id="confirmPass" placeholder="הקלד שוב" dir="ltr" />' +
+    '</div>' +
+    '<button class="sheet-primary" id="sheetSaveBtn">שמור סיסמה חדשה</button>';
+
+  openSheet('שינוי סיסמה', html, () => {
+    const cur = document.getElementById('curPass').value;
+    const newP = document.getElementById('newPass').value;
+    const conf = document.getElementById('confirmPass').value;
+    if (cur.length < 6) return toast('סיסמה נוכחית שגויה');
+    if (newP.length < 6) return toast('סיסמה חייבת להכיל לפחות 6 תווים');
+    if (newP !== conf) return toast('הסיסמאות אינן תואמות');
+    closeSheet();
+    toast('הסיסמה עודכנה ✓');
+  });
+}
+
+/* ============ LANGUAGE ============ */
+function openLanguage() {
+  const html =
+    '<div class="list" style="margin-bottom:20px">' +
+      '<button class="list-row" data-lang="he" style="cursor:pointer">' +
+        '<span class="list-label">עברית</span>' +
+        '<svg class="list-arrow" viewBox="0 0 24 24" style="stroke:var(--forest)"><path d="M20 6L9 17l-5-5"/></svg>' +
+      '</button>' +
+      '<button class="list-row" data-lang="en" style="cursor:pointer">' +
+        '<span class="list-label" style="color:var(--ink-3)">English <small>בקרוב</small></span>' +
+      '</button>' +
+      '<button class="list-row" data-lang="ar" style="cursor:pointer">' +
+        '<span class="list-label" style="color:var(--ink-3)">العربية <small>בקרוב</small></span>' +
+      '</button>' +
+    '</div>';
+
+  openSheet('שפה', html);
+  $$('[data-lang]').forEach(btn => {
+    btn.onclick = () => {
+      const lang = btn.dataset.lang;
+      if (lang === 'he') {
+        closeSheet();
+        toast('עברית נבחרה');
+      } else {
+        toast('בקרוב – ' + (lang === 'en' ? 'English' : 'العربية'));
+      }
+    };
+  });
+}
+
+/* ============ SAFETY ============ */
+function openSafety() {
+  const html =
+    '<div class="legal">' +
+      '<p>אלה העקרונות הבסיסיים לאימון בטוח. קרא אותם לפני כל אימון.</p>' +
+      '<h3>1. חימום וקירור</h3>' +
+      '<p>התחל כל אימון ב-<strong>חימום של 2-3 דקות</strong> כדי להעיר את השרירים. סיים ב-<strong>קירור ומתיחות</strong> כדי למנוע נוקשות.</p>' +
+      '<h3>2. כאב הוא סימן עצור</h3>' +
+      '<p>אם אתה חש <strong>כאב חד</strong> – עצור מיד. כאב אינו סימן להתקדמות.</p>' +
+      '<h3>3. נשימה סדירה</h3>' +
+      '<p>נשום באופן רציף לאורך כל התרגיל. <strong>אל תעצור את הנשימה</strong> בזמן מאמץ.</p>' +
+      '<h3>4. הגב שלך</h3>' +
+      '<p>שמור על <strong>עמוד שדרה ניטרלי</strong> בכל התרגילים. אל תקמר את הגב התחתון.</p>' +
+      '<h3>5. התקדמות הדרגתית</h3>' +
+      '<p>אל תדחוף את עצמך מהר מדי. <strong>התקדם בקצב שלך</strong>.</p>' +
+      '<h3>6. שתייה</h3>' +
+      '<p>שתה מים לפני, במהלך ואחרי האימון.</p>' +
+      '<div class="legal-note">' +
+        '<strong>זכור:</strong> Fit50+ מספקת הדרכה כללית בלבד. היא אינה מהווה ייעוץ רפואי.' +
+      '</div>' +
+    '</div>';
+  openSheet('הנחיות בטיחות', html);
+}
+
+/* ============ PRIVACY ============ */
+function openPrivacy() {
+  const html =
+    '<div class="legal">' +
+      '<div class="legal-meta">עדכון אחרון: 1 בינואר 2026 · גרסה 1.0.0</div>' +
+      '<p><strong>Fit50+</strong> מכבדת את פרטיותך ומחויבת להגן על המידע האישי שלך. מדיניות זו מסבירה אילו נתונים אנו אוספים, כיצד אנו משתמשים בהם, ואילו זכויות עומדות לרשותך.</p>' +
+
+      '<h3>1. איזה מידע אנו אוספים</h3>' +
+      '<h4>1.1 מידע שאתה מספק</h4>' +
+      '<ul>' +
+        '<li><strong>פרטי חשבון:</strong> אימייל, שם, תמונת פרופיל (אם התחברת עם Google/Apple).</li>' +
+        '<li><strong>פרטי פרופיל:</strong> גיל, מין, רמת פעילות.</li>' +
+        '<li><strong>מידע בריאותי:</strong> תשובות לשאלון – נשמר במכשיר שלך בלבד.</li>' +
+        '<li><strong>מטרות כושר:</strong> הבחירות שלך בשאלון.</li>' +
+      '</ul>' +
+      '<h4>1.2 מידע אוטומטי</h4>' +
+      '<ul>' +
+        '<li>נתוני שימוש: אימונים, זמן באפליקציה, תכונות.</li>' +
+        '<li>נתוני מכשיר: סוג, מערכת הפעלה, שפה.</li>' +
+        '<li>נתוני ביצועים: קריסות, שגיאות.</li>' +
+        '<li>כתובת IP: לאבטחה בלבד.</li>' +
+      '</ul>' +
+      '<h4>1.3 מידע שאנו לא אוספים</h4>' +
+      '<ul>' +
+        '<li>מיקום GPS מדויק.</li>' +
+        '<li>מידע רפואי מפלטפורמות חיצוניות.</li>' +
+        '<li>פרטי תשלום.</li>' +
+        '<li>אנשי קשר, SMS, תמונות.</li>' +
+      '</ul>' +
+
+      '<h3>2. שימוש במידע</h3>' +
+      '<ul>' +
+        '<li>אספקת השירות וניהול חשבון.</li>' +
+        '<li>התאמת תוכנית אימונים אישית.</li>' +
+        '<li>מעקב התקדמות ושיאים.</li>' +
+        '<li>תקשורת והתראות (באישורך).</li>' +
+        '<li>שיפור השירות בניתוח מצרפי.</li>' +
+        '<li>אבטחה ומניעת הונאות.</li>' +
+        '<li>עמידה בחוק.</li>' +
+      '</ul>' +
+      '<div class="legal-note"><strong>חשוב:</strong> אנחנו <u>לא</u> משתמשים במידע הבריאותי שלך לפרסום ולא מוכרים אותו.</div>' +
+
+      '<h3>3. אחסון ואבטחה</h3>' +
+      '<ul>' +
+        '<li>שרתי Google Firebase מאובטחים.</li>' +
+        '<li>הצפנת HTTPS/TLS 1.3 בתעבורה.</li>' +
+        '<li>הצפנה במנוחה.</li>' +
+        '<li>גישה מוגבלת לעובדים מורשים.</li>' +
+        '<li>מחיקה תוך 30 יום מהמחיקה.</li>' +
+      '</ul>' +
+
+      '<h3>4. שיתוף מידע</h3>' +
+      '<p><strong>אנחנו לא מוכרים את המידע שלך.</strong> שיתוף רק עם:</p>' +
+      '<ul>' +
+        '<li>ספקי שירות (Firebase, אנליטיקה).</li>' +
+        '<li>דרישות חוקיות.</li>' +
+        '<li>העברות עסקיות (בהסכמה).</li>' +
+        '<li>בהסכמתך המפורשת.</li>' +
+      '</ul>' +
+
+      '<h3>5. הזכויות שלך</h3>' +
+      '<ul>' +
+        '<li>עיון במידע.</li>' +
+        '<li>תיקון מידע.</li>' +
+        '<li>מחיקת חשבון.</li>' +
+        '<li>התנגדות לעיבוד.</li>' +
+        '<li>ניידות מידע.</li>' +
+      '</ul>' +
+      '<p><strong>GDPR:</strong> תושבי האיחוד האירופי יכולים לפנות לרשות הפיקוח המקומית.</p>' +
+      '<p><strong>CCPA:</strong> תושבי קליפורניה יכולים לבקש מחיקה ולא להיות מופלים.</p>' +
+      '<p><strong>ישראל:</strong> בהתאם לחוק הגנת הפרטיות, התשמ"א-1981.</p>' +
+
+      '<h3>6. מחיקת חשבון</h3>' +
+      '<p>בהגדרות → מחיקת חשבון. הנתונים יימחקו תוך 30 יום.</p>' +
+
+      '<h3>7. פרטיות ילדים</h3>' +
+      '<p>השירות אינו מיועד לילדים מתחת לגיל 16.</p>' +
+
+      '<h3>8. העברות בינלאומיות</h3>' +
+      '<p>ייתכן עיבוד בארה"ב ואירופה עם אמצעי הגנה מתאימים.</p>' +
+
+      '<h3>9. שינויים</h3>' +
+      '<p>עדכונים יפורסמו באפליקציה וב-מייל.</p>' +
+
+      '<h3>10. יצירת קשר</h3>' +
+      '<p>privacy@fit50.app · תגובה תוך 30 יום</p>' +
+
+      '<div class="legal-note"><strong>הצהרה:</strong> מסמך משפטי מחייב. יש להתייעץ עם עורך דין במקרה של ספק.</div>' +
+    '</div>';
+  openSheet('מדיניות פרטיות', html);
+}
+
+/* ============ TERMS ============ */
+function openTerms() {
+  const html =
+    '<div class="legal">' +
+      '<div class="legal-meta">עדכון אחרון: 1 בינואר 2026 · גרסה 1.0.0</div>' +
+      '<p>תנאי שימוש אלה מהווים הסכם מחייב בינך לבין Fit50+. השימוש באפליקציה מהווה הסכמה מלאה.</p>' +
+
+      '<h3>1. זכאות</h3>' +
+      '<ul>' +
+        '<li>גיל 16 לפחות.</li>' +
+        '<li>מתחת ל-18 – אישור הורה.</li>' +
+        '<li>כשירות משפטית להתקשר בהסכם.</li>' +
+      '</ul>' +
+
+      '<h3>2. רישום חשבון</h3>' +
+      '<ul>' +
+        '<li>מידע מדויק ומלא.</li>' +
+        '<li>שמירת סודיות פרטי ההתחברות.</li>' +
+        '<li>אחריות על פעילות בחשבון.</li>' +
+        '<li>הודעה על שימוש לא מורשה.</li>' +
+      '</ul>' +
+
+      '<h3>3. הצהרת בריאות – חשוב מאוד</h3>' +
+      '<div class="legal-note"><strong>⚠️ הצהרה קריטית:</strong> Fit50+ מספקת הדרכה כללית בלבד. היא <u>אינה</u> ייעוץ רפואי, אבחון או טיפול.</div>' +
+      '<ul>' +
+        '<li>התייעץ עם רופא לפני תוכנית אימונים חדשה.</li>' +
+        '<li>הפסק מיד אם חש כאב, סחרחורת, קוצר נשימה.</li>' +
+        '<li>אתה האחראי הבלעדי להתאמת התרגילים למצבך.</li>' +
+      '</ul>' +
+      '<p>החברה לא תהיה אחראית לכל נזק גופני, פציעה או בעיה בריאותית שייגרמו משימוש באפליקציה.</p>' +
+
+      '<h3>4. שימוש מותר ואסור</h3>' +
+      '<p><strong>מותר:</strong> אישי, פרטי, לא מסחרי.</p>' +
+      '<p><strong>אסור:</strong></p>' +
+      '<ul>' +
+        '<li>העתקה, הפצה, מכירה.</li>' +
+        '<li>הנדסה לאחור.</li>' +
+        '<li>שימוש אוטומטי (bots, scrapers).</li>' +
+        '<li>פריצה או שיבוש מערכות.</li>' +
+        '<li>העלאת וירוסים.</li>' +
+        '<li>שימוש מסחרי ללא אישור.</li>' +
+      '</ul>' +
+
+      '<h3>5. קניין רוחני</h3>' +
+      '<p>כל התכנים באפליקציה הם רכוש בלעדי של Fit50+ ומוגנים בזכויות יוצרים.</p>' +
+
+      '<h3>6. תוכן משתמש</h3>' +
+      '<p>משוב והצעות שתשלח – אנחנו רשאים להשתמש בהם ללא תמורה.</p>' +
+
+      '<h3>7. מנויים ותשלומים</h3>' +
+      '<ul>' +
+        '<li>תשלום דרך App Store / Google Play.</li>' +
+        '<li>חידוש אוטומטי – ביטול 24 שעות לפני.</li>' +
+        '<li>החזרים לפי מדיניות Apple/Google.</li>' +
+      '</ul>' +
+
+      '<h3>8. זמינות</h3>' +
+      '<p>שואפים ל-99% זמינות. הפסקות לתחזוקה אפשריות.</p>' +
+
+      '<h3>9. סיום</h3>' +
+      '<p>אנחנו רשאים לסיים גישה בגין הפרה.</p>' +
+
+      '<h3>10. הגבלת אחריות</h3>' +
+      '<p>השירות "כפי שהוא". האחריות הכוללת לא תעלה על הסכום ששילמת ב-12 החודשים האחרונים.</p>' +
+
+      '<h3>11. שיפוי</h3>' +
+      '<p>אתה מסכים לשפות אותנו בגין הפרת תנאים.</p>' +
+
+      '<h3>12. דין חל</h3>' +
+      '<p>חוקי מדינת ישראל. סמכות שיפוט: תל אביב-יפו.</p>' +
+
+      '<h3>13. שינויים</h3>' +
+      '<p>עדכונים יפורסמו באפליקציה ובמייל.</p>' +
+
+      '<h3>14. הוראות כלליות</h3>' +
+      '<p>הסכם שלם · הפרדה · ויתור · המחאה.</p>' +
+
+      '<h3>15. יצירת קשר</h3>' +
+      '<p>legal@fit50.app · תגובה תוך 30 יום</p>' +
+
+      '<div class="legal-note"><strong>הצהרה סופית:</strong> תנאים אלה מהווים מסמך מחייב. יש להתייעץ עם עורך דין במקרה של ספק.</div>' +
+    '</div>';
+  openSheet('תנאי שימוש', html);
+}
+
+/* ============ CONTACT ============ */
+function openContact() {
+  const html =
+    '<div style="text-align:center;padding:20px 0">' +
+      '<div style="font-size:15px;color:var(--ink-2);line-height:1.6;margin-bottom:24px">' +
+        'יש לך שאלה, הצעה או משוב?<br>נשמח לשמוע ממך.' +
+      '</div>' +
+      '<div style="font-family:\'Fraunces\',serif;font-size:18px;font-weight:700;color:var(--forest);direction:ltr;margin-bottom:32px">hello@fit50.app</div>' +
+      '<button class="sheet-primary" id="sheetSaveBtn">שלח מייל</button>' +
+    '</div>';
+  openSheet('צור קשר', html, () => {
+    closeSheet();
+    toast('נפתח לקוח המייל שלך');
+  });
+}
+
+/* ============ RATE ============ */
+function openRate() {
+  const html =
+    '<div style="text-align:center;padding:20px 0">' +
+      '<div style="font-size:48px;margin-bottom:16px">⭐</div>' +
+      '<div style="font-family:\'Frank Ruhl Libre\',serif;font-size:24px;font-weight:700;color:var(--ink);margin-bottom:12px;letter-spacing:-.02em">אוהב את Fit50+?</div>' +
+      '<div style="font-size:15px;color:var(--ink-3);line-height:1.6;margin-bottom:32px">' +
+        'דירוג שלך בחנות האפליקציות<br>עוזר לנו להגיע לעוד אנשים.' +
+      '</div>' +
+      '<button class="sheet-primary" id="sheetSaveBtn">דרג ב-App Store</button>' +
+    '</div>';
+  openSheet('דרג אותנו', html, () => {
+    closeSheet();
+    toast('תודה! נפתח את החנות');
+  });
+}
+
+/* ============ LOGOUT ============ */
+function openLogoutDialog() { $('logoutDialog').classList.add('on'); }
+function closeLogoutDialog() { $('logoutDialog').classList.remove('on'); }
+function confirmLogout() {
+  closeLogoutDialog();
+  toast('התנתקת בהצלחה');
+}
+
+/* ============ DELETE ============ */
+function openDeleteDialog() { $('deleteDialog').classList.add('on'); }
+function closeDeleteDialog() { $('deleteDialog').classList.remove('on'); }
+function confirmDelete() {
+  closeDeleteDialog();
+  toast('החשבון נמחק');
+}
+
+/* ============ EVENTS ============ */
+$('profileCard').onclick = openEditProfile;
+$('backBtn').onclick = () => toast('חזרה למסך הבית');
+
+$$('[data-action]').forEach(el => {
+  el.onclick = () => {
+    const a = el.dataset.action;
+    if (a === 'editProfile') openEditProfile();
+    else if (a === 'email') openEmailChange();
+    else if (a === 'password') openPasswordChange();
+    else if (a === 'language') openLanguage();
+    else if (a === 'healthScreening') openHealthScreening();
+    else if (a === 'safety') openSafety();
+    else if (a === 'privacy') openPrivacy();
+    else if (a === 'terms') openTerms();
+    else if (a === 'contact') openContact();
+    else if (a === 'rate') openRate();
+  };
+});
+
+$('logoutBtn').onclick = openLogoutDialog;
+$('deleteBtn').onclick = openDeleteDialog;
+$('logoutConfirm').onclick = confirmLogout;
+$('logoutCancel').onclick = closeLogoutDialog;
+$('deleteConfirm').onclick = confirmDelete;
+$('deleteCancel').onclick = closeDeleteDialog;
+
+$('toggleReminders').onchange = (e) => {
+  state.preferences.reminders = e.target.checked;
+  toast(e.target.checked ? 'תזכורות הופעלו' : 'תזכורות בוטלו');
+};
+$('toggleHaptics').onchange = (e) => {
+  state.preferences.haptics = e.target.checked;
+  toast(e.target.checked ? 'רטט הופעל' : 'רטט בוטל');
+};
+$('toggleSound').onchange = (e) => {
+  state.preferences.sound = e.target.checked;
+  toast(e.target.checked ? 'צלילים הופעלו' : 'צלילים בוטלו');
+};
+
+$$('.nav-item').forEach(item => {
+  item.onclick = () => {
+    const nav = item.dataset.nav;
+    if (nav === 'settings') return;
+    if (nav === 'home') toast('חזרה למסך הבית');
+    else if (nav === 'stretch') toast('מסך מתיחות');
+    else if (nav === 'progress') toast('מסך התקדמות');
+  };
+});
+
+updateProfileUI();
+</script>
+
+
+<script>
+(function(){
+ function nav(n){location.href=n+'.html'}
+ function bind(){
+  var b=document.getElementById('backBtn');if(b)b.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation();nav('home')},true);
+  var lo=document.getElementById('logoutConfirm');if(lo)lo.addEventListener('click',function(){try{if(window.Fit50Native)window.Fit50Native.logout()}catch(e){};setTimeout(function(){nav('login')},150)},true);
+  document.querySelectorAll('[data-nav]').forEach(function(el){el.addEventListener('click',function(e){var n=el.getAttribute('data-nav');if(n){e.preventDefault();e.stopImmediatePropagation();nav(n)}},true)});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
+</body>
+</html>
