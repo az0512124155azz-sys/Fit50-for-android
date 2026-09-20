@@ -22,6 +22,8 @@ service cloud.firestore {
     }
 
     match /passwordResetRequests/{requestId} {
+      // Password reset must work before login, so creation is allowed without auth.
+      // The document shape is intentionally strict to prevent arbitrary writes.
       allow create: if
         request.resource.data.keys().hasOnly([
           "email", "source", "status", "createdAt", "error"
@@ -29,11 +31,9 @@ service cloud.firestore {
         && request.resource.data.email is string
         && request.resource.data.email.size() >= 5
         && request.resource.data.email.size() <= 254
-        && request.resource.data.source in ["app", "admin"]
-        && request.resource.data.status in [
-          "firebase_accepted", "send_error", "admin_accepted"
-        ]
-        && request.resource.data.error is string
+        && request.resource.data.source == "app"
+        && request.resource.data.status == "queued"
+        && request.resource.data.error == ""
         && request.resource.data.createdAt == request.time;
 
       allow read, delete: if isAdmin();
