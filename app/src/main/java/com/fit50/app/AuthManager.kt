@@ -81,7 +81,7 @@ class AuthManager(private val context: Context) {
             }
     }
 
-    fun resetPassword(email: String, age: Int, done: (Boolean, String?) -> Unit) {
+    fun resetPassword(email: String, done: (Boolean, String?) -> Unit) {
         ensureFirebase()
             ?: return done(false, initializationError ?: "Firebase עדיין לא הוגדר בפרויקט")
 
@@ -89,16 +89,12 @@ class AuthManager(private val context: Context) {
         if (!normalized.contains("@")) {
             return done(false, "כתובת אימייל אינה תקינה")
         }
-        if (age !in 40..120) {
-            return done(false, "הגיל שהוזן אינו תקין")
-        }
 
         val db = runCatching { FirebaseFirestore.getInstance() }.getOrNull()
             ?: return done(false, "לא הצלחנו להתחבר לשירות איפוס הסיסמה")
 
         val request = hashMapOf<String, Any?>(
             "email" to normalized,
-            "age" to age,
             "source" to "app",
             "status" to "queued",
             "createdAt" to FieldValue.serverTimestamp(),
@@ -108,17 +104,10 @@ class AuthManager(private val context: Context) {
         db.collection("passwordResetRequests")
             .add(request)
             .addOnSuccessListener {
-                done(
-                    true,
-                    "אם הפרטים תואמים לחשבון, יישלח קישור איפוס לאימייל בתוך כדקה."
-                )
+                done(true, "בקשת האיפוס התקבלה. קישור יישלח לאימייל בתוך כדקה.")
             }
-            .addOnFailureListener {
-                // Keep the user-facing response generic to avoid account enumeration.
-                done(
-                    true,
-                    "אם הפרטים תואמים לחשבון, יישלח קישור איפוס לאימייל בתוך כדקה."
-                )
+            .addOnFailureListener { error ->
+                done(false, error.localizedMessage ?: "לא הצלחנו ליצור בקשת איפוס")
             }
     }
 
