@@ -82,7 +82,7 @@ class AuthManager(private val context: Context) {
     }
 
     fun resetPassword(email: String, done: (Boolean, String?) -> Unit) {
-        val auth = ensureFirebase()
+        ensureFirebase()
             ?: return done(false, initializationError ?: "Firebase עדיין לא הוגדר בפרויקט")
 
         val normalized = email.trim().lowercase()
@@ -90,28 +90,24 @@ class AuthManager(private val context: Context) {
             return done(false, "כתובת אימייל אינה תקינה")
         }
 
-        auth.sendPasswordResetEmail(normalized)
-            .addOnCompleteListener { task ->
-                val db = runCatching { FirebaseFirestore.getInstance() }.getOrNull()
+        val db = runCatching { FirebaseFirestore.getInstance() }.getOrNull()
+            ?: return done(false, "לא הצלחנו להתחבר לשירות איפוס הסיסמה")
 
-                val logData = hashMapOf<String, Any?>(
-                    "email" to normalized,
-                    "source" to "app",
-                    "status" to if (task.isSuccessful) "firebase_accepted" else "send_error",
-                    "createdAt" to FieldValue.serverTimestamp(),
-                    "error" to (task.exception?.localizedMessage ?: "")
-                )
+        val request = hashMapOf<String, Any?>(
+            "email" to normalized,
+            "source" to "app",
+            "status" to "queued",
+            "createdAt" to FieldValue.serverTimestamp(),
+            "error" to ""
+        )
 
-                db?.collection("passwordResetRequests")?.add(logData)
-
-                if (task.isSuccessful) {
-                    done(
-                        true,
-                        "Firebase אישר את בקשת האיפוס. אם קיים חשבון עם האימייל הזה, יישלח אליו קישור. בדוק גם ספאם וקידומי מכירות."
-                    )
-                } else {
-                    done(false, task.exception?.localizedMessage ?: "שליחת קישור האיפוס נכשלה")
-                }
+        db.collection("passwordResetRequests")
+            .add(request)
+            .addOnSuccessListener {
+                done(true, "בקשת האיפוס התקבלה. קישור יישלח אליך במייל בתוך כדקה.")
+            }
+            .addOnFailureListener { error ->
+                done(false, error.localizedMessage ?: "לא הצלחנו ליצור בקשת איפוס")
             }
     }
 
