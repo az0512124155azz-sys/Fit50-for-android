@@ -1,13 +1,12 @@
 package com.fit50.app
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -56,18 +55,39 @@ class Fit50WebBridge(
         }
     }
 
-    private fun launchShareIntent(intent: Intent) {
-        activity.runOnUiThread {
-            runCatching {
-                activity.startActivity(intent)
-            }.onFailure {
-                val fallback = Intent(Intent.ACTION_SEND).apply {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, intent.getStringExtra(Intent.EXTRA_TEXT).orEmpty())
-                }
-                activity.startActivity(Intent.createChooser(fallback, "שיתוף"))
+    private fun finishAuthenticatedSignIn(action: String, message: String) {
+        val handler = Handler(Looper.getMainLooper())
+        var navigated = false
+
+        val fallback = Runnable {
+            if (!navigated) {
+                navigated = true
+                val destination = data.localStartPage()
+                authCallback(action, true, message, destination)
+                navigateTo(destination)
+                data.bootstrapUser { _, _ -> }
             }
         }
+
+        handler.postDelayed(fallback, 1800)
+
+        data.resolveStartPage { destination ->
+            activity.runOnUiThread {
+                if (!navigated) {
+                    navigated = true
+                    handler.removeCallbacks(fallback)
+                    authCallback(action, true, message, destination)
+                    navigateTo(destination)
+                }
+                data.bootstrapUser { _, _ -> }
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun continueSignedInSession() {
+        if (!auth.isSignedIn()) return
+        finishAuthenticatedSignIn("resume", "החשבון כבר מחובר")
     }
 
     @JavascriptInterface
@@ -77,12 +97,7 @@ class Fit50WebBridge(
                 if (!ok) {
                     authCallback("login", false, error ?: "ההתחברות נכשלה")
                 } else {
-                    data.bootstrapUser { _, _ ->
-                        data.resolveStartPage { destination ->
-                            authCallback("login", true, "התחברת בהצלחה", destination)
-                            navigateTo(destination)
-                        }
-                    }
+                    finishAuthenticatedSignIn("login", "התחברת בהצלחה")
                 }
             }
         }
@@ -135,12 +150,7 @@ class Fit50WebBridge(
                     if (!ok) {
                         authCallback("google", false, error ?: "Google Sign-In נכשל")
                     } else {
-                        data.bootstrapUser { _, _ ->
-                            data.resolveStartPage { destination ->
-                                authCallback("google", true, "התחברת עם Google", destination)
-                                navigateTo(destination)
-                            }
-                        }
+                        finishAuthenticatedSignIn("google", "התחברת עם Google")
                     }
                 }
             }
@@ -248,33 +258,10 @@ class Fit50WebBridge(
     }
 
     @JavascriptInterface
-    fun shareJourney(platform: String, text: String) {
-        val normalized = platform.trim().lowercase()
-
-        if (normalized == "copy" || normalized == "הועתק") {
-            val clipboard = activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipboard.setPrimaryClip(ClipData.newPlainText("Fit50+ journey", text))
-            jsCallback("fit50ShareResult", true, "ההתקדמות הועתקה ללוח")
-            return
-        }
-
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, text)
-            putExtra(Intent.EXTRA_SUBJECT, "Fit50+ · המסע שלי")
-        }
-
-        when (normalized) {
-            "whatsapp" -> intent.setPackage("com.whatsapp")
-            "instagram", "stories" -> intent.setPackage("com.instagram.android")
-            "facebook" -> intent.setPackage("com.facebook.katana")
-        }
-
-        try {
-            launchShareIntent(intent)
-            jsCallback("fit50ShareResult", true, "חלון השיתוף נפתח")
-        } catch (_: Throwable) {
-            jsCallback("fit50ShareResult", false, "לא הצלחנו לפתוח את אפליקציית השיתוף")
+    fun shareJourney(platform: String, payloadJson: String) {
+        activity.runOnUiThread {
+            val (ok, message) = JourneyShareManager(activity).share(platform, payloadJson)
+            jsCallback("fit50ShareResult", ok, message)
         }
     }
 
