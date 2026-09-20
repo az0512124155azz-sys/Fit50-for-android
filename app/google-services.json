@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1570044363-t0gtsuc2d1q1f38q06ssm5iv3cc0bg3p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fit50.app",
+            "certificate_hash": "d56bac8a18031fab8b1e595d1c26aaddff551d74"
+          }
+        },
+        {
           "client_id": "1570044363-5jone06j0rr5affoi0c2hb94p6ngjttb.apps.googleusercontent.com",
           "client_type": 3
         }
