@@ -21,7 +21,7 @@ function processPasswordResetQueue() {
     const status = value_(fields.status);
     const gmailStatus = value_(fields.gmailStatus);
 
-    if (!['firebase_accepted', 'admin_accepted'].includes(status)) return;
+    if (!['queued', 'firebase_accepted', 'admin_accepted'].includes(status)) return;
     if (gmailStatus === 'sent' || gmailStatus === 'sending') return;
 
     const email = String(value_(fields.email) || '').trim().toLowerCase();
