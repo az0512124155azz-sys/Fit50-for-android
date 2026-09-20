@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1F2B24">
+<title>Fit50+ — מתיחות</title>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#1F2B24;
+  --forest-2:#2D3D33;
+  --cream:#FAF7F2;
+  --cream-2:#F2EDE4;
+  --cream-3:#E8E1D5;
+  --ink:#1A1A1A;
+  --ink-2:#4A4A4A;
+  --ink-3:#8A8A8A;
+  --line:rgba(26,26,26,.12);
+  --accent:#E85A2C;
+  --accent-2:#C44A22;
+  --lime:#D4E85C;
+  --lime-dark:#7A9E10;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  font-family:'Assistant',-apple-system,sans-serif;
+  background:var(--cream);color:var(--ink);
+  direction:rtl;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;user-select:none;
+}
+.screen{
+  max-width:480px;margin:0 auto;
+  min-height:100vh;display:flex;flex-direction:column;
+  background:var(--cream);padding-bottom:100px;
+}
+
+.view{display:none}
+.view.on{display:block}
+
+.top{
+  padding:24px 24px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.top-back,.top-action{
+  width:44px;height:44px;background:transparent;border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--ink-2);border-radius:50%;
+  transition:background .15s;
+}
+.top-back:hover,.top-action:hover{background:var(--cream-2)}
+.top-back svg,.top-action svg{
+  width:22px;height:22px;stroke:currentColor;fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.top-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.01em;
+}
+
+.hero-stretch{padding:8px 24px 32px}
+.hero-eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:16px;
+}
+.hero-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:48px;font-weight:700;line-height:1;letter-spacing:-.03em;
+  color:var(--ink);margin-bottom:14px;
+}
+.hero-title em{font-style:normal;color:var(--accent)}
+.hero-sub{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:17px;font-style:italic;color:var(--ink-3);
+  line-height:1.5;max-width:340px;
+}
+
+.sequence-wrap{padding:0 24px 24px}
+.sequence-card{
+  display:block;width:100%;
+  background:#FFFFFF;
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:0;cursor:pointer;
+  transition:all .15s;
+  text-align:right;font-family:inherit;
+  overflow:hidden;position:relative;
+  box-shadow:0 4px 20px -12px rgba(0,0,0,.08);
+}
+.sequence-card:hover{
+  border-color:var(--forest);
+  transform:translateY(-2px);
+  box-shadow:0 12px 32px -16px rgba(31,43,36,.2);
+}
+.sequence-card:active{transform:translateY(0)}
+
+.sequence-accent{
+  height:6px;
+  background:linear-gradient(90deg,var(--accent) 0%,var(--lime) 100%);
+}
+.sequence-accent.evening{
+  background:linear-gradient(90deg,var(--forest) 0%,var(--accent) 100%);
+}
+.sequence-accent.noon{
+  background:linear-gradient(90deg,#FFC13D 0%,var(--accent) 100%);
+}
+
+.sequence-inner{padding:28px 26px 24px}
+
+.sequence-head{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:20px;
+}
+.sequence-time-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--cream-2);border-radius:100px;
+  padding:8px 14px;
+  font-size:12px;font-weight:700;
+  letter-spacing:.04em;color:var(--forest);
+}
+.sequence-time-badge svg{
+  width:14px;height:14px;stroke:currentColor;fill:none;
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
+}
+
+.sequence-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:32px;font-weight:700;letter-spacing:-.02em;
+  color:var(--ink);line-height:1.1;margin-bottom:10px;
+}
+.sequence-desc{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:16px;font-style:italic;
+  color:var(--ink-3);font-weight:400;
+  line-height:1.5;margin-bottom:24px;
+  max-width:340px;
+}
+
+.sequence-preview{
+  background:var(--cream-2);
+  border-radius:14px;
+  padding:6px 0;margin-bottom:24px;
+}
+.preview-row{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 18px;
+  border-bottom:1px solid rgba(26,26,26,.06);
+}
+.preview-row:last-child{border-bottom:none}
+.preview-num{
+  font-family:'Fraunces',serif;
+  font-size:14px;font-weight:700;
+  color:var(--accent);direction:ltr;
+  min-width:20px;text-align:left;
+}
+.preview-name{
+  font-size:14px;font-weight:600;
+  color:var(--ink);flex:1;text-align:right;
+}
+.preview-time{
+  font-family:'Fraunces',serif;
+  font-size:13px;font-weight:700;
+  color:var(--ink-3);direction:ltr;
+}
+
+.sequence-meta{
+  display:flex;gap:20px;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+  margin-bottom:20px;align-items:center;
+}
+.sequence-meta-item{
+  display:flex;align-items:center;gap:8px;
+  font-size:14px;color:var(--ink-2);font-weight:600;
+}
+.sequence-meta-item svg{
+  width:16px;height:16px;stroke:var(--ink-3);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+
+.sequence-cta{
+  padding:20px 24px;
+  background:var(--forest);color:var(--cream);
+  border-radius:16px;font-family:inherit;
+  font-size:17px;font-weight:700;
+  letter-spacing:.02em;
+  display:flex;align-items:center;
+  justify-content:center;gap:10px;
+  transition:background .15s;
+}
+.sequence-card:hover .sequence-cta{background:var(--forest-2)}
+.sequence-cta svg{
+  width:18px;height:18px;stroke:currentColor;fill:none;
+  stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* ============ ACTIVE ============ */
+.active-view{
+  position:fixed;inset:0;
+  background:var(--forest);z-index:100;
+  max-width:480px;margin:0 auto;
+  display:none;flex-direction:column;
+  color:var(--cream);
+}
+.active-view.on{display:flex}
+.active-top{
+  padding:20px 24px 0;
+  position:relative;z-index:2;
+}
+.active-top-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;
+}
+.active-exit{
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(250,247,242,.1);
+  border:1px solid rgba(250,247,242,.15);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;flex-shrink:0;
+}
+.active-exit:hover{background:rgba(250,247,242,.18)}
+.active-exit:active{transform:scale(.94)}
+.active-exit svg{
+  width:18px;height:18px;stroke:var(--cream);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.active-counter{
+  display:flex;align-items:baseline;gap:6px;
+  font-family:'Fraunces',serif;letter-spacing:-.02em;
+}
+.active-counter-now{
+  font-size:22px;font-weight:900;color:var(--cream);
+  font-variant-numeric:tabular-nums;
+}
+.active-counter-total{
+  font-size:16px;font-weight:700;color:rgba(250,247,242,.4);
+  font-variant-numeric:tabular-nums;
+}
+.active-counter-lbl{
+  font-family:'Assistant',sans-serif;
+  font-size:11px;font-weight:600;
+  color:rgba(250,247,242,.4);
+  letter-spacing:.14em;text-transform:uppercase;
+  margin-left:6px;
+}
+.active-progress-bar{
+  height:3px;background:rgba(250,247,242,.1);
+  border-radius:100px;overflow:hidden;
+}
+.active-progress-fill{
+  height:100%;background:var(--lime);
+  border-radius:100px;width:0%;
+  transition:width .5s cubic-bezier(.22,1,.36,1);
+}
+
+.active-body{
+  flex:1;
+  padding:32px 24px 0;
+  display:flex;flex-direction:column;
+  position:relative;z-index:2;
+}
+.active-seq-name{
+  font-size:12px;font-weight:700;
+  color:var(--lime);
+  letter-spacing:.24em;text-transform:uppercase;
+  margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.active-seq-name::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--lime);
+  box-shadow:0 0 12px var(--lime);
+}
+.active-name{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:36px;font-weight:700;
+  line-height:1.05;letter-spacing:-.02em;
+  color:var(--cream);
+  margin-bottom:8px;
+}
+.active-muscle{
+  font-size:15px;font-weight:500;
+  color:rgba(250,247,242,.6);
+  letter-spacing:.02em;
+  margin-bottom:32px;
+}
+
+.active-timer{
+  flex:1;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:20px 0;
+}
+.active-time{
+  font-family:'Fraunces',serif;
+  font-size:170px;font-weight:900;
+  line-height:.85;letter-spacing:-.06em;
+  color:var(--cream);direction:ltr;
+  font-variant-numeric:tabular-nums;
+  transition:color .3s, transform .15s;
+}
+.active-time.ending{color:var(--accent)}
+.active-time.tick{transform:scale(1.05)}
+.active-timer-lbl{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:20px;font-style:italic;
+  color:rgba(250,247,242,.5);
+  margin-top:16px;
+}
+.active-bar{
+  width:220px;height:4px;
+  background:rgba(250,247,242,.1);
+  border-radius:100px;overflow:hidden;
+  margin-top:32px;
+}
+.active-bar-fill{
+  height:100%;background:var(--lime);
+  border-radius:100px;width:100%;
+  transition:width 1s linear, background .3s;
+}
+.active-bar-fill.ending{background:var(--accent)}
+
+.active-safety{
+  background:rgba(255,193,61,.06);
+  border:1px solid rgba(255,193,61,.18);
+  border-radius:16px;
+  padding:16px 18px;
+  margin-bottom:16px;
+  display:flex;gap:12px;align-items:flex-start;
+}
+.active-safety-mark{
+  width:26px;height:26px;border-radius:8px;
+  background:rgba(255,193,61,.15);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.active-safety-mark svg{
+  width:13px;height:13px;
+  stroke:#FFC13D;fill:none;
+  stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;
+}
+.active-safety-text{
+  font-size:13px;line-height:1.5;
+  color:rgba(255,228,163,.9);font-weight:500;
+}
+.active-safety-text strong{
+  color:#FFC13D;font-weight:700;
+  display:block;margin-bottom:2px;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+}
+
+.active-foot{
+  padding:16px 24px 28px;
+  background:linear-gradient(to top,var(--forest) 60%,transparent);
+  position:relative;z-index:2;
+}
+.active-btn{
+  width:100%;
+  min-height:58px;
+  padding:18px 20px;
+  border:none;border-radius:16px;
+  font-family:inherit;font-size:16px;font-weight:700;
+  letter-spacing:.02em;cursor:pointer;
+  transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.active-btn.primary{
+  background:var(--lime);
+  color:#1a2600;
+  box-shadow:0 8px 24px -8px rgba(212,232,92,.5);
+}
+.active-btn.primary:hover:not(:disabled){background:#C5E84B}
+.active-btn.primary:active:not(:disabled){transform:translateY(2px)}
+.active-btn.primary:disabled{
+  background:rgba(250,247,242,.08);
+  color:rgba(250,247,242,.35);
+  cursor:not-allowed;
+  box-shadow:none;
+  transform:none;
+}
+.active-btn svg{
+  width:18px;height:18px;stroke:currentColor;fill:none;
+  stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;
+}
+.active-hint{
+  text-align:center;
+  font-size:12px;
+  color:rgba(250,247,242,.4);
+  margin-top:12px;
+  font-weight:500;
+}
+
+/* ============ DONE ============ */
+.done-view{
+  position:fixed;inset:0;
+  background:var(--forest);z-index:110;
+  max-width:480px;margin:0 auto;
+  display:none;flex-direction:column;
+  padding:60px 24px 40px;
+  color:var(--cream);text-align:center;
+  justify-content:center;
+}
+.done-view.on{display:flex}
+.done-mark{
+  width:110px;height:110px;
+  border-radius:50%;background:var(--lime);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 28px;
+  box-shadow:0 20px 40px -12px rgba(212,232,92,.5);
+  animation:popIn .6s cubic-bezier(.22,1.4,.4,1);
+}
+@keyframes popIn{
+  0%{transform:scale(.5);opacity:0}
+  60%{transform:scale(1.1)}
+  100%{transform:scale(1);opacity:1}
+}
+.done-mark svg{
+  width:52px;height:52px;
+  stroke:#1a2600;fill:none;
+  stroke-width:3;stroke-linecap:round;stroke-linejoin:round;
+}
+.done-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:42px;font-weight:700;
+  letter-spacing:-.03em;line-height:1.05;
+  color:var(--cream);margin-bottom:12px;
+}
+.done-title em{font-style:normal;color:var(--lime)}
+.done-sub{
+  font-size:16px;color:rgba(250,247,242,.6);
+  line-height:1.55;margin-bottom:44px;
+  max-width:340px;margin-left:auto;margin-right:auto;
+}
+.done-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-top:1px solid rgba(250,247,242,.12);
+  border-bottom:1px solid rgba(250,247,242,.12);
+  margin-bottom:44px;
+}
+.done-stat{
+  padding:24px 8px;
+  border-left:1px solid rgba(250,247,242,.12);
+}
+.done-stat:last-child{border-left:none}
+.done-stat-num{
+  font-family:'Fraunces',serif;
+  font-size:34px;font-weight:900;
+  letter-spacing:-.03em;line-height:1;
+  color:var(--lime);margin-bottom:8px;
+  direction:ltr;font-variant-numeric:tabular-nums;
+}
+.done-stat-lbl{
+  font-size:11px;font-weight:600;
+  color:rgba(250,247,242,.5);
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.done-cta{
+  width:100%;max-width:340px;
+  min-height:58px;padding:18px 24px;
+  background:var(--lime);color:#1a2600;
+  border:none;border-radius:16px;
+  font-family:inherit;font-size:17px;font-weight:700;
+  cursor:pointer;transition:all .15s;
+  box-shadow:0 8px 20px -6px rgba(212,232,92,.5);
+  margin:0 auto;
+}
+.done-cta:hover{background:#C5E84B}
+
+/* ============ EXIT DIALOG ============ */
+.exit-overlay{
+  position:fixed;inset:0;
+  background:rgba(15,22,18,.85);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  z-index:200;
+  display:none;
+  align-items:center;justify-content:center;
+  padding:24px;
+}
+.exit-overlay.on{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.exit-box{
+  background:var(--cream);
+  border-radius:22px;
+  padding:32px 24px 24px;
+  width:100%;max-width:360px;
+  text-align:center;
+  animation:popIn .3s cubic-bezier(.22,1.4,.4,1);
+}
+.exit-icon{
+  width:64px;height:64px;
+  border-radius:50%;
+  background:var(--cream-2);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+}
+.exit-icon svg{
+  width:28px;height:28px;
+  stroke:var(--ink-2);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.exit-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:26px;font-weight:700;
+  color:var(--ink);letter-spacing:-.02em;
+  margin-bottom:8px;
+}
+.exit-sub{
+  font-size:15px;color:var(--ink-3);
+  line-height:1.5;margin-bottom:28px;
+}
+.exit-actions{
+  display:flex;flex-direction:column;gap:10px;
+}
+.exit-btn{
+  width:100%;padding:16px 20px;
+  border-radius:14px;
+  font-family:inherit;font-size:16px;font-weight:700;
+  cursor:pointer;transition:all .15s;
+  border:none;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.exit-btn svg{
+  width:18px;height:18px;stroke:currentColor;fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.exit-btn.confirm{
+  background:var(--accent);color:#FFFFFF;
+}
+.exit-btn.confirm:hover{background:var(--accent-2)}
+.exit-btn.cancel{
+  background:var(--cream-2);color:var(--ink-2);
+}
+.exit-btn.cancel:hover{background:var(--cream-3)}
+
+.nav{
+  position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 32px);max-width:448px;
+  background:var(--forest);border-radius:22px;padding:8px;
+  display:flex;justify-content:space-around;
+  box-shadow:0 16px 40px -12px rgba(31,43,36,.6);z-index:50;
+}
+.nav-item{
+  flex:1;background:none;border:none;padding:12px 4px;
+  border-radius:14px;font-family:inherit;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  transition:all .15s;
+}
+.nav-item svg{
+  width:22px;height:22px;stroke:rgba(250,247,242,.5);fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+.nav-item span{
+  font-size:10px;font-weight:600;letter-spacing:.06em;
+  color:rgba(250,247,242,.5);
+}
+.nav-item.on{background:rgba(250,247,242,.08)}
+.nav-item.on svg{stroke:var(--lime)}
+.nav-item.on span{color:var(--lime)}
+
+.toast{
+  position:fixed;bottom:100px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--forest);color:var(--cream);
+  padding:14px 24px;border-radius:100px;
+  font-size:14px;font-weight:600;
+  box-shadow:0 12px 32px -8px rgba(0,0,0,.4);
+  z-index:1000;opacity:0;
+  transition:all .35s cubic-bezier(.22,1.4,.4,1);
+  pointer-events:none;max-width:calc(100% - 48px);text-align:center;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-height:750px){
+  .active-time{font-size:130px}
+  .hero-title{font-size:38px}
+  .sequence-title{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<div class="view on" id="viewList">
+<div class="screen">
+
+  <div class="top">
+    <button class="top-back" id="backBtn">
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <span class="top-title">מתיחות</span>
+    <div style="width:44px"></div>
+  </div>
+
+  <div class="hero-stretch">
+    <div class="hero-eyebrow" id="heroEyebrow">בוקר טוב</div>
+    <h1 class="hero-title" id="heroTitle">להתחיל את היום <em>בעדינות</em></h1>
+    <p class="hero-sub" id="heroSub">כמה דקות של מתיחות כדי להעיר את הגוף.</p>
+  </div>
+
+  <div class="sequence-wrap" id="sequenceWrap"></div>
+
+</div>
+</div>
+
+<div class="active-view" id="viewActive">
+  <div class="active-top">
+    <div class="active-top-row">
+      <button class="active-exit" id="activeExit" aria-label="יציאה">
+        <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="active-counter">
+        <span class="active-counter-now" id="activeNow">1</span>
+        <span class="active-counter-total" id="activeTotal">/5</span>
+        <span class="active-counter-lbl">תנוחה</span>
+      </div>
+      <div style="width:42px"></div>
+    </div>
+    <div class="active-progress-bar">
+      <div class="active-progress-fill" id="activeProgress"></div>
+    </div>
+  </div>
+
+  <div class="active-body">
+    <div class="active-seq-name" id="activeSeqName">פתיחת בוקר</div>
+    <div class="active-name" id="activeName">מתיחת צוואר</div>
+    <div class="active-muscle" id="activeMuscle">צוואר · טרפז</div>
+
+    <div class="active-timer">
+      <div class="active-time" id="activeTime">45</div>
+      <div class="active-timer-lbl" id="activeTimerLbl">החזק בנחת · נשום</div>
+      <div class="active-bar">
+        <div class="active-bar-fill" id="activeBarFill"></div>
+      </div>
+    </div>
+
+    <div class="active-safety">
+      <div class="active-safety-mark">
+        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
+      </div>
+      <div class="active-safety-text">
+        <strong>בטיחות</strong>
+        <span id="activeSafety">אל תמשוך בכוח. נשום עמוקות ושחרר לאט.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="active-foot">
+    <button class="active-btn primary" id="activeNext" disabled>
+      <span id="activeNextLbl">המשך אוטומטית בעוד 45</span>
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 19l-7-7 7-7"/></svg>
+    </button>
+    <div class="active-hint" id="activeHint">המשך יופעל כשהטיימר יסתיים</div>
+  </div>
+</div>
+
+<div class="done-view" id="viewDone">
+  <div class="done-mark">
+    <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+  </div>
+  <div class="done-title">סיימת <em>רצף</em></div>
+  <div class="done-sub" id="doneSub">כל הכבוד!<br>הגוף שלך מודה לך.</div>
+  <div class="done-stats">
+    <div class="done-stat">
+      <div class="done-stat-num" id="doneDur">8</div>
+      <div class="done-stat-lbl">דקות</div>
+    </div>
+    <div class="done-stat">
+      <div class="done-stat-num" id="doneCount">5</div>
+      <div class="done-stat-lbl">תנוחות</div>
+    </div>
+    <div class="done-stat">
+      <div class="done-stat-num" id="doneDay">1</div>
+      <div class="done-stat-lbl">רצף</div>
+    </div>
+  </div>
+  <button class="done-cta" id="doneBack">חזרה למתיחות</button>
+</div>
+
+<!-- EXIT DIALOG -->
+<div class="exit-overlay" id="exitOverlay">
+  <div class="exit-box">
+    <div class="exit-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
+    </div>
+    <div class="exit-title">לצאת מהרצף?</div>
+    <div class="exit-sub">ההתקדמות ברצף הזה לא תישמר.<br>תוכל להתחיל אותו מחדש בכל זמן.</div>
+    <div class="exit-actions">
+      <button class="exit-btn confirm" id="exitConfirm">
+        <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        <span>צא מהרצף</span>
+      </button>
+      <button class="exit-btn cancel" id="exitCancel">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 19l-7-7 7-7"/></svg>
+        <span>המשך מתיחות</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<nav class="nav" id="mainNav">
+  <button class="nav-item" data-nav="home">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>בית</span>
+  </button>
+  <button class="nav-item on" data-nav="stretch">
+    <svg viewBox="0 0 24 24"><path d="M12 3v6M12 21v-6M3 12h6M21 12h-6M5.6 5.6l4.2 4.2M19.4 5.6l-4.2 4.2M5.6 18.4l4.2-4.2M19.4 18.4l-4.2-4.2"/></svg>
+    <span>מתיחות</span>
+  </button>
+  <button class="nav-item" data-nav="progress">
+    <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+    <span>התקדמות</span>
+  </button>
+  <button class="nav-item" data-nav="settings">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span>עוד</span>
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const $$ = s => document.querySelectorAll(s);
+
+/* ============ SEQUENCES ============ */
+const SEQUENCES = {
+  morning: {
+    id: 'morning',
+    title: 'פתיחת בוקר',
+    desc: 'להעיר את הגוף בעדינות לפני היום',
+    dur: 8,
+    badge: '☀️ בוקר',
+    items: [
+      { n: 'מתיחת צוואר', m: 'צוואר · טרפז', t: 45, tip: 'הטה ראש לכתף בעדינות. אל תסובב בכח.' },
+      { n: 'סיבובי כתפיים', m: 'כתפיים · שכמות', t: 45, tip: 'תנועה איטית ומעגלית. כתפיים רגועות.' },
+      { n: 'פתיחת חזה בקיר', m: 'חזה · כתפיים', t: 45, tip: 'עמוד לצד הקיר, הושט יד לאחור בעדינות.' },
+      { n: "Child's Pose", m: 'גב תחתון · כתפיים', t: 60, tip: 'שב על העקבים, הושט ידיים קדימה. נשום לבטן.' },
+      { n: 'מתיחת ירך בעמידה', m: 'ירך קדמית', t: 45, tip: 'אחוז בקיר לשיווי משקל. אל תמשוך בכוח.' }
+    ]
+  },
+  noon: {
+    id: 'noon',
+    title: 'הפסקת צהריים',
+    desc: 'לשחרר את הגוף מהכיסא ולחזור רענן',
+    dur: 6,
+    badge: '☀️ צהריים',
+    items: [
+      { n: 'סיבובי כתפיים לאחור', m: 'כתפיים · שכמות', t: 40, tip: 'פתח את בית החזה. כתפיים רחבות ונינוחות.' },
+      { n: 'מתיחת צוואר הצידה', m: 'צוואר · טרפז', t: 40, tip: 'הטה ראש לכתף. אל תרים את הכתף הנגדית.' },
+      { n: 'פתיחת חזה בכיסא', m: 'חזה · גב עליון', t: 45, tip: 'שב זקוף, שלב ידיים מאחור, פתח חזה לאט.' },
+      { n: 'סיבובי גב בעמידה', m: 'גב · עמוד שדרה', t: 45, tip: 'ידיים על הירכיים. סובב לאט לכל צד.' },
+      { n: 'מתיחת ירך קדמית', m: 'ירך קדמית · אגן', t: 45, tip: 'אחוז בשולחן או בכיסא לשיווי משקל.' },
+      { n: 'כפיפת גב עדינה', m: 'גב תחתון', t: 45, tip: 'עמוד זקוף, התכופף קדימה לאט. שחרר צוואר.' }
+    ]
+  },
+  evening: {
+    id: 'evening',
+    title: 'שחרור ערב',
+    desc: 'לשחרר את מה שהתקשה במהלך היום',
+    dur: 12,
+    badge: '🌙 ערב',
+    items: [
+      { n: 'נשימות עמוקות', m: 'רגיעה', t: 60, tip: 'שב בנוחות. שאף 4 שניות, נשוף 4 שניות.' },
+      { n: "World's Greatest Stretch", m: 'ירכיים · מפשעה · גב', t: 90, tip: 'הכנס אגן לאט. אל תכופף את הגב התחתון.' },
+      { n: 'Pigeon Pose', m: 'ישבן · ירך חיצונית', t: 90, tip: 'הנח ברך על כרית אם צריך. אל תלחץ על הברך.' },
+      { n: 'מתיחת המסטרינג', m: 'ירך אחורית', t: 60, tip: 'כופף ברך מעט. אל תעגל את הגב.' },
+      { n: 'מתיחת גב תחתון', m: 'גב תחתון', t: 60, tip: 'שכב על הגב, משוך ברכיים לחזה בעדינות.' }
+    ]
+  }
+};
+
+/* ============ STATE ============ */
+const state = {
+  activeSeq: null,
+  currentIdx: 0,
+  timer: null,
+  timerDone: false
+};
+
+/* ============ AUDIO ============ */
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) {
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch(e) { return null; }
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+  return audioCtx;
+}
+function beep(freq, dur, vol) {
+  freq = freq || 800; dur = dur || 100; vol = vol || 0.25;
+  try {
+    const ctx = getAudioCtx();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.value = freq; osc.type = 'sine';
+    const now = ctx.currentTime;
+    gain.gain.setValueAtTime(vol, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + dur/1000);
+    osc.start(now); osc.stop(now + dur/1000);
+  } catch(e) {}
+}
+function vib(p) {
+  try { if (navigator.vibrate) navigator.vibrate(p); } catch(e) {}
+}
+
+/* ============ TOAST ============ */
+let toastT;
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast on';
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('on'), 2200);
+}
+
+/* ============ RENDER LIST ============ */
+function getCurrentSequence() {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) return SEQUENCES.morning;
+  if (hour >= 12 && hour < 18) return SEQUENCES.noon;
+  return SEQUENCES.evening;
+}
+
+function renderList() {
+  const hour = new Date().getHours();
+  const seq = getCurrentSequence();
+
+  // Hero based on time
+  if (seq.id === 'morning') {
+    $('heroEyebrow').textContent = 'בוקר טוב';
+    $('heroTitle').innerHTML = 'להתחיל את היום <em>בעדינות</em>';
+    $('heroSub').textContent = 'כמה דקות של מתיחות כדי להעיר את הגוף לפני היום.';
+  } else if (seq.id === 'noon') {
+    $('heroEyebrow').textContent = 'צהריים טובים';
+    $('heroTitle').innerHTML = 'לשחרר את הגוף <em>באמצע היום</em>';
+    $('heroSub').textContent = 'כמה דקות של מתיחות כדי לפתוח את מה שהתהדק.';
+  } else {
+    $('heroEyebrow').textContent = 'ערב טוב';
+    $('heroTitle').innerHTML = 'לשחרור היום <em>מהגוף</em>';
+    $('heroSub').textContent = 'כמה דקות של מתיחות כדי לשחרר את היום ולחזור לעצמך.';
+  }
+
+  const previewRows = seq.items.map((item, i) =>
+    '<div class="preview-row">' +
+      '<span class="preview-num">' + (i + 1) + '</span>' +
+      '<span class="preview-name">' + item.n + '</span>' +
+      '<span class="preview-time">' + item.t + 's</span>' +
+    '</div>'
+  ).join('');
+
+  const accentClass = seq.id === 'evening' ? 'evening' : (seq.id === 'noon' ? 'noon' : '');
+
+  $('sequenceWrap').innerHTML =
+    '<button class="sequence-card" data-seq="' + seq.id + '">' +
+      '<div class="sequence-accent ' + accentClass + '"></div>' +
+      '<div class="sequence-inner">' +
+        '<div class="sequence-head">' +
+          '<div class="sequence-time-badge">' +
+            '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>' +
+            '<span>' + seq.badge + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="sequence-title">' + seq.title + '</div>' +
+        '<div class="sequence-desc">' + seq.desc + '</div>' +
+        '<div class="sequence-preview">' + previewRows + '</div>' +
+        '<div class="sequence-meta">' +
+          '<div class="sequence-meta-item">' +
+            '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>' +
+            '<span>' + seq.dur + ' דקות</span>' +
+          '</div>' +
+          '<div class="sequence-meta-item">' +
+            '<svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>' +
+            '<span>' + seq.items.length + ' מתיחות</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="sequence-cta">' +
+          '<span>התחל רצף</span>' +
+          '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>' +
+        '</div>' +
+      '</div>' +
+    '</button>';
+
+  $('sequenceWrap').querySelector('.sequence-card').onclick = () => startSequence(seq.id);
+}
+
+/* ============ VIEWS ============ */
+function showList() {
+  $('viewList').classList.add('on');
+  $('viewActive').classList.remove('on');
+  $('viewDone').classList.remove('on');
+  $('mainNav').style.display = 'flex';
+  renderList();
+}
+function showActive() {
+  $('viewList').classList.remove('on');
+  $('viewActive').classList.add('on');
+  $('viewDone').classList.remove('on');
+  $('mainNav').style.display = 'none';
+}
+function showDone() {
+  $('viewList').classList.remove('on');
+  $('viewActive').classList.remove('on');
+  $('viewDone').classList.add('on');
+  $('mainNav').style.display = 'none';
+}
+
+/* ============ START ============ */
+function startSequence(id) {
+  const seq = SEQUENCES[id];
+  if (!seq) return;
+  state.activeSeq = seq;
+  state.currentIdx = 0;
+  showActive();
+  renderStretch();
+}
+
+/* ============ RENDER ACTIVE ============ */
+function renderStretch() {
+  stopTimer();
+  const seq = state.activeSeq;
+  if (!seq) return;
+  const item = seq.items[state.currentIdx];
+  const total = seq.items.length;
+
+  $('activeSeqName').textContent = seq.title;
+  $('activeNow').textContent = state.currentIdx + 1;
+  $('activeTotal').textContent = '/' + total;
+  $('activeName').textContent = item.n;
+  $('activeMuscle').textContent = item.m;
+  $('activeSafety').textContent = item.tip;
+
+  const pct = (state.currentIdx / total) * 100;
+  $('activeProgress').style.width = pct + '%';
+
+  // Reset button state - disabled during timer
+  state.timerDone = false;
+  $('activeNext').disabled = true;
+  $('activeNextLbl').textContent = 'המשך אוטומטית בעוד ' + item.t;
+  $('activeHint').textContent = 'המשך יופעל כשהטיימר יסתיים';
+
+  startTimer(item.t);
+}
+
+/* ============ TIMER ============ */
+function startTimer(seconds) {
+  let left = seconds;
+  const total = seconds;
+  const timeEl = $('activeTime');
+  const barEl = $('activeBarFill');
+  const lblEl = $('activeTimerLbl');
+  const nextLbl = $('activeNextLbl');
+  const hintEl = $('activeHint');
+
+  timeEl.textContent = left;
+  timeEl.classList.remove('ending');
+  barEl.style.width = '100%';
+  barEl.classList.remove('ending');
+  lblEl.textContent = 'החזק בנחת · נשום';
+
+  state.timer = setInterval(() => {
+    left--;
+    if (left <= 0) {
+      clearInterval(state.timer);
+      state.timer = null;
+      beep(1200, 250, 0.3);
+      vib([80, 50, 80]);
+      onTimerDone();
+      return;
+    }
+
+    timeEl.textContent = left;
+    timeEl.classList.add('tick');
+    setTimeout(() => timeEl.classList.remove('tick'), 120);
+
+    barEl.style.width = (left / total * 100) + '%';
+
+    // Update next button countdown
+    if (nextLbl) nextLbl.textContent = 'המשך אוטומטית בעוד ' + left;
+
+    if (left <= 5) {
+      timeEl.classList.add('ending');
+      barEl.classList.add('ending');
+      lblEl.textContent = 'כמעט סיימת';
+    }
+
+    if (left <= 3) beep(700, 50, 0.15);
+  }, 1000);
+}
+
+function stopTimer() {
+  if (state.timer) {
+    clearInterval(state.timer);
+    state.timer = null;
+  }
+}
+
+/* ============ TIMER DONE ============ */
+function onTimerDone() {
+  state.timerDone = true;
+  const seq = state.activeSeq;
+  const isLast = state.currentIdx === seq.items.length - 1;
+  const nextBtn = $('activeNext');
+  const nextLbl = $('activeNextLbl');
+  const hintEl = $('activeHint');
+
+  nextBtn.disabled = false;
+  $('activeTimerLbl').textContent = 'סיימת את המתיחה';
+
+  if (isLast) {
+    nextLbl.textContent = 'סיים רצף';
+    hintEl.textContent = 'לחץ כדי לסיים את הרצף';
+  } else {
+    nextLbl.textContent = 'המשך למתיחה הבאה';
+    hintEl.textContent = 'או המתן — זה יתקדם אוטומטית';
+    // Auto-advance after 4 seconds if user doesn't tap
+    setTimeout(() => {
+      if (state.timerDone && state.activeSeq === seq && state.currentIdx === seq.items.findIndex(x => x === seq.items[state.currentIdx])) {
+        // Only advance if we haven't already
+        if (state.activeSeq === seq) {
+          autoAdvance();
+        }
+      }
+    }, 4000);
+  }
+}
+
+function autoAdvance() {
+  const seq = state.activeSeq;
+  if (!seq) return;
+
+  if (state.currentIdx < seq.items.length - 1) {
+    state.currentIdx++;
+    renderStretch();
+  } else {
+    finishSequence();
+  }
+}
+
+function nextStretch() {
+  if (!state.timerDone) return;
+  const seq = state.activeSeq;
+  if (!seq) return;
+  if (state.currentIdx < seq.items.length - 1) {
+    state.currentIdx++;
+    renderStretch();
+  } else {
+    finishSequence();
+  }
+}
+
+/* ============ FINISH ============ */
+function finishSequence() {
+  stopTimer();
+  beep(523, 150, 0.3);
+  setTimeout(() => beep(659, 150, 0.3), 180);
+  setTimeout(() => beep(784, 300, 0.3), 360);
+  vib([100, 80, 100, 80, 200]);
+
+  const seq = state.activeSeq;
+  $('doneSub').innerHTML = 'השלמת את "<strong>' + seq.title + '</strong>"<br>כל הכבוד!';
+  $('doneDur').textContent = seq.dur;
+  $('doneCount').textContent = seq.items.length;
+  $('doneDay').textContent = '1';
+
+  showDone();
+}
+
+/* ============ EXIT ============ */
+function openExitDialog() {
+  $('exitOverlay').classList.add('on');
+}
+function closeExitDialog() {
+  $('exitOverlay').classList.remove('on');
+}
+function confirmExit() {
+  closeExitDialog();
+  stopTimer();
+  state.activeSeq = null;
+  state.currentIdx = 0;
+  showList();
+}
+
+/* ============ EVENTS ============ */
+$('activeExit').onclick = openExitDialog;
+$('exitConfirm').onclick = confirmExit;
+$('exitCancel').onclick = closeExitDialog;
+$('activeNext').onclick = nextStretch;
+
+$('doneBack').onclick = () => {
+  state.activeSeq = null;
+  state.currentIdx = 0;
+  showList();
+};
+
+$('backBtn').onclick = () => toast('חזרה למסך הבית');
+
+$$('.nav-item').forEach(item => {
+  item.onclick = () => {
+    const nav = item.dataset.nav;
+    if (nav === 'stretch') return;
+    if (nav === 'home') toast('חזרה למסך הבית');
+    else if (nav === 'progress') toast('מסך התקדמות');
+    else if (nav === 'settings') toast('מסך הגדרות');
+  };
+});
+
+/* ============ INIT ============ */
+showList();
+</script>
+
+
+<script>
+(function(){
+ function nav(n){location.href=n+'.html'}
+ function bind(){
+  ['backBtn','doneBack'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation();nav('home')},true)});
+  document.querySelectorAll('[data-nav]').forEach(function(el){el.addEventListener('click',function(e){var n=el.getAttribute('data-nav');if(n){e.preventDefault();e.stopImmediatePropagation();nav(n)}},true)});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
+</body>
+</html>
