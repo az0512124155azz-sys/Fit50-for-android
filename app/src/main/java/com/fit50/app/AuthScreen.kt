@@ -1,6 +1,8 @@
 package com.fit50.app
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -23,7 +25,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AuthScreen(auth: AuthManager, onAuthenticated: () -> Unit, onGuest: () -> Unit) {
     val context = LocalContext.current
-    val activity = context as Activity
+    val activity = remember(context) { context.findActivity() }
     val scope = rememberCoroutineScope()
     var mode by remember { mutableStateOf(AuthMode.LOGIN) }
     var email by remember { mutableStateOf("") }
@@ -128,10 +130,16 @@ fun AuthScreen(auth: AuthManager, onAuthenticated: () -> Unit, onGuest: () -> Un
                         onClick = {
                             loading = true
                             message = null
-                            scope.launch {
-                                auth.signInWithGoogle(activity) { ok, err ->
-                                    loading = false
-                                    if (ok) onAuthenticated() else message = err
+                            val hostActivity = activity
+                            if (hostActivity == null) {
+                                loading = false
+                                message = "לא ניתן לפתוח כרגע את חלון Google. נסו שוב."
+                            } else {
+                                scope.launch {
+                                    auth.signInWithGoogle(hostActivity) { ok, err ->
+                                        loading = false
+                                        if (ok) onAuthenticated() else message = err
+                                    }
                                 }
                             }
                         },
@@ -162,4 +170,11 @@ fun AuthScreen(auth: AuthManager, onAuthenticated: () -> Unit, onGuest: () -> Un
         }
         Spacer(Modifier.height(32.dp))
     }
+}
+
+
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
