@@ -14,54 +14,73 @@ import com.google.firebase.auth.GoogleAuthProvider
 
 class AuthManager(private val context: Context) {
     private var firebaseAuth: FirebaseAuth? = null
+    var initializationError: String? = null
+        private set
 
     val configured: Boolean
         get() = BuildConfig.FIREBASE_API_KEY.isNotBlank() &&
             BuildConfig.FIREBASE_APP_ID.isNotBlank() &&
-            BuildConfig.FIREBASE_PROJECT_ID.isNotBlank()
+            BuildConfig.FIREBASE_PROJECT_ID.isNotBlank() &&
+            initializationError == null
 
     init {
-        if (configured) {
-            if (FirebaseApp.getApps(context).isEmpty()) {
-                val options = FirebaseOptions.Builder()
-                    .setApiKey(BuildConfig.FIREBASE_API_KEY)
-                    .setApplicationId(BuildConfig.FIREBASE_APP_ID)
-                    .setProjectId(BuildConfig.FIREBASE_PROJECT_ID)
-                    .build()
-                FirebaseApp.initializeApp(context, options)
+        if (
+            BuildConfig.FIREBASE_API_KEY.isNotBlank() &&
+            BuildConfig.FIREBASE_APP_ID.isNotBlank() &&
+            BuildConfig.FIREBASE_PROJECT_ID.isNotBlank()
+        ) {
+            runCatching {
+                if (FirebaseApp.getApps(context).isEmpty()) {
+                    val options = FirebaseOptions.Builder()
+                        .setApiKey(BuildConfig.FIREBASE_API_KEY)
+                        .setApplicationId(BuildConfig.FIREBASE_APP_ID)
+                        .setProjectId(BuildConfig.FIREBASE_PROJECT_ID)
+                        .apply {
+                            if (BuildConfig.FIREBASE_STORAGE_BUCKET.isNotBlank()) {
+                                setStorageBucket(BuildConfig.FIREBASE_STORAGE_BUCKET)
+                            }
+                        }
+                        .build()
+                    FirebaseApp.initializeApp(context, options)
+                }
+                firebaseAuth = FirebaseAuth.getInstance()
+            }.onFailure { error ->
+                firebaseAuth = null
+                initializationError = error.localizedMessage ?: error.javaClass.simpleName
             }
-            firebaseAuth = FirebaseAuth.getInstance()
         }
     }
 
-    fun isSignedIn(): Boolean = firebaseAuth?.currentUser != null
+    fun isSignedIn(): Boolean = runCatching { firebaseAuth?.currentUser != null }.getOrDefault(false)
 
-    fun displayName(): String = firebaseAuth?.currentUser?.displayName
-        ?: firebaseAuth?.currentUser?.email?.substringBefore('@')
-        ?: "מתאמן"
+    fun displayName(): String = runCatching {
+        firebaseAuth?.currentUser?.displayName
+            ?: firebaseAuth?.currentUser?.email?.substringBefore('@')
+            ?: "מתאמן"
+    }.getOrDefault("מתאמן")
 
     fun signIn(email: String, password: String, done: (Boolean, String?) -> Unit) {
-        val auth = firebaseAuth ?: return done(false, "Firebase עדיין לא הוגדר בפרויקט")
+        val auth = firebaseAuth ?: return done(false, initializationError ?: "Firebase עדיין לא הוגדר בפרויקט")
         auth.signInWithEmailAndPassword(email.trim(), password)
             .addOnCompleteListener { task -> done(task.isSuccessful, task.exception?.localizedMessage) }
     }
 
     fun register(email: String, password: String, done: (Boolean, String?) -> Unit) {
-        val auth = firebaseAuth ?: return done(false, "Firebase עדיין לא הוגדר בפרויקט")
+        val auth = firebaseAuth ?: return done(false, initializationError ?: "Firebase עדיין לא הוגדר בפרויקט")
         auth.createUserWithEmailAndPassword(email.trim(), password)
             .addOnCompleteListener { task -> done(task.isSuccessful, task.exception?.localizedMessage) }
     }
 
     fun resetPassword(email: String, done: (Boolean, String?) -> Unit) {
-        val auth = firebaseAuth ?: return done(false, "Firebase עדיין לא הוגדר בפרויקט")
+        val auth = firebaseAuth ?: return done(false, initializationError ?: "Firebase עדיין לא הוגדר בפרויקט")
         auth.sendPasswordResetEmail(email.trim())
             .addOnCompleteListener { task -> done(task.isSuccessful, task.exception?.localizedMessage) }
     }
 
     suspend fun signInWithGoogle(activity: Activity, done: (Boolean, String?) -> Unit) {
-        val auth = firebaseAuth ?: return done(false, "Firebase עדיין לא הוגדר בפרויקט")
+        val auth = firebaseAuth ?: return done(false, initializationError ?: "Firebase עדיין לא הוגדר בפרויקט")
         if (BuildConfig.GOOGLE_WEB_CLIENT_ID.isBlank()) {
-            return done(false, "חסר FIT50_GOOGLE_WEB_CLIENT_ID")
+            return done(false, "חסר Google OAuth Web Client ID עבור Android")
         }
 
         try {
@@ -75,7 +94,8 @@ class AuthManager(private val context: Context) {
                 .build()
             val result = CredentialManager.create(context).getCredential(activity, request)
             val credential = result.credential
-            if (credential is CustomCredential &&
+            if (
+                credential is CustomCredential &&
                 credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
             ) {
                 val googleCredential = GoogleIdTokenCredential.createFrom(credential.data)
@@ -92,5 +112,7 @@ class AuthManager(private val context: Context) {
         }
     }
 
-    fun signOut() = firebaseAuth?.signOut()
+    fun signOut() {
+        runCatching { firebaseAuth?.signOut() }
+    }
 }
