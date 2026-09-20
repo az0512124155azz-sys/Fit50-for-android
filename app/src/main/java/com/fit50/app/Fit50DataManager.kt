@@ -39,6 +39,19 @@ class Fit50DataManager(private val context: Context) {
             .addOnFailureListener { done(false, it.localizedMessage) }
     }
 
+
+    fun resolveStartPage(done: (String) -> Unit) {
+        val ref = userDoc() ?: return done("questionnaire")
+        ref.get()
+            .addOnSuccessListener { snap ->
+                done(if (snap.getBoolean("onboardingComplete") == true) "home" else "questionnaire")
+            }
+            .addOnFailureListener {
+                val hasLocal = prefs.getString("questionnaire", null) != null
+                done(if (hasLocal) "home" else "questionnaire")
+            }
+    }
+
     fun saveQuestionnaire(json: String, done: (Boolean, String?) -> Unit) {
         val ref = userDoc() ?: return done(false, "יש להתחבר לחשבון")
         val data = jsonObjectToMap(JSONObject(json))
