@@ -989,20 +989,20 @@ go(1);
 
 
 <script>
-(function(){
-  function go(){location.href='home.html'}
-  function bind(){
-    var b=document.getElementById('finishBtn');
-    if(b) b.addEventListener('click',function(){setTimeout(go,250)},true);
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
-})();
-</script>
-
-<script>
 window.fit50QuestionnaireSaved = function(ok, message){
-  if(ok) toast('השאלון נשמר בחשבון שלך ✓');
-  else toast(message || 'הנתונים נשמרו במכשיר, אך הסנכרון לענן נכשל', true);
+  if(ok){
+    toast('השאלון נשמר בחשבון שלך ✓');
+    setTimeout(function(){
+      location.replace('home.html');
+    },220);
+  }else{
+    toast(message || 'לא הצלחנו לשמור את השאלון בחשבון. נסה שוב.', true);
+    var finishBtn=document.getElementById('finishBtn');
+    if(finishBtn){
+      finishBtn.disabled=false;
+      finishBtn.textContent='נסה לשמור שוב';
+    }
+  }
 };
 </script>
 </body>
