@@ -88,6 +88,17 @@ class Fit50DataManager(private val context: Context) {
          .addOnFailureListener { done(false, it.localizedMessage) }
     }
 
+    fun savePausedWorkout(json: String) {
+        prefs.edit().putString("pausedWorkout", json).apply()
+    }
+
+    fun getPausedWorkout(): String =
+        prefs.getString("pausedWorkout", "").orEmpty()
+
+    fun clearPausedWorkout() {
+        prefs.edit().remove("pausedWorkout").apply()
+    }
+
     fun completeWorkout(json: String, done: (Boolean, String?, JSONObject?) -> Unit) {
         val collection = workouts() ?: return done(false, "יש להתחבר לחשבון", null)
         val obj = JSONObject(json)
