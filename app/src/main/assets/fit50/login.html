@@ -254,6 +254,11 @@
       text-align: left;
     }
 
+    #passIn {
+      padding-left: 78px;
+      padding-right: 18px;
+    }
+
     .btn-primary {
       width: 100%;
       min-height: 58px;
@@ -388,16 +393,23 @@
     .pass-toggle {
       position: absolute;
       top: 50%;
-      left: 14px;
+      left: 10px;
       transform: translateY(-50%);
-      background: none;
+      min-width: 56px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--cream-2);
       border: none;
+      border-radius: 10px;
       cursor: pointer;
-      padding: 8px;
-      color: var(--ink-3);
+      padding: 0 10px;
+      color: var(--ink-2);
       font-family: inherit;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
+      z-index: 2;
     }
 
     .pass-toggle:hover { color: var(--ink); }
