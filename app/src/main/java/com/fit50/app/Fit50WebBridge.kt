@@ -37,16 +37,23 @@ class Fit50WebBridge(
         }
     }
 
-    private fun authCallback(action: String, ok: Boolean, message: String?) {
-        jsCallback("fit50NativeResult", action, ok, message ?: "")
+    private fun authCallback(action: String, ok: Boolean, message: String?, destination: String? = null) {
+        jsCallback("fit50NativeResult", action, ok, message ?: "", destination)
     }
 
     @JavascriptInterface
     fun login(email: String, password: String) {
         activity.runOnUiThread {
             auth.signIn(email, password) { ok, error ->
-                if (ok) data.bootstrapUser { _, _ -> }
-                authCallback("login", ok, if (ok) "התחברת בהצלחה" else error ?: "ההתחברות נכשלה")
+                if (!ok) {
+                    authCallback("login", false, error ?: "ההתחברות נכשלה")
+                } else {
+                    data.bootstrapUser { _, _ ->
+                        data.resolveStartPage { destination ->
+                            authCallback("login", true, "התחברת בהצלחה", destination)
+                        }
+                    }
+                }
             }
         }
     }
@@ -55,8 +62,13 @@ class Fit50WebBridge(
     fun register(email: String, password: String) {
         activity.runOnUiThread {
             auth.register(email, password) { ok, error ->
-                if (ok) data.bootstrapUser { _, _ -> }
-                authCallback("register", ok, if (ok) "החשבון נוצר בהצלחה" else error ?: "ההרשמה נכשלה")
+                if (!ok) {
+                    authCallback("register", false, error ?: "ההרשמה נכשלה")
+                } else {
+                    data.bootstrapUser { _, _ ->
+                        authCallback("register", true, "החשבון נוצר בהצלחה", "questionnaire")
+                    }
+                }
             }
         }
     }
@@ -75,8 +87,15 @@ class Fit50WebBridge(
         activity.runOnUiThread {
             activity.lifecycleScope.launch {
                 auth.signInWithGoogle(activity) { ok, error ->
-                    if (ok) data.bootstrapUser { _, _ -> }
-                    authCallback("google", ok, if (ok) "התחברת עם Google" else error ?: "Google Sign-In נכשל")
+                    if (!ok) {
+                        authCallback("google", false, error ?: "Google Sign-In נכשל")
+                    } else {
+                        data.bootstrapUser { _, _ ->
+                            data.resolveStartPage { destination ->
+                                authCallback("google", true, "התחברת עם Google", destination)
+                            }
+                        }
+                    }
                 }
             }
         }
