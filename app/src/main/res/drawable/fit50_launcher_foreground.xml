@@ -5,30 +5,30 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Fit -->
+    <!-- Fit: compact and centered inside the adaptive-icon safe zone -->
     <path
         android:fillColor="#FAF7F2"
-        android:pathData="M23,44 H34 V48 H27 V52 H33 V56 H27 V65 H23 Z" />
+        android:pathData="M27,47 H35 V50.5 H30.5 V53.5 H34.5 V57 H30.5 V63 H27 Z" />
     <path
         android:fillColor="#FAF7F2"
-        android:pathData="M36,44 H40 V48 H36 Z M36,51 H40 V65 H36 Z" />
+        android:pathData="M37,47 H40.5 V50.5 H37 Z M37,52 H40.5 V63 H37 Z" />
     <path
         android:fillColor="#FAF7F2"
-        android:pathData="M43,47 H47 V51 H51 V55 H47 V65 H43 V55 H41 V51 H43 Z" />
+        android:pathData="M43,49 H46.5 V52 H49.5 V55.5 H46.5 V63 H43 V55.5 H41 V52 H43 Z" />
 
     <!-- 5 -->
     <path
         android:fillColor="#E85A2C"
-        android:pathData="M53,44 H64 V48 H57 V52 H62 C65,52 67,54 67,57 V61 C67,64 65,66 62,66 H53 V62 H61 C62,62 63,61 63,60 V58 C63,57 62,56 61,56 H53 Z" />
+        android:pathData="M51,47 H60 V50.5 H54.5 V53 H58.5 C61,53 62.5,54.5 62.5,57 V60 C62.5,62.5 61,64 58.5,64 H51 V60.5 H58 C58.7,60.5 59,60.1 59,59.4 V58 C59,57.3 58.7,57 58,57 H51 Z" />
 
     <!-- 0 -->
     <path
         android:fillColor="#E85A2C"
         android:fillType="evenOdd"
-        android:pathData="M70,44 H76 C80,44 82,47 82,51 V59 C82,64 80,66 76,66 H70 C66,66 64,64 64,59 V51 C64,47 66,44 70,44 Z M71,48 C69,48 68,49 68,51 V59 C68,61 69,62 71,62 H75 C77,62 78,61 78,59 V51 C78,49 77,48 75,48 Z" />
+        android:pathData="M65,47 H70.5 C74,47 75.5,49 75.5,52 V59 C75.5,62.5 74,64 70.5,64 H65 C61.5,64 60,62.5 60,59 V52 C60,49 61.5,47 65,47 Z M65.8,50.5 C64.5,50.5 64,51.1 64,52.4 V58.7 C64,60 64.5,60.5 65.8,60.5 H69.8 C71,60.5 71.5,60 71.5,58.7 V52.4 C71.5,51.1 71,50.5 69.8,50.5 Z" />
 
     <!-- + -->
     <path
         android:fillColor="#FAF7F2"
-        android:pathData="M86,50 H89 V55 H94 V58 H89 V63 H86 V58 H81 V55 H86 Z" />
+        android:pathData="M80,51 H83 V55 H87 V58 H83 V62 H80 V58 H76 V55 H80 Z" />
 </vector>
