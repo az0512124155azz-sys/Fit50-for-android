@@ -340,8 +340,14 @@
   let requestTimer=null;
   let observer=null;
 
+  const PERSONAL_IDS = new Set([
+    'greetName','profileName','profileEmail','emailSub',
+    'editName','editEmail','newEmail'
+  ]);
+
   function elementVisible(el){
     if(!el || el.nodeType!==1) return true;
+    if(PERSONAL_IDS.has(el.id)) return false;
     if(el.closest && el.closest('[data-no-i18n]')) return false;
     const tag=el.tagName;
     if(tag==='SCRIPT'||tag==='STYLE'||tag==='NOSCRIPT'||tag==='CODE'||tag==='PRE') return false;
