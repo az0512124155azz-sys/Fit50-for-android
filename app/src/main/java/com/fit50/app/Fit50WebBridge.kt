@@ -21,6 +21,7 @@ class Fit50WebBridge(
 ) {
     private val auth by lazy { AuthManager(activity.applicationContext) }
     private val data by lazy { Fit50DataManager(activity.applicationContext) }
+    private var pendingDisplayName: String? = null
 
     private fun jsCallback(function: String, vararg args: Any?) {
         val serialized = args.joinToString(",") { value ->
@@ -61,14 +62,29 @@ class Fit50WebBridge(
     }
 
     @JavascriptInterface
+    fun setPendingDisplayName(name: String) {
+        pendingDisplayName = name.trim().takeIf { it.isNotBlank() }
+    }
+
+    @JavascriptInterface
     fun register(email: String, password: String) {
         activity.runOnUiThread {
             auth.register(email, password) { ok, error ->
                 if (!ok) {
                     authCallback("register", false, error ?: "ההרשמה נכשלה")
                 } else {
-                    data.bootstrapUser { _, _ ->
-                        authCallback("register", true, "החשבון נוצר בהצלחה", "questionnaire")
+                    val name = pendingDisplayName
+                    pendingDisplayName = null
+                    if (!name.isNullOrBlank()) {
+                        data.updateProfile(name, null) { _, _ ->
+                            data.bootstrapUser { _, _ ->
+                                authCallback("register", true, "החשבון נוצר. נשלח גם מייל אימות.", "questionnaire")
+                            }
+                        }
+                    } else {
+                        data.bootstrapUser { _, _ ->
+                            authCallback("register", true, "החשבון נוצר. נשלח גם מייל אימות.", "questionnaire")
+                        }
                     }
                 }
             }
