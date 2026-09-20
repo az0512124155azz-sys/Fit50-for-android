@@ -878,7 +878,9 @@ function closeShare() {
   document.body.style.overflow = '';
 }
 
-$('shareBtn').onclick = openShare;
+$('shareBtn').onclick = function(){
+  shareTo('generic');
+};
 $('shareClose').onclick = closeShare;
 $('shareOverlay').onclick = closeShare;
 
