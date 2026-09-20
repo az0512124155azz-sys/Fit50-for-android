@@ -1262,12 +1262,20 @@ setWeek();
 
     let paused=false;
     try{
-      const raw=localStorage.getItem(PAUSED_WORKOUT_KEY);
+      let raw='';
+      if(window.Fit50Native && typeof window.Fit50Native.getPausedWorkout==='function'){
+        raw=window.Fit50Native.getPausedWorkout() || '';
+      }
+      if(!raw) raw=localStorage.getItem(PAUSED_WORKOUT_KEY) || '';
+
       if(raw){
         const saved=JSON.parse(raw);
         if(saved && saved.dateKey===todayKey() && saved.workout && saved.workout.exercises){
           paused=true;
         }else{
+          if(window.Fit50Native && typeof window.Fit50Native.clearPausedWorkout==='function'){
+            try{window.Fit50Native.clearPausedWorkout();}catch(e){}
+          }
           localStorage.removeItem(PAUSED_WORKOUT_KEY);
         }
       }
