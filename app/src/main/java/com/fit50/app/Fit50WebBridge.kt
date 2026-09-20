@@ -23,6 +23,7 @@ class Fit50WebBridge(
 ) {
     private val auth by lazy { AuthManager(activity.applicationContext) }
     private val data by lazy { Fit50DataManager(activity.applicationContext) }
+    private val translations by lazy { TranslationManager(activity.applicationContext) }
     private var pendingDisplayName: String? = null
     private var authNavigationInProgress = false
 
@@ -81,6 +82,39 @@ class Fit50WebBridge(
     fun continueSignedInSession() {
         if (!auth.isSignedIn()) return
         finishAuthenticatedSignIn("resume", "החשבון כבר מחובר")
+    }
+
+    @JavascriptInterface
+    fun getDeviceLanguage(): String =
+        translations.getDeviceLanguage()
+
+    @JavascriptInterface
+    fun getPreferredLanguage(): String =
+        translations.getPreferredLanguage()
+
+    @JavascriptInterface
+    fun getEffectiveLanguage(): String =
+        translations.getEffectiveLanguage()
+
+    @JavascriptInterface
+    fun getSupportedLanguages(): String =
+        translations.supportedLanguagesJson()
+
+    @JavascriptInterface
+    fun setPreferredLanguage(language: String) {
+        translations.setPreferredLanguage(language)
+    }
+
+    @JavascriptInterface
+    fun translateTexts(language: String, textsJson: String) {
+        translations.translateTexts(language, textsJson) { ok, target, translationsJson ->
+            jsCallback(
+                "fit50TranslationResult",
+                ok,
+                target,
+                translationsJson
+            )
+        }
     }
 
     @JavascriptInterface
