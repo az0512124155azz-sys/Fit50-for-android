@@ -549,7 +549,7 @@
         const label=lang.code==='auto'?autoLabel:lang.name;
         const on=selected===lang.code;
         return '<button class="list-row" data-fit50-lang="'+lang.code+'" style="cursor:pointer">' +
-          '<span class="list-label" dir="'+(lang.rtl?'rtl':'ltr')+'">'+label+'</span>' +
+          '<span class="list-label" data-no-i18n dir="'+(lang.rtl?'rtl':'ltr')+'">'+label+'</span>' +
           (on?'<span style="font-size:20px;color:var(--forest)">✓</span>':'') +
         '</button>';
       }).join('') +
