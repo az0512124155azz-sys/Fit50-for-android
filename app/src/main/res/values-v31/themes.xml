@@ -1,0 +1,12 @@
+<resources>
+    <style name="Theme.Fit50" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">#1C2A22</item>
+        <item name="android:navigationBarColor">#1C2A22</item>
+        <item name="android:windowBackground">#1C2A22</item>
+        <item name="android:windowSplashScreenBackground">#1C2A22</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/fit50_logo</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">#1C2A22</item>
+    </style>
+</resources>
