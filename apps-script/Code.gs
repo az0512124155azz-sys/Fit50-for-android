@@ -3,15 +3,17 @@ const DATABASE = '(default)';
 const SENDER_NAME = 'Fit50+';
 
 /**
- * Run once.
- * Creates a time trigger that processes password reset requests every minute.
+ * ONE-TIME SETUP
+ * 1) Make sure this Apps Script project is linked to the same Google Cloud
+ *    project as Firebase: fit50-plus (project number 1570044363).
+ * 2) Run resetSystem() once.
+ * 3) Run installTrigger() once.
  */
+
 function installTrigger() {
   testConnection();
 
-  const triggers = ScriptApp.getProjectTriggers();
-
-  triggers.forEach(trigger => {
+  ScriptApp.getProjectTriggers().forEach(trigger => {
     if (trigger.getHandlerFunction() === 'processPasswordResetQueue') {
       ScriptApp.deleteTrigger(trigger);
     }
@@ -24,14 +26,30 @@ function installTrigger() {
 
   Logger.log('Trigger installed successfully.');
 
-  // Process requests that are already waiting.
   processPasswordResetQueue();
 }
 
-/**
- * Verifies Firestore access and confirms that the script
- * has an available mail quota.
- */
+function resetSystem() {
+  Logger.log('Resetting password reset queue...');
+
+  const docs = listResetRequests_();
+
+  docs.forEach(doc => {
+    deleteDocument_(doc.name);
+  });
+
+  Logger.log('Deleted ' + docs.length + ' password reset requests.');
+
+  ScriptApp.getProjectTriggers().forEach(trigger => {
+    if (trigger.getHandlerFunction() === 'processPasswordResetQueue') {
+      ScriptApp.deleteTrigger(trigger);
+    }
+  });
+
+  Logger.log('Old triggers removed.');
+  Logger.log('System reset complete. Run installTrigger() next.');
+}
+
 function testConnection() {
   Logger.log('Testing Firestore access...');
 
@@ -75,26 +93,55 @@ function testConnection() {
 
   Logger.log('Mail service OK.');
 
+  // Test that Identity Toolkit is available in THIS Apps Script GCP project.
+  const identityUrl =
+    'https://identitytoolkit.googleapis.com/v1/projects/' +
+    encodeURIComponent(PROJECT_ID) +
+    '/accounts:query';
+
+  const identityResponse = UrlFetchApp.fetch(identityUrl, {
+    method: 'post',
+    contentType: 'application/json',
+    headers: {
+      Authorization: 'Bearer ' + ScriptApp.getOAuthToken()
+    },
+    payload: JSON.stringify({
+      returnUserInfo: false,
+      limit: 1
+    }),
+    muteHttpExceptions: true
+  });
+
+  const identityCode = identityResponse.getResponseCode();
+
+  Logger.log('Identity Toolkit HTTP status: ' + identityCode);
+
+  if (identityCode >= 300) {
+    throw new Error(
+      'Identity Toolkit connection failed (' +
+      identityCode +
+      '): ' +
+      identityResponse.getContentText()
+    );
+  }
+
+  Logger.log('Identity Toolkit connection OK.');
   return true;
 }
 
-/**
- * Trigger worker.
- */
 function processPasswordResetQueue() {
   Logger.log('Starting password reset worker...');
 
   const docs = listResetRequests_();
-
   Logger.log('Found ' + docs.length + ' recent reset requests.');
 
   let processed = 0;
 
   docs.forEach(doc => {
     const fields = doc.fields || {};
-
     const status = value_(fields.status);
-    const gmailStatus = value_(fields.gmailStatus);
+    const mailStatus = value_(fields.gmailStatus);
+
     const email = String(value_(fields.email) || '')
       .trim()
       .toLowerCase();
@@ -105,18 +152,14 @@ function processPasswordResetQueue() {
       ' | status=' +
       status +
       ' | mail=' +
-      gmailStatus
+      mailStatus
     );
 
-    if (
-      status !== 'queued' &&
-      status !== 'firebase_accepted' &&
-      status !== 'admin_accepted'
-    ) {
+    if (status !== 'queued') {
       return;
     }
 
-    if (gmailStatus === 'sent' || gmailStatus === 'sending') {
+    if (mailStatus === 'sent' || mailStatus === 'sending') {
       return;
     }
 
@@ -140,15 +183,9 @@ function processPasswordResetQueue() {
         }
       });
 
-      Logger.log('Generating reset link for ' + email + '...');
-
       const resetLink = generatePasswordResetLink_(email);
 
-      Logger.log('Reset link generated.');
-
       sendPasswordResetEmail_(email, resetLink);
-
-      Logger.log('Email sent.');
 
       updateResetRequest_(docName, {
         status: {
@@ -166,7 +203,6 @@ function processPasswordResetQueue() {
       });
 
       processed++;
-
       Logger.log('Completed reset for ' + email + '.');
 
     } catch (error) {
@@ -202,15 +238,9 @@ function processPasswordResetQueue() {
     }
   });
 
-  Logger.log(
-    'Worker finished. Processed: ' +
-    processed
-  );
+  Logger.log('Worker finished. Processed: ' + processed);
 }
 
-/**
- * Reads recent password reset requests from Firestore.
- */
 function listResetRequests_() {
   const url =
     'https://firestore.googleapis.com/v1/projects/' +
@@ -218,13 +248,10 @@ function listResetRequests_() {
     '/databases/' +
     encodeURIComponent(DATABASE) +
     '/documents/passwordResetRequests' +
-    '?pageSize=100' +
+    '?pageSize=500' +
     '&orderBy=createdAt%20desc';
 
-  const response = googleRequest_(
-    url,
-    'get'
-  );
+  const response = googleRequest_(url, 'get');
 
   const body = JSON.parse(
     response.getContentText() || '{}'
@@ -233,9 +260,6 @@ function listResetRequests_() {
   return body.documents || [];
 }
 
-/**
- * Creates a real Firebase password-reset OOB link.
- */
 function generatePasswordResetLink_(email) {
   const url =
     'https://identitytoolkit.googleapis.com/v1/projects/' +
@@ -275,9 +299,7 @@ function generatePasswordResetLink_(email) {
     );
   }
 
-  const body = JSON.parse(
-    text || '{}'
-  );
+  const body = JSON.parse(text || '{}');
 
   const link =
     body.oobLink ||
@@ -293,10 +315,6 @@ function generatePasswordResetLink_(email) {
   return link;
 }
 
-/**
- * Sends the reset email through the Google account
- * that owns/runs this Apps Script project.
- */
 function sendPasswordResetEmail_(email, resetLink) {
   const subject =
     'איפוס הסיסמה שלך ב-Fit50+';
@@ -406,12 +424,8 @@ function sendPasswordResetEmail_(email, resetLink) {
   });
 }
 
-/**
- * Updates selected fields on the Firestore reset-request document.
- */
 function updateResetRequest_(documentName, fields) {
-  const parts =
-    documentName.split('/documents/');
+  const parts = documentName.split('/documents/');
 
   if (parts.length !== 2) {
     throw new Error(
@@ -420,8 +434,7 @@ function updateResetRequest_(documentName, fields) {
     );
   }
 
-  const documentPath =
-    parts[1];
+  const documentPath = parts[1];
 
   const updateMask =
     Object.keys(fields)
@@ -451,9 +464,29 @@ function updateResetRequest_(documentName, fields) {
   );
 }
 
-/**
- * Authenticated request to a Google REST API.
- */
+function deleteDocument_(documentName) {
+  const parts = documentName.split('/documents/');
+
+  if (parts.length !== 2) {
+    throw new Error(
+      'Invalid Firestore document name: ' +
+      documentName
+    );
+  }
+
+  const documentPath = parts[1];
+
+  const url =
+    'https://firestore.googleapis.com/v1/projects/' +
+    encodeURIComponent(PROJECT_ID) +
+    '/databases/' +
+    encodeURIComponent(DATABASE) +
+    '/documents/' +
+    documentPath;
+
+  googleRequest_(url, 'delete');
+}
+
 function googleRequest_(url, method, body) {
   const options = {
     method: method,
@@ -494,9 +527,6 @@ function googleRequest_(url, method, body) {
   return response;
 }
 
-/**
- * Converts a Firestore REST field value to JavaScript.
- */
 function value_(field) {
   if (!field) {
     return null;
@@ -526,9 +556,7 @@ function value_(field) {
       'integerValue'
     )
   ) {
-    return Number(
-      field.integerValue
-    );
+    return Number(field.integerValue);
   }
 
   if (
@@ -537,9 +565,7 @@ function value_(field) {
       'doubleValue'
     )
   ) {
-    return Number(
-      field.doubleValue
-    );
+    return Number(field.doubleValue);
   }
 
   if (
