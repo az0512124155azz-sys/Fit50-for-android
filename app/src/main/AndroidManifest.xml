@@ -8,7 +8,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/fit50_app_icon"
         android:label="Fit50+"
-        android:logo="@drawable/fit50_logo"
+        android:logo="@drawable/fit50_launcher_foreground"
         android:roundIcon="@mipmap/fit50_app_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fit50">
