@@ -15,8 +15,8 @@ android {
         applicationId = "com.fit50.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 9
-        versionName = "1.1.7"
+        versionCode = 10
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", fit50Prop("FIT50_GOOGLE_WEB_CLIENT_ID", "1570044363-5jone06j0rr5affoi0c2hb94p6ngjttb.apps.googleusercontent.com").asBuildConfigString())
