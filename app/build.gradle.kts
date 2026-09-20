@@ -4,8 +4,7 @@ plugins {
     id("com.google.gms.google-services")
 }
 
-fun Project.fit50Prop(name: String, fallback: String = ""): String =
-    providers.gradleProperty(name).orNull?.trim()?.takeIf { it.isNotEmpty() } ?: fallback
+fun Project.fit50Prop(name: String, fallback: String = ""): String = providers.gradleProperty(name).orNull ?: fallback
 fun String.asBuildConfigString(): String = "\"${replace("\\", "\\\\").replace("\"", "\\\"")}\""
 
 android {
