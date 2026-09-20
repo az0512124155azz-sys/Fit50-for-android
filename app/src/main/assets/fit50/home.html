@@ -838,6 +838,35 @@ function setGreeting() {
 }
 
 /* ============ HERO ============ */
+function getPausedWorkoutForToday() {
+  try {
+    let raw = '';
+    if (window.Fit50Native && typeof window.Fit50Native.getPausedWorkout === 'function') {
+      raw = window.Fit50Native.getPausedWorkout() || '';
+    }
+    if (!raw) raw = localStorage.getItem('fit50_paused_workout_v1') || '';
+    if (!raw) return null;
+
+    const saved = JSON.parse(raw);
+    const d = new Date();
+    const key = d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+
+    if (!saved || saved.dateKey !== key || !saved.workout || !saved.workout.exercises) {
+      if (window.Fit50Native && typeof window.Fit50Native.clearPausedWorkout === 'function') {
+        try { window.Fit50Native.clearPausedWorkout(); } catch(e) {}
+      }
+      try { localStorage.removeItem('fit50_paused_workout_v1'); } catch(e) {}
+      return null;
+    }
+
+    return saved;
+  } catch(e) {
+    return null;
+  }
+}
+
 function setHero() {
   const today = new Date().getDay();
   const workout = WORKOUTS[today];
@@ -853,7 +882,15 @@ function setHero() {
     $('heroTitle').innerHTML = workout.title + '<br><em>' + workout.sub + '</em>';
     $('metaEx').textContent = workout.exercises.length + ' תרגילים';
     $('metaDur').textContent = workout.dur + ' דקות';
-    $('startBtnText').textContent = isDone ? 'חזור על האימון' : 'התחל אימון';
+    const pausedWorkout = getPausedWorkoutForToday();
+    if (pausedWorkout) {
+      $('heroLabelText').textContent = 'אימון מושהה';
+      $('startBtnText').textContent = 'המשך אימון';
+      $('startBtn').dataset.resume = '1';
+    } else {
+      $('startBtnText').textContent = isDone ? 'חזור על האימון' : 'התחל אימון';
+      $('startBtn').dataset.resume = '0';
+    }
   } else {
     $('heroLabelText').textContent = 'יום מנוחה';
     $('heroTitle').innerHTML = 'תנוח היום<em>.</em>';
@@ -1245,55 +1282,9 @@ setWeek();
 </script>
 
 <script>
-(function(){
-  const PAUSED_WORKOUT_KEY='fit50_paused_workout_v1';
-
-  function todayKey(){
-    const d=new Date();
-    return d.getFullYear()+'-'+
-      String(d.getMonth()+1).padStart(2,'0')+'-'+
-      String(d.getDate()).padStart(2,'0');
-  }
-
-  function refreshPausedWorkoutButton(){
-    const btn=document.getElementById('startBtn');
-    const text=document.getElementById('startBtnText');
-    if(!btn || !text) return;
-
-    let paused=false;
-    try{
-      let raw='';
-      if(window.Fit50Native && typeof window.Fit50Native.getPausedWorkout==='function'){
-        raw=window.Fit50Native.getPausedWorkout() || '';
-      }
-      if(!raw) raw=localStorage.getItem(PAUSED_WORKOUT_KEY) || '';
-
-      if(raw){
-        const saved=JSON.parse(raw);
-        if(saved && saved.dateKey===todayKey() && saved.workout && saved.workout.exercises){
-          paused=true;
-        }else{
-          if(window.Fit50Native && typeof window.Fit50Native.clearPausedWorkout==='function'){
-            try{window.Fit50Native.clearPausedWorkout();}catch(e){}
-          }
-          localStorage.removeItem(PAUSED_WORKOUT_KEY);
-        }
-      }
-    }catch(e){}
-
-    text.textContent=paused?'המשך אימון':'התחל אימון';
-    btn.setAttribute('aria-label', paused?'המשך אימון':'התחל אימון');
-    btn.dataset.resume = paused ? '1' : '0';
-  }
-
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',refreshPausedWorkoutButton);
-  }else{
-    refreshPausedWorkoutButton();
-  }
-
-  window.addEventListener('pageshow',refreshPausedWorkoutButton);
-})();
+window.addEventListener('pageshow', function(){
+  try { setHero(); } catch(e) {}
+});
 </script>
 
 </body>
