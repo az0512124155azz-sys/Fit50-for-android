@@ -23,7 +23,7 @@ android {
         buildConfigField("String", "FIREBASE_APP_ID", fit50Prop("FIT50_FIREBASE_APP_ID", "1:1570044363:web:4d7260347d578d89c11e4e").asBuildConfigString())
         buildConfigField("String", "FIREBASE_PROJECT_ID", fit50Prop("FIT50_FIREBASE_PROJECT_ID", "fit50-plus").asBuildConfigString())
         buildConfigField("String", "FIREBASE_STORAGE_BUCKET", fit50Prop("FIT50_FIREBASE_STORAGE_BUCKET", "fit50-plus.firebasestorage.app").asBuildConfigString())
-        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", fit50Prop("FIT50_GOOGLE_WEB_CLIENT_ID").asBuildConfigString())
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", fit50Prop("FIT50_GOOGLE_WEB_CLIENT_ID", "1570044363-5jone06j0rr5affoi0c2hb94p6ngjttb.apps.googleusercontent.com").asBuildConfigString())
     }
 
     buildFeatures {
