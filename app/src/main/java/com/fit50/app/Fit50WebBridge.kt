@@ -94,8 +94,8 @@ class Fit50WebBridge(
     @JavascriptInterface
     fun resetPassword(email: String) {
         activity.runOnUiThread {
-            auth.resetPassword(email) { ok, error ->
-                authCallback("reset", ok, if (ok) "נשלח אליך קישור לאיפוס הסיסמה" else error ?: "שליחת הקישור נכשלה")
+            auth.resetPassword(email) { ok, message ->
+                authCallback("reset", ok, message ?: if (ok) "בקשת האיפוס התקבלה" else "יצירת בקשת האיפוס נכשלה")
             }
         }
     }
