@@ -8,7 +8,6 @@ import androidx.credentials.GetCredentialRequest
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.FirebaseApp
-import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
@@ -17,42 +16,21 @@ class AuthManager(private val context: Context) {
     var initializationError: String? = null
         private set
 
-    private val hasFirebaseConfig: Boolean
-        get() = BuildConfig.FIREBASE_API_KEY.isNotBlank() &&
-            BuildConfig.FIREBASE_APP_ID.isNotBlank() &&
-            BuildConfig.FIREBASE_PROJECT_ID.isNotBlank()
-
     val configured: Boolean
-        get() = hasFirebaseConfig && initializationError == null
+        get() = runCatching {
+            ensureFirebase() != null
+        }.getOrDefault(false)
 
     private fun ensureFirebase(): FirebaseAuth? {
         firebaseAuth?.let { return it }
-        if (!hasFirebaseConfig) return null
 
         return runCatching {
-            val app = FirebaseApp.getApps(context).firstOrNull()
-                ?: FirebaseApp.initializeApp(
-                    context,
-                    FirebaseOptions.Builder()
-                        .setApiKey(BuildConfig.FIREBASE_API_KEY)
-                        .setApplicationId(BuildConfig.FIREBASE_APP_ID)
-                        .setProjectId(BuildConfig.FIREBASE_PROJECT_ID)
-                        .apply {
-                            if (BuildConfig.FIREBASE_STORAGE_BUCKET.isNotBlank()) {
-                                setStorageBucket(BuildConfig.FIREBASE_STORAGE_BUCKET)
-                            }
-                        }
-                        .build()
-                )
-
-            if (app == null) {
-                initializationError = "Firebase initialization returned null"
-                null
-            } else {
-                FirebaseAuth.getInstance(app).also {
-                    firebaseAuth = it
-                    initializationError = null
-                }
+            if (FirebaseApp.getApps(context).isEmpty()) {
+                FirebaseApp.initializeApp(context)
+            }
+            FirebaseAuth.getInstance().also {
+                firebaseAuth = it
+                initializationError = null
             }
         }.getOrElse { error ->
             firebaseAuth = null
