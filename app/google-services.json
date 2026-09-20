@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1570044363",
+    "project_id": "fit50-plus",
+    "storage_bucket": "fit50-plus.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1570044363:android:afe9df51ebe086eec11e4e",
+        "android_client_info": {
+          "package_name": "com.fit50.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1570044363-5jone06j0rr5affoi0c2hb94p6ngjttb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB82zQCA58_8RktQjsFsMs578V0yp3kW9Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1570044363-5jone06j0rr5affoi0c2hb94p6ngjttb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
