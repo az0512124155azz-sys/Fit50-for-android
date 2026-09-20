@@ -26,11 +26,14 @@ service cloud.firestore {
       // The document shape is intentionally strict to prevent arbitrary writes.
       allow create: if
         request.resource.data.keys().hasOnly([
-          "email", "source", "status", "createdAt", "error"
+          "email", "age", "source", "status", "createdAt", "error"
         ])
         && request.resource.data.email is string
         && request.resource.data.email.size() >= 5
         && request.resource.data.email.size() <= 254
+        && request.resource.data.age is int
+        && request.resource.data.age >= 40
+        && request.resource.data.age <= 120
         && request.resource.data.source == "app"
         && request.resource.data.status == "queued"
         && request.resource.data.error == ""
