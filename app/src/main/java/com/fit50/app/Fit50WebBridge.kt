@@ -169,6 +169,20 @@ class Fit50WebBridge(
     }
 
     @JavascriptInterface
+    fun savePausedWorkout(json: String) {
+        data.savePausedWorkout(json)
+    }
+
+    @JavascriptInterface
+    fun getPausedWorkout(): String =
+        data.getPausedWorkout()
+
+    @JavascriptInterface
+    fun clearPausedWorkout() {
+        data.clearPausedWorkout()
+    }
+
+    @JavascriptInterface
     fun completeWorkout(json: String) {
         data.completeWorkout(json) { ok, error, progress ->
             jsCallback("fit50WorkoutSaved", ok, error ?: "", progress)
