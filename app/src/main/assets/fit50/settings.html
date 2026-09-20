@@ -1511,5 +1511,99 @@ updateProfileUI();
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
 })();
 </script>
+
+<script>
+(function(){
+  function applyProfile(data){
+    if(!data) return;
+    if(data.name) state.user.name=data.name;
+    if(data.email) state.user.email=data.email;
+    if(data.preferences){
+      state.preferences=Object.assign(state.preferences,data.preferences);
+      var r=document.getElementById('toggleReminders');
+      var h=document.getElementById('toggleHaptics');
+      var s=document.getElementById('toggleSound');
+      if(r) r.checked=!!state.preferences.reminders;
+      if(h) h.checked=!!state.preferences.haptics;
+      if(s) s.checked=!!state.preferences.sound;
+    }
+    updateProfileUI();
+  }
+
+  window.fit50ProfileResult=function(ok,message,data){
+    if(ok && data) applyProfile(data);
+    else if(message) toast(message);
+  };
+  window.fit50PreferencesSaved=function(ok,message){
+    if(!ok) toast(message || 'שמירת ההעדפות נכשלה');
+  };
+  window.fit50ProfileSaved=function(ok,message){
+    if(ok){
+      toast('הפרופיל נשמר ✓');
+      closeSheet();
+      if(window.Fit50Native) window.Fit50Native.getProfile();
+    }else toast(message || 'עדכון הפרופיל נכשל');
+  };
+  window.fit50PasswordChanged=function(ok,message){
+    if(ok){toast('הסיסמה עודכנה ✓');closeSheet();}
+    else toast(message || 'שינוי הסיסמה נכשל');
+  };
+  window.fit50AccountDeleted=function(ok,message){
+    if(ok) location.href='login.html';
+    else toast(message || 'מחיקת החשבון נכשלה. ייתכן שנדרשת התחברות מחדש.');
+  };
+
+  function savePrefs(){
+    if(!window.Fit50Native || typeof window.Fit50Native.savePreferences!=='function') return;
+    window.Fit50Native.savePreferences(JSON.stringify({
+      reminders:!!document.getElementById('toggleReminders').checked,
+      haptics:!!document.getElementById('toggleHaptics').checked,
+      sound:!!document.getElementById('toggleSound').checked
+    }));
+  }
+  ['toggleReminders','toggleHaptics','toggleSound'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.addEventListener('change',savePrefs);
+  });
+
+  document.addEventListener('click',function(e){
+    var target=e.target;
+    if(!target) return;
+
+    if(target.id==='deleteConfirm' && window.Fit50Native){
+      e.preventDefault();e.stopImmediatePropagation();
+      closeDeleteDialog();
+      window.Fit50Native.deleteAccount();
+      return;
+    }
+
+    if(target.id!=='sheetSaveBtn' || !window.Fit50Native) return;
+    var title=(document.getElementById('sheetTitle')||{}).textContent||'';
+
+    if(title.indexOf('עריכת פרופיל')>=0){
+      e.preventDefault();e.stopImmediatePropagation();
+      var name=(document.getElementById('editName')||{}).value||'';
+      var email=(document.getElementById('editEmail')||{}).value||'';
+      window.Fit50Native.updateProfile(name.trim(),email.trim());
+    }else if(title.indexOf('שינוי אימייל')>=0){
+      e.preventDefault();e.stopImmediatePropagation();
+      var newEmail=(document.getElementById('newEmail')||{}).value||'';
+      window.Fit50Native.updateProfile(state.user.name,newEmail.trim());
+    }else if(title.indexOf('שינוי סיסמה')>=0){
+      e.preventDefault();e.stopImmediatePropagation();
+      var cur=(document.getElementById('curPass')||{}).value||'';
+      var np=(document.getElementById('newPass')||{}).value||'';
+      var cp=(document.getElementById('confirmPass')||{}).value||'';
+      if(np.length<6) return toast('הסיסמה החדשה חייבת להכיל לפחות 6 תווים');
+      if(np!==cp) return toast('הסיסמאות אינן תואמות');
+      window.Fit50Native.changePassword(cur,np);
+    }
+  },true);
+
+  if(window.Fit50Native && typeof window.Fit50Native.getProfile==='function'){
+    try{window.Fit50Native.getProfile();}catch(e){}
+  }
+})();
+</script>
 </body>
 </html>

@@ -892,14 +892,24 @@ $('backBtn').onclick = () => {
 };
 
 function finish() {
+  const payload = {
+    ...answers,
+    acknowledgedDisclaimer: true,
+    completedAt: new Date().toISOString()
+  };
+
   try {
-    localStorage.setItem('fit50.health.v1', JSON.stringify({
-      ...answers,
-      acknowledgedDisclaimer: true,
-      completedAt: new Date().toISOString()
-    }));
+    localStorage.setItem('fit50.health.v1', JSON.stringify(payload));
     localStorage.setItem('fit50.health.done', '1');
   } catch(e) {}
+
+  if (window.Fit50Native && typeof window.Fit50Native.saveQuestionnaire === 'function') {
+    try {
+      window.Fit50Native.saveQuestionnaire(JSON.stringify(payload));
+    } catch(e) {
+      toast('השאלון נשמר במכשיר. הסנכרון לענן יתבצע בהמשך.', true);
+    }
+  }
 
   $('qScreen').style.display = 'none';
   $('finishScreen').classList.add('on');
@@ -987,6 +997,13 @@ go(1);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
 })();
+</script>
+
+<script>
+window.fit50QuestionnaireSaved = function(ok, message){
+  if(ok) toast('השאלון נשמר בחשבון שלך ✓');
+  else toast(message || 'הנתונים נשמרו במכשיר, אך הסנכרון לענן נכשל', true);
+};
 </script>
 </body>
 </html>

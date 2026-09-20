@@ -1126,8 +1126,26 @@ function finishWorkout() {
   setTimeout(() => beep(784, 300, 0.3), 360);
   vib([100, 80, 100, 80, 200]);
 
-  const duration = Math.round((Date.now() - state.startedAt) / 60000);
+  const duration = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
   $('finishDur').textContent = duration;
+
+  if (!window.__fit50WorkoutSaved && window.Fit50Native && typeof window.Fit50Native.completeWorkout === 'function') {
+    window.__fit50WorkoutSaved = true;
+    try {
+      const now = new Date();
+      const dayIndex = now.getDay();
+      const dateKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+      window.Fit50Native.completeWorkout(JSON.stringify({
+        title: WORKOUT.title,
+        durationMins: duration,
+        exerciseCount: WORKOUT.exercises.length,
+        activityType: 'workout',
+        planKey: 'w1d' + (dayIndex + 1) + '-' + dateKey
+      }));
+    } catch(e) {
+      window.__fit50WorkoutSaved = false;
+    }
+  }
   $('finishEx').textContent = WORKOUT.exercises.length;
   $('finishStreak').textContent = 1;
   $('finishSub').innerHTML = 'השלמת את "<strong>' + WORKOUT.title + '</strong>"<br>כל הכבוד!';
@@ -1184,6 +1202,18 @@ renderExercise();
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
 })();
+</script>
+
+<script>
+window.fit50WorkoutSaved = function(ok, message, progress){
+  if(ok && progress){
+    try{
+      document.getElementById('finishStreak').textContent = progress.streak || 1;
+    }catch(e){}
+  }else if(!ok && message){
+    console.error('Fit50 workout sync:', message);
+  }
+};
 </script>
 </body>
 </html>

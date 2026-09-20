@@ -1193,5 +1193,33 @@ setWeek();
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
 })();
 </script>
+
+<script>
+(function(){
+  window.fit50DashboardResult = function(ok, message, data){
+    if(!ok || !data){
+      if(typeof toast==='function' && message) toast(message, true);
+      return;
+    }
+    try{
+      if(data.user) state.user = Object.assign(state.user, data.user);
+      if(data.progress) state.progress = Object.assign(state.progress, data.progress);
+      setGreeting();
+      setHero();
+      setWeek();
+    }catch(e){
+      if(typeof toast==='function') toast('לא הצלחנו לרענן את נתוני החשבון', true);
+    }
+  };
+
+  function loadRealDashboard(){
+    if(window.Fit50Native && typeof window.Fit50Native.getDashboard==='function'){
+      try{ window.Fit50Native.getDashboard(); }catch(e){}
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',loadRealDashboard);
+  else loadRealDashboard();
+})();
+</script>
 </body>
 </html>

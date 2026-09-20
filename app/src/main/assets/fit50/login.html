@@ -547,10 +547,13 @@ $('privacyLink').onclick = () => toast('מדיניות הפרטיות');
     var args=[].slice.call(arguments,1);
     try{ window.Fit50Native[name].apply(window.Fit50Native,args); return true; }catch(e){ return false; }
   }
-  window.fit50NativeResult=function(action,ok,message){
+  window.fit50NativeResult=function(action,ok,message,destination){
     var t=document.getElementById('toast');
     if(t){t.textContent=message||'';t.className='toast show'+(ok?'':' error');setTimeout(function(){t.classList.remove('show')},2200);}
-    if(ok && (action==='login'||action==='register'||action==='google')) setTimeout(function(){location.href='questionnaire.html'},350);
+    if(ok && (action==='login'||action==='register'||action==='google')){
+      var next=(destination==='home'?'home':'questionnaire')+'.html';
+      setTimeout(function(){location.href=next},350);
+    }
   };
   function bind(){
     var login=document.getElementById('loginBtn');

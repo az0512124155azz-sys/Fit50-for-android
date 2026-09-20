@@ -925,5 +925,44 @@ render();
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
 })();
 </script>
+
+<script>
+(function(){
+  window.fit50ProgressResult = function(ok, message, data){
+    if(!ok || !data){
+      if(typeof toast==='function' && message) toast(message);
+      return;
+    }
+    try{
+      state.progress = Object.assign(state.progress, data);
+      render();
+    }catch(e){
+      if(typeof toast==='function') toast('לא הצלחנו לרענן את ההתקדמות');
+    }
+  };
+
+  window.shareTo = function(platform){
+    closeShare();
+    var p=state.progress;
+    var text='Fit50+ · ההתקדמות שלי\n' +
+      'אימונים: ' + p.total + '\n' +
+      'דקות תנועה: ' + p.mins + '\n' +
+      'רצף: ' + p.streak + ' ימים';
+    if(window.Fit50Native && typeof window.Fit50Native.shareText==='function'){
+      window.Fit50Native.shareText(text);
+    } else {
+      setTimeout(function(){toast('שיתוף אינו זמין כרגע')},200);
+    }
+  };
+
+  function loadRealProgress(){
+    if(window.Fit50Native && typeof window.Fit50Native.getProgress==='function'){
+      try{window.Fit50Native.getProgress();}catch(e){}
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',loadRealProgress);
+  else loadRealProgress();
+})();
+</script>
 </body>
 </html>
