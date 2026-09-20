@@ -13,6 +13,10 @@ class Fit50Prefs(context: Context) {
         get() = prefs.getBoolean("guest", false)
         set(value) = prefs.edit().putBoolean("guest", value).apply()
 
+    var accountSignedIn: Boolean
+        get() = prefs.getBoolean("account_signed_in", false)
+        set(value) = prefs.edit().putBoolean("account_signed_in", value).apply()
+
     var completed: Int
         get() = prefs.getInt("completed", 0)
         set(value) = prefs.edit().putInt("completed", value).apply()
