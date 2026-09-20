@@ -92,7 +92,7 @@ class AuthManager(private val context: Context) {
     }
 
     fun resetPassword(email: String, done: (Boolean, String?) -> Unit) {
-        ensureFirebase()
+        val auth = ensureFirebase()
             ?: return done(false, initializationError ?: "Firebase עדיין לא הוגדר בפרויקט")
 
         val normalized = email.trim().lowercase()
@@ -100,24 +100,13 @@ class AuthManager(private val context: Context) {
             return done(false, "כתובת אימייל אינה תקינה")
         }
 
-        val db = runCatching { FirebaseFirestore.getInstance() }.getOrNull()
-            ?: return done(false, "לא הצלחנו להתחבר לשירות איפוס הסיסמה")
-
-        val request = hashMapOf<String, Any?>(
-            "email" to normalized,
-            "source" to "app",
-            "status" to "queued",
-            "createdAt" to FieldValue.serverTimestamp(),
-            "error" to ""
-        )
-
-        db.collection("passwordResetRequests")
-            .add(request)
-            .addOnSuccessListener {
-                done(true, "בקשת האיפוס התקבלה. קישור יישלח לאימייל בתוך כדקה.")
-            }
-            .addOnFailureListener { error ->
-                done(false, error.localizedMessage ?: "לא הצלחנו ליצור בקשת איפוס")
+        auth.sendPasswordResetEmail(normalized)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    done(true, "קישור איפוס נשלח לאימייל.")
+                } else {
+                    done(false, task.exception?.localizedMessage ?: "שליחת קישור האיפוס נכשלה")
+                }
             }
     }
 
