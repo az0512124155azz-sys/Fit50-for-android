@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
-fun Project.fit50Prop(name: String): String = providers.gradleProperty(name).orNull ?: ""
+fun Project.fit50Prop(name: String, fallback: String = ""): String = providers.gradleProperty(name).orNull ?: fallback
 fun String.asBuildConfigString(): String = "\"${replace("\\", "\\\\").replace("\"", "\\\"")}\""
 
 android {
@@ -19,9 +19,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "FIREBASE_API_KEY", fit50Prop("FIT50_FIREBASE_API_KEY").asBuildConfigString())
-        buildConfigField("String", "FIREBASE_APP_ID", fit50Prop("FIT50_FIREBASE_APP_ID").asBuildConfigString())
-        buildConfigField("String", "FIREBASE_PROJECT_ID", fit50Prop("FIT50_FIREBASE_PROJECT_ID").asBuildConfigString())
+        buildConfigField("String", "FIREBASE_API_KEY", fit50Prop("FIT50_FIREBASE_API_KEY", "AIzaSyA-6Vv4xXV7FxG9SedTtxMl7YpNL5egmAY").asBuildConfigString())
+        buildConfigField("String", "FIREBASE_APP_ID", fit50Prop("FIT50_FIREBASE_APP_ID", "1:1570044363:web:4d7260347d578d89c11e4e").asBuildConfigString())
+        buildConfigField("String", "FIREBASE_PROJECT_ID", fit50Prop("FIT50_FIREBASE_PROJECT_ID", "fit50-plus").asBuildConfigString())
+        buildConfigField("String", "FIREBASE_STORAGE_BUCKET", fit50Prop("FIT50_FIREBASE_STORAGE_BUCKET", "fit50-plus.firebasestorage.app").asBuildConfigString())
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", fit50Prop("FIT50_GOOGLE_WEB_CLIENT_ID").asBuildConfigString())
     }
 
