@@ -92,10 +92,10 @@ class Fit50WebBridge(
     }
 
     @JavascriptInterface
-    fun resetPassword(email: String, age: Int) {
+    fun resetPassword(email: String) {
         activity.runOnUiThread {
-            auth.resetPassword(email, age) { ok, message ->
-                authCallback("reset", ok, message ?: "אם הפרטים תואמים לחשבון, יישלח קישור איפוס לאימייל.")
+            auth.resetPassword(email) { ok, message ->
+                authCallback("reset", ok, message ?: if (ok) "בקשת האיפוס התקבלה" else "יצירת בקשת האיפוס נכשלה")
             }
         }
     }
