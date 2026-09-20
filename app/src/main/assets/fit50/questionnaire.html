@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1F2B24">
+<title>Fit50+ — שאלון בריאות</title>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#1F2B24;
+  --forest-2:#2D3D33;
+  --cream:#FAF7F2;
+  --cream-2:#F2EDE4;
+  --cream-3:#E8E1D5;
+  --ink:#1A1A1A;
+  --ink-2:#4A4A4A;
+  --ink-3:#8A8A8A;
+  --line:rgba(26,26,26,.12);
+  --accent:#E85A2C;
+  --accent-2:#C44A22;
+  --lime:#D4E85C;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  font-family:'Assistant',-apple-system,sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  direction:rtl;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;
+  user-select:none;
+}
+.screen{
+  max-width:480px;margin:0 auto;
+  min-height:100vh;display:flex;flex-direction:column;
+  background:var(--cream);
+}
+
+.top{
+  padding:20px 24px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:10;
+  background:var(--cream);
+  border-bottom:1px solid var(--line);
+}
+.top-back{
+  width:38px;height:38px;
+  background:transparent;border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--ink-2);
+  border-radius:50%;
+  transition:background .15s;
+}
+.top-back:hover{background:var(--cream-2)}
+.top-back svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.top-back[disabled]{opacity:.2;cursor:default}
+.top-back[disabled]:hover{background:transparent}
+.top-step{
+  font-size:12px;font-weight:600;
+  color:var(--ink-3);letter-spacing:.08em;
+}
+.top-count{
+  font-family:'Fraunces',serif;
+  font-weight:700;font-size:14px;
+  color:var(--ink);
+}
+.top-count i{font-style:normal;color:var(--ink-3);font-weight:400}
+
+.progress{
+  height:3px;background:var(--cream-3);
+  position:sticky;top:73px;z-index:10;
+}
+.progress-fill{
+  height:100%;
+  background:var(--accent);
+  transition:width .5s cubic-bezier(.22,1,.36,1);
+  width:0;
+}
+
+.step{
+  flex:1;
+  padding:36px 28px 120px;
+  display:none;
+  animation:fadeUp .35s ease-out;
+}
+.step.on{display:block}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.step-eyebrow{
+  font-size:12px;font-weight:600;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:12px;
+}
+.step-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:32px;font-weight:700;
+  line-height:1.1;letter-spacing:-.02em;
+  color:var(--ink);
+  margin-bottom:12px;
+}
+.step-title em{font-style:normal;color:var(--accent)}
+.step-sub{
+  font-size:16px;line-height:1.5;
+  color:var(--ink-2);
+  margin-bottom:32px;
+  font-weight:400;
+}
+
+.q{margin-bottom:32px}
+.q:last-child{margin-bottom:0}
+.q-label{
+  display:block;
+  font-size:15px;font-weight:700;
+  color:var(--ink);
+  margin-bottom:14px;
+  line-height:1.4;
+}
+.q-hint{
+  font-size:13px;color:var(--ink-3);
+  margin-top:-8px;margin-bottom:14px;
+  line-height:1.5;
+}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips.vert{flex-direction:column;gap:8px}
+.chip{
+  padding:12px 18px;
+  background:transparent;
+  border:1.5px solid var(--line);
+  border-radius:100px;
+  font-family:inherit;font-size:15px;font-weight:600;
+  color:var(--ink-2);
+  cursor:pointer;transition:all .15s;
+  text-align:right;
+}
+.chip:hover{border-color:var(--ink-3);background:var(--cream-2)}
+.chip.on{
+  background:var(--forest);
+  color:var(--cream);
+  border-color:var(--forest);
+}
+.chips.vert .chip{
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 18px;
+  width:100%;
+  text-align:right;
+}
+.chips.vert .chip::after{
+  content:'';
+  width:18px;height:18px;
+  border:2px solid var(--line);
+  border-radius:50%;
+  flex-shrink:0;
+  transition:all .15s;
+}
+.chips.vert .chip.on::after{
+  background:var(--lime);
+  border-color:var(--lime);
+  box-shadow:inset 0 0 0 4px var(--forest);
+}
+
+.yn{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.yn-btn{
+  padding:18px 16px;
+  background:transparent;
+  border:1.5px solid var(--line);
+  border-radius:14px;
+  font-family:inherit;font-size:16px;font-weight:700;
+  color:var(--ink-2);
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.yn-btn:hover{border-color:var(--ink-3);background:var(--cream-2)}
+.yn-btn.on.yes{
+  background:var(--accent);
+  color:var(--cream);
+  border-color:var(--accent);
+}
+.yn-btn.on.no{
+  background:var(--forest);
+  color:var(--cream);
+  border-color:var(--forest);
+}
+.yn-btn .mark{
+  width:16px;height:16px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:14px;
+  opacity:.6;
+}
+
+.scale{
+  display:grid;
+  grid-template-columns:repeat(11,1fr);
+  gap:4px;
+  margin-top:8px;
+}
+.scale-btn{
+  aspect-ratio:1;
+  background:transparent;
+  border:1.5px solid var(--line);
+  border-radius:8px;
+  font-family:'Fraunces',serif;
+  font-size:14px;font-weight:700;
+  color:var(--ink-2);
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+  padding:0;
+}
+.scale-btn:hover{border-color:var(--ink-3);background:var(--cream-2)}
+.scale-btn.on{
+  background:var(--forest);
+  color:var(--cream);
+  border-color:var(--forest);
+}
+.scale-labels{
+  display:flex;justify-content:space-between;
+  margin-top:8px;
+  font-size:11px;color:var(--ink-3);
+}
+
+.slider-wrap{margin-top:8px}
+.slider{
+  width:100%;
+  height:44px;
+  -webkit-appearance:none;
+  appearance:none;
+  background:transparent;
+  cursor:pointer;
+}
+.slider::-webkit-slider-runnable-track{
+  height:3px;background:var(--cream-3);border-radius:3px;
+}
+.slider::-moz-range-track{
+  height:3px;background:var(--cream-3);border-radius:3px;
+}
+.slider::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:26px;height:26px;
+  background:var(--forest);
+  border:4px solid var(--cream);
+  border-radius:50%;
+  margin-top:-12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+  cursor:pointer;
+}
+.slider::-moz-range-thumb{
+  width:26px;height:26px;
+  background:var(--forest);
+  border:4px solid var(--cream);
+  border-radius:50%;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+  cursor:pointer;
+}
+.slider-val{
+  font-family:'Fraunces',serif;
+  font-size:52px;font-weight:900;
+  line-height:1;letter-spacing:-.03em;
+  color:var(--ink);
+  text-align:center;
+  margin-bottom:16px;
+}
+.slider-val small{
+  font-family:'Assistant',sans-serif;
+  font-size:18px;font-weight:600;
+  color:var(--ink-3);
+  margin-right:4px;
+}
+
+.notice{
+  background:rgba(232,90,44,.06);
+  border-right:3px solid var(--accent);
+  padding:18px 20px;
+  border-radius:6px;
+  margin-bottom:24px;
+}
+.notice-title{
+  font-size:13px;font-weight:700;
+  color:var(--accent);
+  letter-spacing:.04em;
+  margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.notice-title svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.notice-text{
+  font-size:14px;line-height:1.6;
+  color:var(--ink-2);
+}
+
+.ack{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:20px;
+  background:var(--cream-2);
+  border-radius:14px;
+  cursor:pointer;
+  margin-bottom:24px;
+  transition:all .15s;
+}
+.ack:hover{background:var(--cream-3)}
+.ack input{
+  appearance:none;
+  width:22px;height:22px;
+  border:2px solid var(--ink-3);
+  border-radius:6px;
+  cursor:pointer;
+  flex-shrink:0;
+  margin-top:2px;
+  position:relative;
+  background:transparent;
+  transition:all .15s;
+}
+.ack input:checked{
+  background:var(--forest);
+  border-color:var(--forest);
+}
+.ack input:checked::after{
+  content:'';
+  position:absolute;
+  left:6px;top:2px;
+  width:6px;height:11px;
+  border:solid var(--cream);
+  border-width:0 2.5px 2.5px 0;
+  transform:rotate(45deg);
+}
+.ack-text{
+  font-size:14px;line-height:1.6;
+  color:var(--ink-2);
+  font-weight:500;
+}
+
+/* ============ SUMMARY ============ */
+.summary-heading{
+  font-size:13px;font-weight:700;
+  color:var(--ink-3);
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+.summary{
+  background:var(--cream-2);
+  border-radius:16px;
+  padding:6px 0;
+  margin-bottom:24px;
+}
+.summary-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:16px;
+  padding:14px 20px;
+  border-bottom:1px solid var(--line);
+  font-size:14px;
+}
+.summary-row:last-child{border-bottom:none}
+.summary-key{
+  color:var(--ink-3);
+  font-weight:500;
+  flex-shrink:0;
+}
+.summary-val{
+  color:var(--ink);
+  font-weight:700;
+  text-align:left;
+  line-height:1.4;
+}
+
+.foot{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:480px;
+  padding:16px 28px 24px;
+  background:linear-gradient(to top,var(--cream) 70%,transparent);
+  z-index:5;
+}
+.btn-continue{
+  width:100%;min-height:58px;
+  padding:18px 24px;
+  background:var(--forest);
+  color:var(--cream);
+  border:none;border-radius:16px;
+  font-family:inherit;font-size:17px;font-weight:700;
+  letter-spacing:.02em;
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 20px -8px rgba(31,43,36,.5);
+}
+.btn-continue:hover{background:var(--forest-2)}
+.btn-continue:active{transform:translateY(2px);box-shadow:0 2px 8px -4px rgba(31,43,36,.4)}
+.btn-continue:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+
+.finish{
+  display:none;
+  min-height:100vh;
+  padding:60px 28px 40px;
+  flex-direction:column;
+  justify-content:center;
+  text-align:center;
+  background:var(--cream);
+}
+.finish.on{display:flex}
+.finish-mark{
+  width:88px;height:88px;
+  border-radius:50%;
+  background:var(--forest);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 28px;
+  animation:popIn .5s cubic-bezier(.22,1.4,.4,1);
+}
+@keyframes popIn{
+  0%{transform:scale(.6);opacity:0}
+  60%{transform:scale(1.08)}
+  100%{transform:scale(1);opacity:1}
+}
+.finish-mark svg{width:44px;height:44px;stroke:var(--lime);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.finish-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:38px;font-weight:700;
+  letter-spacing:-.03em;line-height:1.05;
+  margin-bottom:12px;
+}
+.finish-title em{font-style:normal;color:var(--accent)}
+.finish-sub{
+  font-size:16px;color:var(--ink-2);
+  line-height:1.55;margin-bottom:40px;
+  max-width:340px;margin-left:auto;margin-right:auto;
+}
+
+.toast{
+  position:fixed;bottom:100px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--forest);color:var(--cream);
+  padding:14px 24px;border-radius:100px;
+  font-size:14px;font-weight:600;
+  box-shadow:0 12px 32px -8px rgba(0,0,0,.4);
+  z-index:1000;opacity:0;
+  transition:all .35s cubic-bezier(.22,1.4,.4,1);
+  pointer-events:none;max-width:calc(100% - 48px);
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--accent)}
+
+@media (max-height:700px){
+  .step{padding:24px 28px 120px}
+  .step-title{font-size:26px}
+  .step-sub{margin-bottom:20px}
+  .q{margin-bottom:22px}
+}
+</style>
+</head>
+<body>
+
+<div class="screen" id="qScreen">
+
+  <div class="top">
+    <button class="top-back" id="backBtn" disabled>
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <span class="top-step">שאלון בטיחות</span>
+    <span class="top-count"><span id="stepNow">1</span><i> / 7</i></span>
+  </div>
+  <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+
+  <!-- STEP 1 -->
+  <div class="step on" data-step="1">
+    <div class="step-eyebrow">שלב 1 מתוך 7</div>
+    <div class="step-title">נתחיל <em>בבסיס</em></div>
+    <div class="step-sub">כמה פרטים כלליים כדי שנוכל להתאים את התוכנית אליך.</div>
+
+    <div class="q">
+      <label class="q-label">באיזה גיל אתה?</label>
+      <div class="slider-wrap">
+        <div class="slider-val"><span id="ageVal">52</span><small>שנים</small></div>
+        <input type="range" class="slider" id="ageSlider" min="40" max="75" value="52">
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">מין</label>
+      <div class="chips" data-group="gender">
+        <button class="chip" data-val="m">גבר</button>
+        <button class="chip" data-val="f">אישה</button>
+        <button class="chip" data-val="x">אחר / מעדיף לא לציין</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">רמת הפעילות היומיומית שלך</label>
+      <div class="chips vert" data-group="daily">
+        <button class="chip" data-val="sit">יושבני — רוב היום בכיסא</button>
+        <button class="chip" data-val="light">קלילה — עומד/הולך קצת</button>
+        <button class="chip" data-val="mod">פעילה — הולך הרבה, עובד פיזית</button>
+        <button class="chip" data-val="high">גבוהה — עבודה פיזית או ספורט קבוע</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step" data-step="2">
+    <div class="step-eyebrow">שלב 2 מתוך 7</div>
+    <div class="step-title">מצב <em>רפואי</em></div>
+    <div class="step-sub">סמן כל מה שרלוונטי. המידע נשאר במכשיר שלך בלבד.</div>
+
+    <div class="q">
+      <label class="q-label">האם אובחנו אצלך אחד מהמצבים הבאים?</label>
+      <div class="q-hint">אפשר לסמן כמה אפשרויות</div>
+      <div class="chips vert" data-group="conditions" data-multi="1">
+        <button class="chip" data-val="heart">מחלת לב / בעיות בלב</button>
+        <button class="chip" data-val="bp">לחץ דם גבוה</button>
+        <button class="chip" data-val="diabetes">סוכרת</button>
+        <button class="chip" data-val="asthma">אסטמה / בעיות נשימה</button>
+        <button class="chip" data-val="joints">שחיקת סחוס / דלקת מפרקים</button>
+        <button class="chip" data-val="back">בעיות גב כרוניות</button>
+        <button class="chip" data-val="osteo">אוסטיאופורוזיס</button>
+        <button class="chip" data-val="none">אף אחד מהנ״ל</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">האם עברת ניתוח בשנתיים האחרונות?</label>
+      <div class="yn" data-group="surgery">
+        <button class="yn-btn no" data-val="0"><span class="mark">○</span>לא</button>
+        <button class="yn-btn yes" data-val="1"><span class="mark">●</span>כן</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step" data-step="3">
+    <div class="step-eyebrow">שלב 3 מתוך 7</div>
+    <div class="step-title">כאבים <em>ומגבלות</em></div>
+    <div class="step-sub">זה עוזר לנו להבין איפה לשים דגש ואיפה להיזהר.</div>
+
+    <div class="q">
+      <label class="q-label">איפה אתה חש כאב או נוקשות?</label>
+      <div class="q-hint">אפשר לסמן כמה אזורים</div>
+      <div class="chips" data-group="painAreas" data-multi="1">
+        <button class="chip" data-val="neck">צוואר</button>
+        <button class="chip" data-val="shoulders">כתפיים</button>
+        <button class="chip" data-val="upperBack">גב עליון</button>
+        <button class="chip" data-val="lowerBack">גב תחתון</button>
+        <button class="chip" data-val="hips">ירכיים</button>
+        <button class="chip" data-val="knees">ברכיים</button>
+        <button class="chip" data-val="ankles">קרסוליים</button>
+        <button class="chip" data-val="none">אין כאב</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">בסולם של 0 עד 10 — כמה כואב לך ביום טיפוסי?</label>
+      <div class="q-hint">0 = בכלל לא כואב · 10 = כואב מאוד</div>
+      <div class="scale" data-group="painLevel">
+        <button class="scale-btn" data-val="0">0</button>
+        <button class="scale-btn" data-val="1">1</button>
+        <button class="scale-btn" data-val="2">2</button>
+        <button class="scale-btn" data-val="3">3</button>
+        <button class="scale-btn" data-val="4">4</button>
+        <button class="scale-btn" data-val="5">5</button>
+        <button class="scale-btn" data-val="6">6</button>
+        <button class="scale-btn" data-val="7">7</button>
+        <button class="scale-btn" data-val="8">8</button>
+        <button class="scale-btn" data-val="9">9</button>
+        <button class="scale-btn" data-val="10">10</button>
+      </div>
+      <div class="scale-labels"><span>בלי כאב</span><span>כואב מאוד</span></div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">האם יש תנועות שאתה נמנע מהן בגלל כאב?</label>
+      <div class="yn" data-group="avoid">
+        <button class="yn-btn no" data-val="0"><span class="mark">○</span>לא</button>
+        <button class="yn-btn yes" data-val="1"><span class="mark">●</span>כן</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step" data-step="4">
+    <div class="step-eyebrow">שלב 4 מתוך 7</div>
+    <div class="step-title">תרופות <em>וטיפולים</em></div>
+    <div class="step-sub">חלק מהתרופות משפיעות על איך שהגוף מגיב למאמץ. חשוב לנו לדעת.</div>
+
+    <div class="q">
+      <label class="q-label">האם אתה נוטל תרופות באופן קבוע?</label>
+      <div class="chips vert" data-group="meds" data-multi="1">
+        <button class="chip" data-val="bp">תרופות ללחץ דם</button>
+        <button class="chip" data-val="heart">תרופות ללב</button>
+        <button class="chip" data-val="diabetes">תרופות לסוכרת</button>
+        <button class="chip" data-val="thinners">מדללי דם</button>
+        <button class="chip" data-val="pain">משככי כאבים קבועים</button>
+        <button class="chip" data-val="psych">תרופות פסיכיאטריות</button>
+        <button class="chip" data-val="none">לא נוטל תרופות</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">האם רופא המליץ לך בעבר להגביל פעילות גופנית?</label>
+      <div class="yn" data-group="restricted">
+        <button class="yn-btn no" data-val="0"><span class="mark">○</span>לא</button>
+        <button class="yn-btn yes" data-val="1"><span class="mark">●</span>כן</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">האם חווית בעבר כאב בחזה בזמן מאמץ?</label>
+      <div class="yn" data-group="chestPain">
+        <button class="yn-btn no" data-val="0"><span class="mark">○</span>לא</button>
+        <button class="yn-btn yes" data-val="1"><span class="mark">●</span>כן</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step" data-step="5">
+    <div class="step-eyebrow">שלב 5 מתוך 7</div>
+    <div class="step-title">הרקע <em>הספורטיבי</em></div>
+    <div class="step-sub">כדי שנתחיל בדיוק במקום הנכון עבורך.</div>
+
+    <div class="q">
+      <label class="q-label">מתי בפעם האחרונה התאמנת באופן קבוע?</label>
+      <div class="chips vert" data-group="lastTrained">
+        <button class="chip" data-val="now">אני מתאמן עכשיו באופן קבוע</button>
+        <button class="chip" data-val="6m">בחצי השנה האחרונה</button>
+        <button class="chip" data-val="1y">לפני שנה בערך</button>
+        <button class="chip" data-val="5y">הרבה שנים — מעל 5</button>
+        <button class="chip" data-val="never">אף פעם לא ממש</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">איזה סוגי פעילות אתה אוהב?</label>
+      <div class="q-hint">אפשר לסמן כמה סוגים</div>
+      <div class="chips" data-group="likes" data-multi="1">
+        <button class="chip" data-val="walk">הליכה</button>
+        <button class="chip" data-val="strength">כוח ומשקל גוף</button>
+        <button class="chip" data-val="mobility">מתיחות ומוביליטי</button>
+        <button class="chip" data-val="yoga">יוגה / פילאטיס</button>
+        <button class="chip" data-val="swim">שחייה</button>
+        <button class="chip" data-val="bike">אופניים</button>
+        <button class="chip" data-val="garden">עבודה בגינה</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">כמה פעמים בשבוע תוכל להתאמן?</label>
+      <div class="chips" data-group="freq">
+        <button class="chip" data-val="2">פעמיים</button>
+        <button class="chip" data-val="3">3 פעמים</button>
+        <button class="chip" data-val="4">4 פעמים</button>
+        <button class="chip" data-val="5">5+ פעמים</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">כמה זמן נוח לך להקדיש לכל אימון?</label>
+      <div class="chips" data-group="duration">
+        <button class="chip" data-val="15">15 דקות</button>
+        <button class="chip" data-val="20">20 דקות</button>
+        <button class="chip" data-val="30">30 דקות</button>
+        <button class="chip" data-val="45">45+ דקות</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="step" data-step="6">
+    <div class="step-eyebrow">שלב 6 מתוך 7</div>
+    <div class="step-title">המטרות <em>שלך</em></div>
+    <div class="step-sub">מה הדבר הכי חשוב לך להשיג?</div>
+
+    <div class="q">
+      <label class="q-label">בחר את המטרה הראשית שלך</label>
+      <div class="chips vert" data-group="mainGoal">
+        <button class="chip" data-val="pain">להפחית כאב ולנוע בלי הגבלה</button>
+        <button class="chip" data-val="strength">לבנות כוח פונקציונלי</button>
+        <button class="chip" data-val="mobility">לשפר גמישות וטווחי תנועה</button>
+        <button class="chip" data-val="balance">לשפר יציבות ושיווי משקל</button>
+        <button class="chip" data-val="health">בריאות כללית ואיכות חיים</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">מה עוד חשוב לך?</label>
+      <div class="q-hint">אפשר לסמן כמה</div>
+      <div class="chips" data-group="extraGoals" data-multi="1">
+        <button class="chip" data-val="energy">יותר אנרגיה ביום</button>
+        <button class="chip" data-val="sleep">שיפור שינה</button>
+        <button class="chip" data-val="weight">ירידה במשקל</button>
+        <button class="chip" data-val="stress">הפחתת מתח</button>
+        <button class="chip" data-val="posture">שיפור יציבה</button>
+        <button class="chip" data-val="independence">עצמאות תנועתית לשנים הבאות</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">מתי נוח לך להתאמן בדרך כלל?</label>
+      <div class="chips" data-group="timeOfDay">
+        <button class="chip" data-val="morning">בוקר</button>
+        <button class="chip" data-val="noon">צהריים</button>
+        <button class="chip" data-val="evening">ערב</button>
+        <button class="chip" data-val="flex">גמיש — לפי היום</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 7 -->
+  <div class="step" data-step="7">
+    <div class="step-eyebrow">שלב 7 מתוך 7</div>
+    <div class="step-title">רגע <em>אחרון</em></div>
+    <div class="step-sub">רק נוודא שהבנו אחד את השני, ונתחיל.</div>
+
+    <div class="notice">
+      <div class="notice-title">
+        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
+        חשוב שתדע
+      </div>
+      <div class="notice-text">
+        Fit50+ מספקת הדרכה כללית לכושר, תנועה ומוביליטי. היא <strong>אינה</strong> מהווה ייעוץ רפואי, אבחון או טיפול. אם יש לך מצב רפואי, התייעץ עם רופא לפני תחילת התוכנית. עצור מיד אם אתה חש כאב, סחרחורת או קוצר נשימה.
+      </div>
+    </div>
+
+    <div class="summary-heading">הנה סיכום מה שאמרת</div>
+    <div class="summary" id="summaryList"></div>
+
+    <label class="ack">
+      <input type="checkbox" id="ackBox">
+      <div class="ack-text">
+        קראתי והבנתי את ההנחיות. אני מתחייב/ת לעצור אם ארגיש כאב או אי-נוחות, ולהתייעץ עם איש מקצוע במידת הצורך.
+      </div>
+    </label>
+  </div>
+
+  <div class="foot" id="foot">
+    <button class="btn-continue" id="nextBtn" disabled>
+      <span id="nextLbl">המשך</span>
+    </button>
+  </div>
+
+</div>
+
+<div class="finish" id="finishScreen">
+  <div class="finish-mark">
+    <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+  </div>
+  <div class="finish-title">מעולה.<br>אנחנו <em>מוכנים</em>.</div>
+  <div class="finish-sub">בנינו לך תוכנית שמתאימה למטרות שלך. בואו נתחיל את האימון הראשון.</div>
+  <button class="btn-continue" id="finishBtn">
+    <span>בואו נתחיל</span>
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const $$ = s => document.querySelectorAll(s);
+
+const TOTAL = 7;
+let current = 1;
+const answers = {};
+
+let toastT;
+function toast(msg, isErr){
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast on' + (isErr ? ' err' : '');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('on'), 2200);
+}
+
+$$('.chips').forEach(group => {
+  const name = group.dataset.group;
+  const multi = group.dataset.multi === '1';
+  group.querySelectorAll('.chip').forEach(btn => {
+    btn.onclick = () => {
+      const val = btn.dataset.val;
+      if (val === 'none') {
+        group.querySelectorAll('.chip').forEach(b => b.classList.remove('on'));
+        btn.classList.add('on');
+        answers[name] = [val];
+      } else {
+        const noneBtn = group.querySelector('.chip[data-val="none"]');
+        if (noneBtn) noneBtn.classList.remove('on');
+        if (multi) {
+          btn.classList.toggle('on');
+          const selected = [...group.querySelectorAll('.chip.on')].map(b => b.dataset.val);
+          answers[name] = selected;
+        } else {
+          group.querySelectorAll('.chip').forEach(b => b.classList.remove('on'));
+          btn.classList.add('on');
+          answers[name] = val;
+        }
+      }
+      validate();
+    };
+  });
+});
+
+$$('.yn').forEach(group => {
+  const name = group.dataset.group;
+  group.querySelectorAll('.yn-btn').forEach(btn => {
+    btn.onclick = () => {
+      group.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      answers[name] = btn.dataset.val === '1';
+      validate();
+    };
+  });
+});
+
+$$('.scale').forEach(group => {
+  const name = group.dataset.group;
+  group.querySelectorAll('.scale-btn').forEach(btn => {
+    btn.onclick = () => {
+      group.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      answers[name] = parseInt(btn.dataset.val, 10);
+      validate();
+    };
+  });
+});
+
+const ageSlider = $('ageSlider');
+if (ageSlider) {
+  ageSlider.oninput = () => {
+    $('ageVal').textContent = ageSlider.value;
+    answers.age = parseInt(ageSlider.value, 10);
+    validate();
+  };
+  answers.age = parseInt(ageSlider.value, 10);
+}
+
+function validate() {
+  const s = current;
+  let ok = false;
+
+  if (s === 1) {
+    ok = answers.gender && answers.daily;
+  } else if (s === 2) {
+    ok = answers.conditions && answers.conditions.length > 0 && answers.surgery !== undefined;
+  } else if (s === 3) {
+    ok = answers.painAreas && answers.painAreas.length > 0
+      && answers.painLevel !== undefined
+      && answers.avoid !== undefined;
+  } else if (s === 4) {
+    ok = answers.meds && answers.meds.length > 0
+      && answers.restricted !== undefined
+      && answers.chestPain !== undefined;
+  } else if (s === 5) {
+    ok = answers.lastTrained && answers.likes && answers.likes.length > 0
+      && answers.freq && answers.duration;
+  } else if (s === 6) {
+    ok = answers.mainGoal && answers.extraGoals && answers.extraGoals.length > 0
+      && answers.timeOfDay;
+  } else if (s === 7) {
+    ok = $('ackBox').checked;
+  }
+
+  $('nextBtn').disabled = !ok;
+}
+
+function go(step) {
+  if (step < 1 || step > TOTAL) return;
+  $$('.step').forEach(el => el.classList.toggle('on', parseInt(el.dataset.step, 10) === step));
+  current = step;
+  $('stepNow').textContent = step;
+  $('progressFill').style.width = ((step - 1) / (TOTAL - 1) * 100) + '%';
+  $('backBtn').disabled = step === 1;
+  $('nextLbl').textContent = step === TOTAL ? 'סיים שאלון' : 'המשך';
+
+  // ✅ הסיכום מוצג תמיד בשלב 7
+  if (step === 7) renderSummary();
+
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  validate();
+}
+
+$('nextBtn').onclick = () => {
+  if (current === TOTAL) {
+    finish();
+  } else {
+    go(current + 1);
+  }
+};
+
+$('backBtn').onclick = () => {
+  if (current > 1) go(current - 1);
+};
+
+function finish() {
+  try {
+    localStorage.setItem('fit50.health.v1', JSON.stringify({
+      ...answers,
+      acknowledgedDisclaimer: true,
+      completedAt: new Date().toISOString()
+    }));
+    localStorage.setItem('fit50.health.done', '1');
+  } catch(e) {}
+
+  $('qScreen').style.display = 'none';
+  $('finishScreen').classList.add('on');
+  window.scrollTo(0, 0);
+}
+
+function renderSummary() {
+  const rows = [];
+  const genderMap = {m:'גבר', f:'אישה', x:'אחר / לא לציין'};
+  const dailyMap = { sit:'יושבני', light:'קלילה', mod:'פעילה', high:'גבוהה' };
+  const goalMap = {
+    pain:'הפחתת כאב', strength:'כוח פונקציונלי',
+    mobility:'גמישות וטווחים', balance:'יציבות',
+    health:'בריאות כללית'
+  };
+  const freqMap = { '2':'פעמיים בשבוע', '3':'3 פעמים', '4':'4 פעמים', '5':'5+ פעמים' };
+  const durMap = { '15':'15 דקות', '20':'20 דקות', '30':'30 דקות', '45':'45+ דקות' };
+  const timeMap = { morning:'בוקר', noon:'צהריים', evening:'ערב', flex:'גמיש' };
+  const trainedMap = {
+    now:'עכשיו באופן קבוע', '6m':'בחצי השנה האחרונה',
+    '1y':'לפני שנה', '5y':'מעל 5 שנים', never:'אף פעם לא ממש'
+  };
+  const painAreaMap = {
+    neck:'צוואר', shoulders:'כתפיים', upperBack:'גב עליון',
+    lowerBack:'גב תחתון', hips:'ירכיים', knees:'ברכיים',
+    ankles:'קרסוליים', none:'ללא כאב'
+  };
+  const condMap = {
+    heart:'לב', bp:'לחץ דם', diabetes:'סוכרת', asthma:'אסטמה',
+    joints:'מפרקים', back:'גב', osteo:'אוסטיאופורוזיס', none:'ללא'
+  };
+
+  if (answers.age) rows.push(['גיל', answers.age + ' שנים']);
+  if (answers.gender) rows.push(['מין', genderMap[answers.gender] || '—']);
+  if (answers.daily) rows.push(['רמת פעילות', dailyMap[answers.daily] || '—']);
+
+  if (answers.conditions && answers.conditions.length > 0) {
+    const list = answers.conditions.map(c => condMap[c] || c).join(', ');
+    rows.push(['מצב רפואי', list]);
+  }
+  if (answers.surgery !== undefined) {
+    rows.push(['ניתוח לאחרונה', answers.surgery ? 'כן' : 'לא']);
+  }
+  if (answers.painAreas && answers.painAreas.length > 0) {
+    const list = answers.painAreas.map(p => painAreaMap[p] || p).join(', ');
+    rows.push(['אזורי כאב', list]);
+  }
+  if (answers.painLevel !== undefined) {
+    rows.push(['רמת כאב', answers.painLevel + ' מתוך 10']);
+  }
+  if (answers.avoid !== undefined) {
+    rows.push(['הימנעות מתנועות', answers.avoid ? 'כן' : 'לא']);
+  }
+  if (answers.restricted !== undefined) {
+    rows.push(['הגבלה רפואית', answers.restricted ? 'כן' : 'לא']);
+  }
+  if (answers.chestPain !== undefined) {
+    rows.push(['כאבי חזה במאמץ', answers.chestPain ? 'כן' : 'לא']);
+  }
+  if (answers.lastTrained) {
+    rows.push(['ניסיון אחרון', trainedMap[answers.lastTrained] || '—']);
+  }
+  if (answers.freq) rows.push(['תדירות אימונים', freqMap[answers.freq] || '—']);
+  if (answers.duration) rows.push(['משך אימון', durMap[answers.duration] || '—']);
+  if (answers.mainGoal) rows.push(['מטרה ראשית', goalMap[answers.mainGoal] || '—']);
+  if (answers.timeOfDay) rows.push(['זמן מועדף', timeMap[answers.timeOfDay] || '—']);
+
+  $('summaryList').innerHTML = rows.map(([k, v]) =>
+    `<div class="summary-row"><span class="summary-key">${k}</span><span class="summary-val">${v}</span></div>`
+  ).join('');
+}
+
+$('ackBox').onchange = validate;
+
+go(1);
+</script>
+
+
+<script>
+(function(){
+  function go(){location.href='home.html'}
+  function bind(){
+    var b=document.getElementById('finishBtn');
+    if(b) b.addEventListener('click',function(){setTimeout(go,250)},true);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
+</body>
+</html>
