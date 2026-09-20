@@ -5,25 +5,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Fit50+ Admin</title>
 <style>
-:root{--forest:#1F2B24;--cream:#FAF7F2;--accent:#E85A2C;--lime:#D4E85C;--ink:#1A1A1A;--muted:#777;--line:#ded8ce}
-*{box-sizing:border-box}
-body{margin:0;background:var(--cream);font-family:Arial,sans-serif;color:var(--ink)}
-.shell{max-width:1100px;margin:0 auto;padding:32px 20px 60px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}
-.brand{font-size:28px;font-weight:900;direction:ltr}.brand b{color:var(--accent)}.brand small{font-size:16px}
-.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 12px 30px rgba(31,43,36,.05);margin-bottom:18px}
-h1,h2{margin:0 0 12px}.sub{color:var(--muted);line-height:1.5}
+:root{--forest:#1F2B24;--cream:#FAF7F2;--accent:#E85A2C;--ink:#1A1A1A;--muted:#777;--line:#ded8ce}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);font-family:Arial,sans-serif;color:var(--ink)}
+.shell{max-width:1100px;margin:auto;padding:32px 20px 60px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:24px}
+.brand{font-size:28px;font-weight:900;direction:ltr}.brand b{color:var(--accent)}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;margin-bottom:18px;box-shadow:0 12px 30px rgba(31,43,36,.05)}
 .row{display:flex;gap:10px;flex-wrap:wrap}.row input{flex:1;min-width:240px}
 input{padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:16px;direction:ltr}
-button{border:0;border-radius:12px;padding:13px 18px;font-size:15px;font-weight:700;cursor:pointer}
-.primary{background:var(--forest);color:#fff}.danger{background:var(--accent);color:#fff}.ghost{background:#eee9e0}.google{background:#fff;border:1px solid var(--line)}
-.status{padding:12px 14px;border-radius:12px;background:#f4f0e8;margin-top:14px;white-space:pre-wrap}
-.hidden{display:none!important}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
-.kv{background:#f7f3ec;border-radius:12px;padding:12px}.kv b{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+button{border:0;border-radius:12px;padding:13px 18px;font-weight:700;cursor:pointer}.primary{background:var(--forest);color:white}.danger{background:var(--accent);color:white}.ghost{background:#eee9e0}.google{background:white;border:1px solid var(--line)}
+.status{padding:12px 14px;background:#f4f0e8;border-radius:12px;margin-top:12px;white-space:pre-wrap}.hidden{display:none!important}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.kv{background:#f7f3ec;padding:12px;border-radius:12px}.kv b{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
 table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:12px 8px;border-bottom:1px solid var(--line);text-align:right}th{color:var(--muted)}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#eee}.sent{background:#e8f5d0}.send_error,.lookup_error{background:#fde0d9}.not_found{background:#eee}
-.note{border-right:4px solid var(--accent);padding:12px 14px;background:#fff4ef;border-radius:10px;line-height:1.55}
+.note{border-right:4px solid var(--accent);padding:12px 14px;background:#fff4ef;border-radius:10px;line-height:1.55}.sub{color:var(--muted);line-height:1.5}
 @media(max-width:700px){.grid{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
@@ -31,8 +24,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:12px 8px;
 <div class="shell">
   <div class="top">
     <div>
-      <div class="brand"><span>Fit</span><b>50</b><small>+</small></div>
-      <div class="sub">Admin · Firebase Authentication</div>
+      <div class="brand"><span>Fit</span><b>50</b><span>+</span></div>
+      <div class="sub">Admin · Spark plan · ללא Cloud Functions</div>
     </div>
     <div>
       <button id="loginBtn" class="google">התחבר עם Google</button>
@@ -42,39 +35,30 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:12px 8px;
 
   <div class="card">
     <h2>גישה למנהל</h2>
-    <div class="sub">השרת מאשר רק את כתובת המנהל שהוגדרה ב־Firebase Functions.</div>
     <div id="authStatus" class="status">לא מחובר</div>
   </div>
 
   <div id="adminArea" class="hidden">
     <div class="card">
-      <h2>חיפוש משתמש ואיפוס סיסמה</h2>
-      <div class="note">סיסמאות לא נשמרות בצורה שניתן לקרוא. הדשבורד יכול לאמת שהמשתמש קיים ולשלוח לו קישור איפוס אמיתי.</div>
-
+      <h2>חיפוש משתמש</h2>
+      <div class="note">הדשבורד לא קורא סיסמאות. הוא מחפש פרופיל Fit50 ב־Firestore ויכול לבקש מ־Firebase לשלוח קישור איפוס אמיתי.</div>
       <div class="row" style="margin-top:16px">
         <input id="emailIn" type="email" placeholder="user@example.com">
-        <button id="lookupBtn" class="primary">חפש משתמש</button>
+        <button id="lookupBtn" class="primary">חפש</button>
         <button id="resetBtn" class="danger">שלח קישור איפוס</button>
       </div>
-
       <div id="lookupStatus" class="status">הזן כתובת אימייל.</div>
       <div id="userInfo" class="grid hidden"></div>
     </div>
 
     <div class="card">
-      <div class="row" style="align-items:center;justify-content:space-between">
-        <div>
-          <h2>בקשות איפוס אחרונות</h2>
-          <div class="sub">בקשות שהגיעו מהאפליקציה או שנשלחו מהדשבורד.</div>
-        </div>
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <div><h2>בקשות איפוס אחרונות</h2><div class="sub">נרשמות מהאפליקציה ומהדשבורד.</div></div>
         <button id="refreshBtn" class="ghost">רענן</button>
       </div>
-
       <div style="overflow:auto;margin-top:10px">
         <table>
-          <thead>
-            <tr><th>זמן</th><th>אימייל</th><th>מקור</th><th>מצב</th><th>ספקים</th></tr>
-          </thead>
+          <thead><tr><th>זמן</th><th>אימייל</th><th>מקור</th><th>מצב</th></tr></thead>
           <tbody id="requestsBody"></tbody>
         </table>
       </div>
@@ -84,87 +68,72 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:12px 8px;
 
 <script src="/__/firebase/10.14.1/firebase-app-compat.js"></script>
 <script src="/__/firebase/10.14.1/firebase-auth-compat.js"></script>
-<script src="/__/firebase/10.14.1/firebase-functions-compat.js"></script>
+<script src="/__/firebase/10.14.1/firebase-firestore-compat.js"></script>
 <script src="/__/firebase/init.js"></script>
 <script>
+const ADMIN_EMAIL='az0512124155azz@gmail.com';
 const auth=firebase.auth();
-const functions=firebase.functions();
-const lookupUser=functions.httpsCallable('lookupUser');
-const adminSendPasswordReset=functions.httpsCallable('adminSendPasswordReset');
-const listResetRequests=functions.httpsCallable('listResetRequests');
+const db=firebase.firestore();
 const $=id=>document.getElementById(id);
 
-function status(id,msg){$(id).textContent=msg}
 function esc(v){return String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function status(id,msg){$(id).textContent=msg}
 
 $('loginBtn').onclick=()=>auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>status('authStatus',e.message));
 $('logoutBtn').onclick=()=>auth.signOut();
 
 auth.onAuthStateChanged(async user=>{
+  const allowed=!!user && String(user.email||'').toLowerCase()===ADMIN_EMAIL.toLowerCase();
   $('loginBtn').classList.toggle('hidden',!!user);
   $('logoutBtn').classList.toggle('hidden',!user);
+  $('adminArea').classList.toggle('hidden',!allowed);
 
-  if(!user){
-    $('adminArea').classList.add('hidden');
-    status('authStatus','לא מחובר');
-    return;
-  }
-
-  status('authStatus','מחובר: '+user.email+' · בודק הרשאת מנהל...');
-  try{
-    await listResetRequests({});
-    $('adminArea').classList.remove('hidden');
-    status('authStatus','מחובר כמנהל: '+user.email);
-    refreshRequests();
-  }catch(e){
-    $('adminArea').classList.add('hidden');
-    status('authStatus','החשבון מחובר אך אינו מורשה לדשבורד.');
-  }
+  if(!user) status('authStatus','לא מחובר');
+  else if(allowed){status('authStatus','מחובר כמנהל: '+user.email);refreshRequests();}
+  else {status('authStatus','החשבון '+user.email+' אינו מורשה.');await auth.signOut();}
 });
 
 $('lookupBtn').onclick=async()=>{
-  const email=$('emailIn').value.trim();
+  const email=$('emailIn').value.trim().toLowerCase();
   if(!email.includes('@')) return status('lookupStatus','אימייל לא תקין');
-
-  status('lookupStatus','מחפש...');
+  status('lookupStatus','מחפש פרופיל Fit50...');
   $('userInfo').classList.add('hidden');
 
   try{
-    const {data}=await lookupUser({email});
-    if(!data.exists){
-      status('lookupStatus','לא נמצא משתמש Firebase עם האימייל הזה.');
+    const snap=await db.collection('users').where('email','==',email).limit(1).get();
+    if(snap.empty){
+      status('lookupStatus','לא נמצא פרופיל Fit50 עם האימייל הזה. ייתכן שקיים חשבון Auth שעדיין לא יצר פרופיל.');
       return;
     }
-
-    status('lookupStatus','המשתמש נמצא.');
+    const doc=snap.docs[0],d=doc.data();
     const info=[
-      ['UID',data.uid],
-      ['שם',data.displayName||'—'],
-      ['אימייל',data.email||'—'],
-      ['אימייל מאומת',data.emailVerified?'כן':'לא'],
-      ['מושבת',data.disabled?'כן':'לא'],
-      ['ספקי התחברות',(data.providers||[]).join(', ')||'—'],
-      ['נוצר',data.createdAt||'—'],
-      ['התחברות אחרונה',data.lastSignInAt||'—']
+      ['UID',doc.id],
+      ['שם',d.displayName||'—'],
+      ['אימייל',d.email||email],
+      ['Onboarding',d.onboardingComplete===true?'הושלם':'לא הושלם']
     ];
-
     $('userInfo').innerHTML=info.map(([k,v])=>'<div class="kv"><b>'+esc(k)+'</b>'+esc(v)+'</div>').join('');
     $('userInfo').classList.remove('hidden');
-  }catch(e){
-    status('lookupStatus','החיפוש נכשל: '+e.message);
-  }
+    status('lookupStatus','נמצא פרופיל.');
+  }catch(e){status('lookupStatus','החיפוש נכשל: '+e.message)}
 };
 
 $('resetBtn').onclick=async()=>{
-  const email=$('emailIn').value.trim();
+  const email=$('emailIn').value.trim().toLowerCase();
   if(!email.includes('@')) return status('lookupStatus','אימייל לא תקין');
-  if(!confirm('לשלוח קישור איפוס סיסמה ל-'+email+'?')) return;
+  if(!confirm('לשלוח קישור איפוס ל-'+email+'?')) return;
 
-  status('lookupStatus','שולח קישור דרך Firebase...');
-
+  status('lookupStatus','מבקש מ־Firebase לשלוח קישור...');
   try{
-    await adminSendPasswordReset({email});
-    status('lookupStatus','קישור האיפוס נשלח ל-'+email+'.');
+    await auth.sendPasswordResetEmail(email);
+    await db.collection('passwordResetRequests').add({
+      email,
+      source:'admin',
+      status:'admin_accepted',
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+      error:''
+    });
+    status('lookupStatus','Firebase אישר את הבקשה. בדוק את תיבת הדואר של המשתמש וגם ספאם.');
     refreshRequests();
   }catch(e){
     status('lookupStatus','השליחה נכשלה: '+e.message);
@@ -173,23 +142,16 @@ $('resetBtn').onclick=async()=>{
 
 async function refreshRequests(){
   try{
-    const {data}=await listResetRequests({});
-    const items=data.items||[];
-    $('requestsBody').innerHTML=items.map(x=>{
-      const d=x.createdAt?new Date(x.createdAt).toLocaleString('he-IL'):'—';
-      return '<tr>'+
-        '<td>'+esc(d)+'</td>'+
-        '<td dir="ltr">'+esc(x.email)+'</td>'+
-        '<td>'+esc(x.source)+'</td>'+
-        '<td><span class="badge '+esc(x.status)+'">'+esc(x.status)+'</span></td>'+
-        '<td>'+esc((x.providers||[]).join(', '))+'</td>'+
-      '</tr>';
-    }).join('') || '<tr><td colspan="5">אין עדיין בקשות.</td></tr>';
+    const snap=await db.collection('passwordResetRequests').orderBy('createdAt','desc').limit(100).get();
+    $('requestsBody').innerHTML=snap.docs.map(doc=>{
+      const d=doc.data();
+      const when=d.createdAt?.toDate?d.createdAt.toDate().toLocaleString('he-IL'):'—';
+      return '<tr><td>'+esc(when)+'</td><td dir="ltr">'+esc(d.email)+'</td><td>'+esc(d.source)+'</td><td>'+esc(d.status)+'</td></tr>';
+    }).join('') || '<tr><td colspan="4">אין בקשות.</td></tr>';
   }catch(e){
-    $('requestsBody').innerHTML='<tr><td colspan="5">שגיאה: '+esc(e.message)+'</td></tr>';
+    $('requestsBody').innerHTML='<tr><td colspan="4">שגיאה: '+esc(e.message)+'</td></tr>';
   }
 }
-
 $('refreshBtn').onclick=refreshRequests;
 </script>
 </body>
