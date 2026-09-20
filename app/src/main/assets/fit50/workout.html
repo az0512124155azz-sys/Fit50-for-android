@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1F2B24">
+<title>Fit50+ — אימון</title>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#1F2B24;
+  --forest-2:#2D3D33;
+  --cream:#FAF7F2;
+  --cream-2:#F2EDE4;
+  --cream-3:#E8E1D5;
+  --ink:#1A1A1A;
+  --ink-2:#4A4A4A;
+  --ink-3:#8A8A8A;
+  --line:rgba(26,26,26,.12);
+  --accent:#E85A2C;
+  --accent-2:#C44A22;
+  --lime:#D4E85C;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  font-family:'Assistant',-apple-system,sans-serif;
+  background:var(--forest);color:var(--cream);
+  direction:rtl;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;user-select:none;
+}
+.screen{
+  max-width:480px;margin:0 auto;
+  min-height:100vh;background:var(--forest);
+  display:flex;flex-direction:column;position:relative;
+  overflow:hidden;
+}
+.wk-top{padding:20px 24px 0;position:relative;z-index:2}
+.wk-top-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;
+}
+.wk-exit{
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(250,247,242,.1);
+  border:1px solid rgba(250,247,242,.15);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;flex-shrink:0;
+}
+.wk-exit:hover{background:rgba(250,247,242,.18)}
+.wk-exit:active{transform:scale(.94)}
+.wk-exit svg{
+  width:18px;height:18px;stroke:var(--cream);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.wk-counter{
+  display:flex;align-items:baseline;gap:6px;
+  font-family:'Fraunces',serif;letter-spacing:-.02em;
+}
+.wk-counter-now{
+  font-size:22px;font-weight:900;color:var(--cream);
+  font-variant-numeric:tabular-nums;
+}
+.wk-counter-total{
+  font-size:16px;font-weight:700;color:rgba(250,247,242,.4);
+  font-variant-numeric:tabular-nums;
+}
+.wk-counter-lbl{
+  font-family:'Assistant',sans-serif;
+  font-size:11px;font-weight:600;
+  color:rgba(250,247,242,.4);
+  letter-spacing:.14em;text-transform:uppercase;
+  margin-left:6px;
+}
+.wk-progress-bar{
+  height:3px;background:rgba(250,247,242,.1);
+  border-radius:100px;overflow:hidden;
+}
+.wk-progress-fill{
+  height:100%;background:var(--accent);
+  border-radius:100px;width:0%;
+  transition:width .5s cubic-bezier(.22,1,.36,1);
+}
+
+.wk-main{
+  flex:1;
+  padding:32px 24px 0;
+  display:flex;flex-direction:column;
+  position:relative;z-index:2;
+}
+.wk-name{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:36px;font-weight:700;
+  line-height:1.05;letter-spacing:-.02em;
+  color:var(--cream);
+  margin-bottom:8px;
+}
+.wk-muscle{
+  font-size:15px;font-weight:500;
+  color:var(--lime);
+  letter-spacing:.02em;
+  margin-bottom:28px;
+  display:flex;align-items:center;gap:8px;
+}
+.wk-muscle::before{
+  content:'';
+  width:4px;height:4px;border-radius:50%;
+  background:var(--lime);
+}
+.wk-chips{
+  display:flex;gap:8px;flex-wrap:wrap;
+  margin-bottom:24px;
+}
+.wk-chip{
+  padding:8px 14px;
+  background:rgba(250,247,242,.08);
+  border:1px solid rgba(250,247,242,.12);
+  border-radius:100px;
+  font-size:13px;font-weight:600;
+  color:rgba(250,247,242,.8);
+  letter-spacing:.02em;
+}
+.wk-chip.accent{
+  background:rgba(212,232,92,.12);
+  border-color:rgba(212,232,92,.3);
+  color:var(--lime);
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  letter-spacing:.04em;
+}
+
+/* Instruction area */
+.instruction{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:12px 0;
+  text-align:center;
+  position:relative;
+}
+
+/* ============ REPS SCREEN ============ */
+.reps-hero{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+}
+.reps-num{
+  font-family:'Fraunces',serif;
+  font-size:150px;
+  font-weight:900;
+  line-height:.85;
+  letter-spacing:-.06em;
+  color:var(--accent);
+  direction:ltr;
+  font-variant-numeric:tabular-nums;
+}
+.reps-lbl{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:24px;
+  font-weight:400;
+  font-style:italic;
+  color:var(--cream);
+  letter-spacing:-.01em;
+}
+.reps-pace{
+  font-size:15px;
+  font-weight:600;
+  color:rgba(250,247,242,.6);
+  letter-spacing:.04em;
+  max-width:280px;
+  line-height:1.5;
+}
+/* Elapsed time - subtle stopwatch */
+.stopwatch{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:24px;
+  padding:10px 18px;
+  background:rgba(250,247,242,.05);
+  border:1px solid rgba(250,247,242,.08);
+  border-radius:100px;
+  font-family:'Fraunces',serif;
+  font-size:16px;
+  font-weight:700;
+  letter-spacing:.02em;
+  color:rgba(250,247,242,.6);
+  direction:ltr;
+  font-variant-numeric:tabular-nums;
+}
+.stopwatch svg{
+  width:14px;height:14px;
+  stroke:rgba(250,247,242,.4);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.stopwatch-running{
+  color:var(--lime);
+}
+.stopwatch-running svg{stroke:var(--lime)}
+
+/* ============ HOLD SCREEN ============ */
+.hold-hero{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+}
+.hold-time{
+  font-family:'Fraunces',serif;
+  font-size:170px;
+  font-weight:900;
+  line-height:.85;
+  letter-spacing:-.06em;
+  color:var(--lime);
+  direction:ltr;
+  font-variant-numeric:tabular-nums;
+  transition:color .3s;
+}
+.hold-time.ending{color:var(--accent)}
+.hold-lbl{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:22px;
+  font-weight:400;
+  font-style:italic;
+  color:rgba(250,247,242,.6);
+}
+.hold-bar{
+  width:240px;height:4px;
+  background:rgba(250,247,242,.1);
+  border-radius:100px;overflow:hidden;
+}
+.hold-bar-fill{
+  height:100%;
+  background:var(--lime);
+  border-radius:100px;width:100%;
+  transition:width 1s linear, background .3s;
+}
+.hold-bar-fill.ending{background:var(--accent)}
+
+/* ============ BREATH SCREEN ============ */
+.breath-hero{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+}
+.breath-circle{
+  width:200px;height:200px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(212,232,92,.18), rgba(212,232,92,.04));
+  border:2px solid rgba(212,232,92,.3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:transform 3.8s cubic-bezier(.4,0,.2,1), background 3.8s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.breath-circle::before{
+  content:'';
+  position:absolute;
+  inset:-8px;
+  border-radius:50%;
+  border:1px solid rgba(212,232,92,.1);
+  transition:transform 3.8s cubic-bezier(.4,0,.2,1);
+}
+.breath-circle.inhaling{
+  transform:scale(1.25);
+  background:radial-gradient(circle, rgba(212,232,92,.35), rgba(212,232,92,.08));
+}
+.breath-circle.inhaling::before{
+  transform:scale(1.15);
+}
+.breath-num{
+  font-family:'Fraunces',serif;
+  font-size:80px;
+  font-weight:900;
+  line-height:1;
+  color:var(--lime);
+  letter-spacing:-.04em;
+  direction:ltr;
+  position:relative;
+  z-index:1;
+}
+.breath-phase{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:28px;
+  font-weight:700;
+  color:var(--cream);
+  letter-spacing:-.01em;
+  min-height:36px;
+}
+.breath-count{
+  font-size:14px;
+  font-weight:600;
+  color:rgba(250,247,242,.5);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.breath-hint{
+  font-size:13px;
+  font-weight:500;
+  color:rgba(250,247,242,.4);
+  letter-spacing:.02em;
+  margin-top:4px;
+  font-style:italic;
+  font-family:'Frank Ruhl Libre',serif;
+}
+
+/* Sets dots */
+.sets-row{display:flex;gap:8px;margin-bottom:20px}
+.set-dot{
+  flex:1;height:5px;border-radius:100px;
+  background:rgba(250,247,242,.1);
+  transition:all .3s;
+}
+.set-dot.on{
+  background:var(--lime);
+  box-shadow:0 0 12px rgba(212,232,92,.5);
+}
+
+.safety{
+  background:rgba(255,193,61,.06);
+  border:1px solid rgba(255,193,61,.18);
+  border-radius:16px;
+  padding:16px 18px;
+  margin-bottom:16px;
+  display:flex;gap:12px;align-items:flex-start;
+}
+.safety-mark{
+  width:26px;height:26px;
+  border-radius:8px;
+  background:rgba(255,193,61,.15);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.safety-mark svg{
+  width:13px;height:13px;
+  stroke:#FFC13D;fill:none;
+  stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;
+}
+.safety-text{
+  font-size:13px;line-height:1.5;
+  color:rgba(255,228,163,.9);
+  font-weight:500;
+}
+.safety-text strong{
+  color:#FFC13D;font-weight:700;
+  display:block;margin-bottom:2px;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+}
+
+.wk-foot{
+  padding:16px 24px 28px;
+  position:relative;z-index:2;
+  background:linear-gradient(to top,var(--forest) 60%,transparent);
+}
+.wk-cta{
+  width:100%;min-height:62px;
+  padding:20px 24px;
+  background:var(--accent);color:#FFFFFF;
+  border:none;border-radius:18px;
+  font-family:inherit;font-size:17px;font-weight:700;
+  letter-spacing:.02em;cursor:pointer;
+  transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  box-shadow:0 8px 24px -8px rgba(232,90,44,.6);
+}
+.wk-cta:hover:not(:disabled){background:var(--accent-2)}
+.wk-cta:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 8px -4px rgba(232,90,44,.4)}
+.wk-cta:disabled{
+  background:rgba(250,247,242,.06);
+  color:rgba(250,247,242,.35);
+  cursor:not-allowed;
+  box-shadow:none;transform:none;
+}
+.wk-cta .check{
+  width:22px;height:22px;
+  border-radius:50%;
+  background:rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;
+}
+.wk-cta .check svg{
+  width:12px;height:12px;
+  stroke:#FFFFFF;fill:none;
+  stroke-width:3;stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* ============ REST SCREEN ============ */
+.rest-screen{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:var(--forest);z-index:100;
+  display:none;flex-direction:column;
+  max-width:480px;margin:0 auto;
+  padding:40px 24px 32px;
+}
+.rest-screen.on{display:flex}
+.rest-screen::before{
+  content:'';
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:340px;height:340px;
+  border-radius:50%;
+  border:1px solid rgba(212,232,92,.12);
+  pointer-events:none;
+}
+.rest-inner{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;position:relative;z-index:1;
+}
+.rest-label{
+  font-size:12px;font-weight:700;
+  color:var(--lime);
+  letter-spacing:.24em;text-transform:uppercase;
+  margin-bottom:24px;
+  display:flex;align-items:center;gap:10px;
+}
+.rest-label::before{
+  content:'';width:8px;height:8px;border-radius:50%;
+  background:var(--lime);
+  box-shadow:0 0 16px var(--lime);
+  animation:blink 1.5s ease-in-out infinite;
+}
+@keyframes blink{50%{opacity:.3}}
+.rest-label.short{
+  color:var(--cream);
+}
+.rest-label.short::before{
+  background:var(--cream);
+  box-shadow:0 0 16px var(--cream);
+}
+.rest-time{
+  font-family:'Fraunces',serif;
+  font-size:200px;font-weight:900;
+  line-height:.85;letter-spacing:-.06em;
+  color:var(--cream);
+  direction:ltr;font-variant-numeric:tabular-nums;
+  margin-bottom:20px;
+  transition:color .3s;
+}
+.rest-time.ending{color:var(--accent)}
+.rest-note{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:17px;font-style:italic;
+  color:rgba(250,247,242,.5);
+  line-height:1.5;
+  max-width:280px;margin-bottom:32px;
+}
+.rest-next{
+  font-size:14px;color:rgba(250,247,242,.7);
+  font-weight:500;
+  background:rgba(250,247,242,.08);
+  padding:12px 22px;border-radius:100px;
+  border:1px solid rgba(250,247,242,.1);
+}
+.rest-next strong{color:var(--cream);font-weight:700}
+.rest-add{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:16px 24px 32px;
+  z-index:1;
+}
+.rest-add-btn{
+  width:100%;padding:18px 24px;
+  background:rgba(250,247,242,.08);
+  border:1.5px solid rgba(250,247,242,.15);
+  border-radius:14px;
+  font-family:inherit;font-size:15px;font-weight:700;
+  color:var(--cream);
+  letter-spacing:.02em;cursor:pointer;
+  transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.rest-add-btn:hover:not(:disabled){background:rgba(250,247,242,.12)}
+.rest-add-btn:disabled{opacity:.3;cursor:not-allowed}
+.rest-add-btn svg{
+  width:16px;height:16px;stroke:currentColor;fill:none;
+  stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* ============ EXIT DIALOG ============ */
+.exit-overlay{
+  position:fixed;inset:0;
+  background:rgba(15,22,18,.85);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  z-index:200;
+  display:none;align-items:center;justify-content:center;
+  padding:24px;
+}
+.exit-overlay.on{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.exit-box{
+  background:var(--cream);
+  border-radius:22px;
+  padding:32px 24px 24px;
+  width:100%;max-width:360px;
+  text-align:center;
+  animation:popIn .3s cubic-bezier(.22,1.4,.4,1);
+}
+@keyframes popIn{
+  0%{transform:scale(.9);opacity:0}
+  60%{transform:scale(1.03)}
+  100%{transform:scale(1);opacity:1}
+}
+.exit-icon{
+  width:64px;height:64px;
+  border-radius:50%;
+  background:var(--cream-2);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+}
+.exit-icon svg{
+  width:28px;height:28px;
+  stroke:var(--ink-2);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.exit-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:26px;font-weight:700;
+  color:var(--ink);letter-spacing:-.02em;
+  margin-bottom:8px;
+}
+.exit-sub{
+  font-size:15px;color:var(--ink-3);
+  line-height:1.5;margin-bottom:28px;
+}
+.exit-actions{display:flex;flex-direction:column;gap:10px}
+.exit-btn{
+  width:100%;padding:16px 20px;
+  border-radius:14px;
+  font-family:inherit;font-size:16px;font-weight:700;
+  cursor:pointer;transition:all .15s;
+  border:none;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.exit-btn svg{
+  width:18px;height:18px;stroke:currentColor;fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.exit-btn.suspend{background:var(--forest);color:var(--cream)}
+.exit-btn.suspend:hover{background:var(--forest-2)}
+.exit-btn.cancel{background:var(--cream-2);color:var(--ink-2)}
+.exit-btn.cancel:hover{background:var(--cream-3)}
+
+/* ============ FINISH ============ */
+.finish-overlay{
+  position:fixed;inset:0;
+  background:var(--forest);z-index:150;
+  display:none;flex-direction:column;
+  max-width:480px;margin:0 auto;
+  padding:60px 24px 40px;
+  text-align:center;
+  overflow-y:auto;
+}
+.finish-overlay.on{display:flex}
+.finish-mark{
+  width:110px;height:110px;
+  border-radius:50%;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  margin:60px auto 28px;
+  box-shadow:0 20px 40px -12px rgba(232,90,44,.7);
+  animation:popIn .6s cubic-bezier(.22,1.4,.4,1);
+}
+.finish-mark svg{
+  width:52px;height:52px;
+  stroke:#FFFFFF;fill:none;
+  stroke-width:3;stroke-linecap:round;stroke-linejoin:round;
+}
+.finish-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:42px;font-weight:700;
+  letter-spacing:-.03em;line-height:1.05;
+  color:var(--cream);margin-bottom:12px;
+}
+.finish-title em{font-style:normal;color:var(--lime)}
+.finish-sub{
+  font-size:16px;color:rgba(250,247,242,.6);
+  line-height:1.55;margin-bottom:44px;
+  max-width:340px;margin-left:auto;margin-right:auto;
+}
+.finish-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-top:1px solid rgba(250,247,242,.12);
+  border-bottom:1px solid rgba(250,247,242,.12);
+  margin-bottom:44px;
+}
+.finish-stat{
+  padding:24px 8px;
+  border-left:1px solid rgba(250,247,242,.12);
+}
+.finish-stat:last-child{border-left:none}
+.finish-stat-num{
+  font-family:'Fraunces',serif;
+  font-size:34px;font-weight:900;
+  letter-spacing:-.03em;line-height:1;
+  color:var(--lime);margin-bottom:8px;
+  font-variant-numeric:tabular-nums;direction:ltr;
+}
+.finish-stat-lbl{
+  font-size:11px;font-weight:600;
+  color:rgba(250,247,242,.5);
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.finish-cta{
+  width:100%;max-width:340px;
+  min-height:58px;padding:18px 24px;
+  background:var(--accent);color:#FFFFFF;
+  border:none;border-radius:16px;
+  font-family:inherit;font-size:17px;font-weight:700;
+  cursor:pointer;transition:all .15s;
+  box-shadow:0 8px 20px -6px rgba(232,90,44,.5);
+  margin:0 auto;
+}
+.finish-cta:hover{background:var(--accent-2)}
+
+@media (max-height:750px){
+  .reps-num{font-size:120px}
+  .hold-time{font-size:130px}
+  .breath-circle{width:170px;height:170px}
+  .rest-time{font-size:150px}
+  .wk-name{font-size:28px}
+}
+</style>
+</head>
+<body>
+
+<div class="screen">
+
+  <div class="wk-top">
+    <div class="wk-top-row">
+      <button class="wk-exit" id="exitBtn" aria-label="יציאה">
+        <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="wk-counter">
+        <span class="wk-counter-now" id="exNow">1</span>
+        <span class="wk-counter-total" id="exTotal">/8</span>
+        <span class="wk-counter-lbl">תרגיל</span>
+      </div>
+      <div style="width:42px"></div>
+    </div>
+    <div class="wk-progress-bar">
+      <div class="wk-progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="wk-main">
+    <h1 class="wk-name" id="exName">—</h1>
+    <div class="wk-muscle" id="exMuscle">—</div>
+
+    <div class="wk-chips" id="chipsRow"></div>
+
+    <div class="instruction" id="instructionArea"></div>
+
+    <div class="sets-row" id="setsRow"></div>
+
+    <div class="safety">
+      <div class="safety-mark">
+        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
+      </div>
+      <div class="safety-text">
+        <strong>בטיחות</strong>
+        <span id="safetyText">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="wk-foot">
+    <button class="wk-cta" id="setBtn">
+      <span class="check">
+        <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+      </span>
+      <span id="setBtnText">סיים סט · 1 מתוך 3</span>
+    </button>
+  </div>
+
+</div>
+
+<!-- REST -->
+<div class="rest-screen" id="restScreen">
+  <div class="rest-inner">
+    <div class="rest-label" id="restLabel">מנוחה</div>
+    <div class="rest-time" id="restTime">45</div>
+    <div class="rest-note" id="restNote">תן לגוף לנשום ולהתאושש<br>הסט הבא מתחיל אוטומטית</div>
+    <div class="rest-next" id="restNext">הבא: —</div>
+  </div>
+  <div class="rest-add">
+    <button class="rest-add-btn" id="restAddBtn">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      <span>הוסף 15 שניות</span>
+    </button>
+  </div>
+</div>
+
+<!-- EXIT -->
+<div class="exit-overlay" id="exitOverlay">
+  <div class="exit-box">
+    <div class="exit-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
+    </div>
+    <div class="exit-title">לצאת מהאימון?</div>
+    <div class="exit-sub">אפשר להשהות ולחזור מאוחר יותר, או לבטל לגמרי</div>
+    <div class="exit-actions">
+      <button class="exit-btn suspend" id="suspendBtn">
+        <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+        <span>השהה אימון</span>
+      </button>
+      <button class="exit-btn cancel" id="cancelBtn">
+        <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        <span>בטל אימון</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- FINISH -->
+<div class="finish-overlay" id="finishScreen">
+  <div class="finish-mark">
+    <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+  </div>
+  <div class="finish-title">סיימת <em>אימון</em></div>
+  <div class="finish-sub" id="finishSub">—</div>
+  <div class="finish-stats">
+    <div class="finish-stat">
+      <div class="finish-stat-num" id="finishDur">25</div>
+      <div class="finish-stat-lbl">דקות</div>
+    </div>
+    <div class="finish-stat">
+      <div class="finish-stat-num" id="finishEx">8</div>
+      <div class="finish-stat-lbl">תרגילים</div>
+    </div>
+    <div class="finish-stat">
+      <div class="finish-stat-num" id="finishStreak">1</div>
+      <div class="finish-stat-lbl">רצף</div>
+    </div>
+  </div>
+  <button class="finish-cta" id="finishBack">חזרה לבית</button>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+/* ============ WORKOUT DATA ============ */
+/* Types:
+   - reps: user performs X reps, we time how long it takes
+   - hold: countdown timer, button disabled until done
+   - breath: automatic inhale/exhale cycles
+*/
+const WORKOUT = {
+  title: 'כוח גינה · יסודות',
+  week: 1,
+  dur: 25,
+  exercises: [
+    { n: 'סיבובי כתפיים', m: 'חימום · כתפיים', type: 'reps', sets: 1, reps: 10, repsText: 'סיבובים לכל כיוון', pace: 'לאט, כתפיים רגועות', rest: 20, safety: 'תנועה איטית ומבוקרת' },
+    { n: 'הליכה במקום', m: 'חימום · רגליים', type: 'hold', sets: 1, hold: 120, repsText: '2 דקות', rest: 20, safety: 'גב ישר, רגליים מתרוממות בעדינות' },
+    { n: 'שכיבות סמיכה בקיר', m: 'חזה · כתפיים · טריצפס', type: 'reps', sets: 3, reps: 10, repsText: 'חזרות', pace: 'בצע לאט ובשליטה', rest: 60, safety: 'מרחק יד מהקיר, גוף בקו ישר' },
+    { n: 'סקוואט לכיסא', m: 'ירכיים · ישבן', type: 'reps', sets: 3, reps: 10, repsText: 'חזרות', pace: 'בצע לאט ובשליטה', rest: 60, safety: 'הורד לאט, ברכיים לא חורגות מהבהונות' },
+    { n: 'חתירה עם גומיה', m: 'גב · ביצפס', type: 'reps', sets: 3, reps: 10, repsText: 'חזרות', pace: 'משוך מרפקים לאחור לאט', rest: 60, safety: 'אל תקמר את הגב' },
+    { n: 'פלאנק על ברכיים', m: 'ליבה · בטן', type: 'hold', sets: 3, hold: 20, repsText: '20 שניות', rest: 60, safety: 'קו ישר מהראש עד הברכיים' },
+    { n: 'מתיחת חזה בקיר', m: 'קירור · חזה', type: 'hold', sets: 1, hold: 30, repsText: '30 שניות כל צד', rest: 20, safety: 'בטווח נוח בלבד' },
+    { n: 'נשימות עמוקות', m: 'קירור · רגיעה', type: 'breath', sets: 1, breaths: 5, inhale: 4, exhale: 4, repsText: '5 נשימות', rest: 20, safety: 'שאיפה באף, נשיפה בפה' }
+  ]
+};
+
+/* Short rest between sets of same exercise (seconds) */
+const SHORT_REST = 10;
+
+/* ============ STATE ============ */
+const state = {
+  exIndex: 0,
+  setIndex: 0,
+  startedAt: Date.now(),
+  currentSetTime: null,
+  lastSetDuration: null
+};
+
+let holdInterval = null;
+let repsInterval = null;
+let breathTimeout = null;
+let restInterval = null;
+let restAddedOnce = false;
+
+/* ============ AUDIO ============ */
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) {
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch(e) { return null; }
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+  return audioCtx;
+}
+function beep(freq, dur, vol) {
+  freq = freq || 800; dur = dur || 100; vol = vol || 0.25;
+  try {
+    const ctx = getAudioCtx();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.value = freq; osc.type = 'sine';
+    const now = ctx.currentTime;
+    gain.gain.setValueAtTime(vol, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + dur/1000);
+    osc.start(now); osc.stop(now + dur/1000);
+  } catch(e) {}
+}
+function vib(pattern) {
+  try { if (navigator.vibrate) navigator.vibrate(pattern); } catch(e) {}
+}
+
+/* ============ FORMAT TIME ============ */
+function fmtTime(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return m + ':' + String(s).padStart(2, '0');
+}
+
+/* ============ RENDER EXERCISE ============ */
+function renderExercise() {
+  stopAllTimers();
+  const ex = WORKOUT.exercises[state.exIndex];
+  const total = WORKOUT.exercises.length;
+  state.currentSetTime = Date.now();
+  state.lastSetDuration = null;
+
+  $('exNow').textContent = state.exIndex + 1;
+  $('exTotal').textContent = '/' + total;
+  $('exName').textContent = ex.n;
+  $('exMuscle').textContent = ex.m;
+  $('safetyText').textContent = ex.safety;
+
+  const chips = [];
+  chips.push('<div class="wk-chip">' + ex.sets + (ex.sets === 1 ? ' סט' : ' סטים') + '</div>');
+  chips.push('<div class="wk-chip accent">' + ex.repsText + '</div>');
+  $('chipsRow').innerHTML = chips.join('');
+
+  const pct = (state.exIndex / total) * 100;
+  $('progressFill').style.width = pct + '%';
+
+  const setsHtml = Array.from({ length: ex.sets }, (_, i) =>
+    '<div class="set-dot' + (i < state.setIndex ? ' on' : '') + '"></div>'
+  ).join('');
+  $('setsRow').innerHTML = setsHtml;
+
+  $('setBtnText').textContent = 'סיים סט · ' + (state.setIndex + 1) + ' מתוך ' + ex.sets;
+
+  if (ex.type === 'reps') {
+    renderRepsUI(ex);
+  } else if (ex.type === 'hold') {
+    renderHoldUI(ex);
+  } else if (ex.type === 'breath') {
+    renderBreathUI(ex);
+  }
+}
+
+/* ============ REPS UI (with stopwatch) ============ */
+function renderRepsUI(ex) {
+  $('instructionArea').innerHTML =
+    '<div class="reps-hero">' +
+      '<div class="reps-num">' + ex.reps + '</div>' +
+      '<div class="reps-lbl">' + ex.repsText + '</div>' +
+      (ex.pace ? '<div class="reps-pace">' + ex.pace + '</div>' : '') +
+      '<div class="stopwatch stopwatch-running" id="stopwatch">' +
+        '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>' +
+        '<span id="stopwatchTime">0:00</span>' +
+      '</div>' +
+    '</div>';
+
+  $('setBtn').disabled = false;
+
+  startRepsTimer();
+}
+
+function startRepsTimer() {
+  const startTime = Date.now();
+  repsInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const el = $('stopwatchTime');
+    if (el) el.textContent = fmtTime(elapsed);
+  }, 1000);
+}
+
+function stopRepsTimer() {
+  if (repsInterval) {
+    clearInterval(repsInterval);
+    repsInterval = null;
+  }
+}
+
+/* ============ HOLD UI ============ */
+function renderHoldUI(ex) {
+  $('instructionArea').innerHTML =
+    '<div class="hold-hero">' +
+      '<div class="hold-time" id="holdTime">' + ex.hold + '</div>' +
+      '<div class="hold-lbl">החזק בנחת · נשום</div>' +
+      '<div class="hold-bar"><div class="hold-bar-fill" id="holdBar"></div></div>' +
+    '</div>';
+
+  $('setBtn').disabled = true;
+  startHold(ex);
+}
+
+function startHold(ex) {
+  let left = ex.hold;
+  const total = ex.hold;
+
+  holdInterval = setInterval(() => {
+    left--;
+    if (left <= 0) {
+      clearInterval(holdInterval);
+      holdInterval = null;
+      beep(1200, 200, 0.3);
+      vib([80, 50, 80]);
+      $('setBtn').disabled = false;
+      return;
+    }
+    const timeEl = $('holdTime');
+    if (timeEl) {
+      timeEl.textContent = left;
+      if (left <= 5) timeEl.classList.add('ending');
+    }
+    const barEl = $('holdBar');
+    if (barEl) {
+      barEl.style.width = (left / total * 100) + '%';
+      if (left <= 5) barEl.classList.add('ending');
+    }
+    if (left <= 3) beep(700, 50, 0.15);
+  }, 1000);
+}
+
+/* ============ BREATH UI (automatic inhale/exhale) ============ */
+function renderBreathUI(ex) {
+  $('instructionArea').innerHTML =
+    '<div class="breath-hero">' +
+      '<div class="breath-circle" id="breathCircle">' +
+        '<div class="breath-num" id="breathNum">' + ex.inhale + '</div>' +
+      '</div>' +
+      '<div class="breath-phase" id="breathPhase">שאף</div>' +
+      '<div class="breath-count" id="breathCount">נשימה 1 מתוך ' + ex.breaths + '</div>' +
+      '<div class="breath-hint">בקצב שלך, בלי מאמץ</div>' +
+    '</div>';
+
+  $('setBtn').disabled = true;
+  startBreath(ex);
+}
+
+function startBreath(ex) {
+  let phase = 'inhale';
+  let timeLeft = ex.inhale;
+  let breathNum = 1;
+
+  const updateUI = () => {
+    const numEl = $('breathNum');
+    const phaseEl = $('breathPhase');
+    const countEl = $('breathCount');
+    const circleEl = $('breathCircle');
+
+    if (numEl) numEl.textContent = timeLeft;
+    if (phaseEl) phaseEl.textContent = phase === 'inhale' ? 'שאף' : 'נשוף';
+    if (countEl) countEl.textContent = 'נשימה ' + breathNum + ' מתוך ' + ex.breaths;
+
+    if (circleEl) {
+      if (phase === 'inhale') {
+        circleEl.classList.add('inhaling');
+      } else {
+        circleEl.classList.remove('inhaling');
+      }
+    }
+  };
+
+  updateUI();
+
+  // Play initial tone
+  if (phase === 'inhale') beep(600, 200, 0.2);
+
+  const tick = () => {
+    timeLeft--;
+
+    if (timeLeft <= 0) {
+      if (phase === 'inhale') {
+        // Switch to exhale
+        phase = 'exhale';
+        timeLeft = ex.exhale;
+        beep(800, 200, 0.2);
+        vib(50);
+      } else {
+        // Finished exhale - one full breath done
+        breathNum++;
+        if (breathNum > ex.breaths) {
+          // All breaths done
+          beep(1200, 300, 0.3);
+          vib([80, 50, 80]);
+          $('setBtn').disabled = false;
+          return;
+        }
+        phase = 'inhale';
+        timeLeft = ex.inhale;
+        beep(600, 200, 0.2);
+        vib(50);
+      }
+    }
+
+    updateUI();
+    breathTimeout = setTimeout(tick, 1000);
+  };
+
+  breathTimeout = setTimeout(tick, 1000);
+}
+
+/* ============ COMPLETE SET ============ */
+function completeSet() {
+  const ex = WORKOUT.exercises[state.exIndex];
+  if ($('setBtn').disabled) return;
+
+  stopAllTimers();
+
+  const setDuration = Math.floor((Date.now() - state.currentSetTime) / 1000);
+  state.lastSetDuration = setDuration;
+
+  beep(880, 150, 0.28);
+  vib([60, 50, 60]);
+
+  state.setIndex++;
+
+  if (state.setIndex >= ex.sets) {
+    // Done with all sets of this exercise
+    if (state.exIndex < WORKOUT.exercises.length - 1) {
+      state.exIndex++;
+      state.setIndex = 0;
+      startRest(ex.rest, false);
+    } else {
+      finishWorkout();
+    }
+  } else {
+    // More sets of same exercise - SHORT rest
+    startRest(SHORT_REST, true);
+  }
+}
+
+/* ============ REST ============ */
+function startRest(seconds, isShort) {
+  stopAllTimers();
+  restAddedOnce = false;
+
+  $('restScreen').classList.add('on');
+  $('restAddBtn').disabled = false;
+  $('restAddBtn').querySelector('span').textContent = 'הוסף 15 שניות';
+  $('restLabel').textContent = isShort ? 'מנוחה קצרה' : 'מנוחה';
+  $('restLabel').classList.toggle('short', isShort);
+  $('restNote').innerHTML = isShort
+    ? 'עוד רגע, ממשיכים<br>אותו תרגיל'
+    : 'תן לגוף לנשום ולהתאושש<br>התרגיל הבא מתחיל אוטומטית';
+
+  let left = seconds;
+  $('restTime').textContent = left;
+  $('restTime').classList.remove('ending');
+
+  const ex = WORKOUT.exercises[state.exIndex];
+  if (isShort) {
+    $('restNext').innerHTML = 'המשך: <strong>' + ex.n + '</strong>';
+  } else {
+    $('restNext').innerHTML = 'הבא: <strong>' + ex.n + '</strong>';
+  }
+
+  clearInterval(restInterval);
+  restInterval = setInterval(() => {
+    left--;
+    if (left <= 0) {
+      clearInterval(restInterval);
+      restInterval = null;
+      endRest();
+      return;
+    }
+    $('restTime').textContent = left;
+    if (left <= 3) $('restTime').classList.add('ending');
+    if (left <= 3 && left > 0) beep(700, 50, 0.15);
+  }, 1000);
+}
+
+function addRestTime() {
+  if (restAddedOnce) return;
+  restAddedOnce = true;
+  $('restAddBtn').disabled = true;
+  $('restAddBtn').querySelector('span').textContent = 'נוסף ✓';
+
+  const currentTime = parseInt($('restTime').textContent, 10);
+  const newTime = currentTime + 15;
+
+  clearInterval(restInterval);
+  let left = newTime;
+  $('restTime').textContent = left;
+  $('restTime').classList.remove('ending');
+
+  restInterval = setInterval(() => {
+    left--;
+    if (left <= 0) {
+      clearInterval(restInterval);
+      restInterval = null;
+      endRest();
+      return;
+    }
+    $('restTime').textContent = left;
+    if (left <= 3) $('restTime').classList.add('ending');
+    if (left <= 3 && left > 0) beep(700, 50, 0.15);
+  }, 1000);
+
+  beep(600, 100, 0.2);
+}
+
+function endRest() {
+  beep(1000, 200, 0.3);
+  vib([80, 50, 80]);
+  $('restScreen').classList.remove('on');
+  renderExercise();
+}
+
+/* ============ FINISH ============ */
+function finishWorkout() {
+  stopAllTimers();
+  beep(523, 150, 0.3);
+  setTimeout(() => beep(659, 150, 0.3), 180);
+  setTimeout(() => beep(784, 300, 0.3), 360);
+  vib([100, 80, 100, 80, 200]);
+
+  const duration = Math.round((Date.now() - state.startedAt) / 60000);
+  $('finishDur').textContent = duration;
+  $('finishEx').textContent = WORKOUT.exercises.length;
+  $('finishStreak').textContent = 1;
+  $('finishSub').innerHTML = 'השלמת את "<strong>' + WORKOUT.title + '</strong>"<br>כל הכבוד!';
+  $('finishScreen').classList.add('on');
+}
+
+/* ============ STOP ALL ============ */
+function stopAllTimers() {
+  if (holdInterval) { clearInterval(holdInterval); holdInterval = null; }
+  if (repsInterval) { clearInterval(repsInterval); repsInterval = null; }
+  if (breathTimeout) { clearTimeout(breathTimeout); breathTimeout = null; }
+}
+
+/* ============ EXIT ============ */
+function exitWorkout() { $('exitOverlay').classList.add('on'); }
+
+function suspendWorkout() {
+  stopAllTimers();
+  if (restInterval) { clearInterval(restInterval); restInterval = null; }
+  $('exitOverlay').classList.remove('on');
+  $('restScreen').classList.remove('on');
+  alert('האימון הושהה. תוכל לחזור אליו מהמסך הראשי.');
+}
+
+function cancelWorkout() {
+  stopAllTimers();
+  if (restInterval) { clearInterval(restInterval); restInterval = null; }
+  $('exitOverlay').classList.remove('on');
+  $('restScreen').classList.remove('on');
+  alert('האימון בוטל');
+}
+
+/* ============ EVENTS ============ */
+$('setBtn').onclick = completeSet;
+$('exitBtn').onclick = exitWorkout;
+$('suspendBtn').onclick = suspendWorkout;
+$('cancelBtn').onclick = cancelWorkout;
+$('restAddBtn').onclick = addRestTime;
+$('finishBack').onclick = () => {
+  $('finishScreen').classList.remove('on');
+  alert('חזרה למסך הבית');
+};
+
+/* ============ INIT ============ */
+renderExercise();
+</script>
+
+
+<script>
+(function(){
+ function home(){location.href='home.html'}
+ function bind(){
+  ['finishBack','suspendBtn','cancelBtn'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('click',function(){setTimeout(home,120)},true)});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
+</body>
+</html>
