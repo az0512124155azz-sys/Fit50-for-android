@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.gms.google-services")
 }
 
 fun Project.fit50Prop(name: String, fallback: String = ""): String = providers.gradleProperty(name).orNull ?: fallback
@@ -18,11 +19,6 @@ android {
         versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String", "FIREBASE_API_KEY", fit50Prop("FIT50_FIREBASE_API_KEY", "AIzaSyA-6Vv4xXV7FxG9SedTtxMl7YpNL5egmAY").asBuildConfigString())
-        buildConfigField("String", "FIREBASE_APP_ID", fit50Prop("FIT50_FIREBASE_APP_ID", "1:1570044363:web:4d7260347d578d89c11e4e").asBuildConfigString())
-        buildConfigField("String", "FIREBASE_PROJECT_ID", fit50Prop("FIT50_FIREBASE_PROJECT_ID", "fit50-plus").asBuildConfigString())
-        buildConfigField("String", "FIREBASE_STORAGE_BUCKET", fit50Prop("FIT50_FIREBASE_STORAGE_BUCKET", "fit50-plus.firebasestorage.app").asBuildConfigString())
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", fit50Prop("FIT50_GOOGLE_WEB_CLIENT_ID", "1570044363-5jone06j0rr5affoi0c2hb94p6ngjttb.apps.googleusercontent.com").asBuildConfigString())
     }
 
@@ -59,6 +55,7 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
 
     implementation("androidx.credentials:credentials:1.3.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
