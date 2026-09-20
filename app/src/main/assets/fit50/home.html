@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1F2B24">
+<title>Fit50+ — בית</title>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#1F2B24;
+  --forest-2:#2D3D33;
+  --cream:#FAF7F2;
+  --cream-2:#F2EDE4;
+  --cream-3:#E8E1D5;
+  --ink:#1A1A1A;
+  --ink-2:#4A4A4A;
+  --ink-3:#8A8A8A;
+  --line:rgba(26,26,26,.12);
+  --line-2:rgba(26,26,26,.06);
+  --accent:#E85A2C;
+  --accent-2:#C44A22;
+  --lime:#D4E85C;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  font-family:'Assistant',-apple-system,sans-serif;
+  background:var(--cream);color:var(--ink);
+  direction:rtl;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;user-select:none;
+}
+.screen{
+  max-width:480px;margin:0 auto;
+  min-height:100vh;display:flex;flex-direction:column;
+  background:var(--cream);padding-bottom:100px;
+}
+.hero{
+  background:var(--forest);color:var(--cream);
+  padding:28px 32px 40px;
+  border-radius:0 0 36px 36px;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-60px;right:-80px;
+  width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(232,90,44,.22),transparent 70%);
+  pointer-events:none;
+}
+.hero::after{
+  content:'';position:absolute;bottom:-100px;left:-60px;
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(212,232,92,.12),transparent 70%);
+  pointer-events:none;
+}
+.hero-top{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  position:relative;z-index:1;margin-bottom:32px;
+}
+.greeting{display:flex;flex-direction:column;gap:4px}
+.greeting-time{
+  font-size:14px;font-weight:500;color:rgba(250,247,242,.6);letter-spacing:.02em;
+}
+.greeting-name{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:32px;font-weight:700;letter-spacing:-.02em;line-height:1;
+}
+.greeting-name i{font-style:normal;color:var(--lime)}
+.hero-btn{
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(250,247,242,.1);border:1px solid rgba(250,247,242,.15);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;flex-shrink:0;
+}
+.hero-btn:hover{background:rgba(250,247,242,.18)}
+.hero-btn:active{transform:scale(.94)}
+.hero-btn svg{
+  width:20px;height:20px;stroke:var(--cream);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.hero-label{
+  position:relative;z-index:1;font-size:12px;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(250,247,242,.5);margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.hero-label .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--lime);
+  box-shadow:0 0 12px var(--lime);
+}
+.hero-title{
+  position:relative;z-index:1;
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:38px;font-weight:700;letter-spacing:-.02em;
+  line-height:1.05;color:var(--cream);margin-bottom:16px;
+}
+.hero-title em{font-style:normal;color:rgba(250,247,242,.55);font-weight:400}
+.hero-meta{
+  position:relative;z-index:1;
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:26px;font-size:14px;color:rgba(250,247,242,.7);
+}
+.hero-meta span{display:flex;align-items:center;gap:6px}
+.hero-meta svg{
+  width:14px;height:14px;stroke:currentColor;fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.7;
+}
+.hero-meta .divider-dot{
+  width:3px;height:3px;border-radius:50%;
+  background:rgba(250,247,242,.3);
+}
+.hero-cta{
+  position:relative;z-index:1;width:100%;min-height:58px;
+  padding:18px 24px;background:var(--accent);color:#FFFFFF;
+  border:none;border-radius:16px;font-family:inherit;
+  font-size:17px;font-weight:700;letter-spacing:.02em;
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 8px 20px -6px rgba(232,90,44,.5);
+}
+.hero-cta:hover{background:var(--accent-2)}
+.hero-cta:active{transform:translateY(2px);box-shadow:0 2px 8px -4px rgba(232,90,44,.4)}
+.hero-cta .play{
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;
+}
+.hero-cta .play svg{width:12px;height:12px;fill:#FFFFFF;stroke:none;margin-right:2px}
+.week-section{padding:28px 24px 8px}
+.section-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:16px;padding:0 8px;
+}
+.section-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:20px;font-weight:700;letter-spacing:-.01em;color:var(--ink);
+}
+.section-link{
+  font-size:13px;font-weight:600;color:var(--accent);
+  text-decoration:none;cursor:pointer;background:none;
+  border:none;font-family:inherit;padding:0;
+}
+.section-link:hover{text-decoration:underline}
+.week-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day{
+  padding:12px 4px 10px;border-radius:14px;text-align:center;
+  background:transparent;border:1.5px solid var(--line);
+  cursor:pointer;transition:all .15s;position:relative;
+}
+.day:hover{border-color:var(--ink-3);background:var(--cream-2)}
+.day:active{transform:scale(.96)}
+.day-letter{
+  display:block;font-size:11px;font-weight:600;color:var(--ink-3);
+  margin-bottom:6px;letter-spacing:.02em;
+}
+.day-num{
+  display:block;font-family:'Fraunces',serif;
+  font-size:18px;font-weight:700;line-height:1;
+  color:var(--ink);letter-spacing:-.02em;margin-bottom:8px;
+}
+.day-mark{
+  width:6px;height:6px;border-radius:50%;background:var(--cream-3);
+  margin:0 auto;transition:all .2s;
+}
+.day.today{
+  background:var(--forest);border-color:var(--forest);
+  box-shadow:0 8px 20px -8px rgba(31,43,36,.4);
+}
+.day.today .day-letter{color:rgba(250,247,242,.5)}
+.day.today .day-num{color:var(--cream)}
+.day.today .day-mark{background:var(--lime);width:8px;height:8px}
+.day.done .day-mark{background:var(--accent);width:8px;height:8px}
+.day.rest .day-num{color:var(--ink-3);font-weight:500}
+.section{padding:8px 24px 24px}
+.journey{
+  background:#FFFFFF;border-radius:20px;padding:24px;
+  box-shadow:0 2px 12px -4px rgba(0,0,0,.06);
+  border:1px solid var(--line-2);position:relative;overflow:hidden;
+}
+.journey::before{
+  content:'';position:absolute;top:-40px;left:-40px;
+  width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(31,43,36,.04),transparent 70%);
+  pointer-events:none;
+}
+.journey-head{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:20px;position:relative;
+}
+.journey-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:22px;font-weight:700;letter-spacing:-.01em;
+  color:var(--ink);line-height:1.15;margin-bottom:6px;
+}
+.journey-title em{font-style:normal;color:var(--accent)}
+.journey-sub{
+  font-size:14px;color:var(--ink-3);font-weight:500;line-height:1.4;
+}
+.journey-badge{
+  background:var(--cream-2);border-radius:100px;padding:8px 14px;
+  font-size:12px;font-weight:700;color:var(--forest);
+  letter-spacing:.02em;white-space:nowrap;
+  display:flex;align-items:center;gap:6px;
+}
+.journey-badge svg{
+  width:12px;height:12px;stroke:currentColor;fill:none;
+  stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;
+}
+.journey-progress{margin-bottom:20px;position:relative}
+.journey-progress-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:8px;
+}
+.journey-progress-label{
+  font-size:12px;font-weight:600;color:var(--ink-3);
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.journey-progress-num{
+  font-family:'Fraunces',serif;font-size:20px;font-weight:900;
+  color:var(--forest);letter-spacing:-.02em;line-height:1;
+}
+.journey-progress-num small{
+  font-family:'Assistant',sans-serif;font-size:12px;
+  font-weight:600;color:var(--ink-3);letter-spacing:.02em;margin-right:2px;
+}
+.journey-bar{
+  height:8px;background:var(--cream-2);border-radius:100px;
+  overflow:hidden;position:relative;
+}
+.journey-bar-fill{
+  height:100%;background:linear-gradient(90deg,var(--accent),#FF7A4D);
+  border-radius:100px;width:0%;transition:width .8s cubic-bezier(.22,1,.36,1);
+}
+.journey-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  border-top:1px solid var(--line-2);margin-top:4px;padding-top:16px;
+}
+.journey-stat{
+  text-align:center;padding:0 8px;border-left:1px solid var(--line-2);
+}
+.journey-stat:first-child{border-left:none}
+.journey-stat-val{
+  font-family:'Fraunces',serif;font-size:28px;font-weight:900;
+  letter-spacing:-.03em;line-height:1;color:var(--forest);
+  margin-bottom:6px;font-variant-numeric:tabular-nums;
+}
+.journey-stat-label{
+  font-size:11px;font-weight:600;color:var(--ink-3);
+  letter-spacing:.04em;line-height:1.2;
+}
+.journey-hint{
+  background:var(--cream-2);border-radius:12px;padding:14px 16px;
+  margin-top:20px;display:flex;align-items:center;gap:12px;position:relative;
+}
+.journey-hint-icon{
+  width:32px;height:32px;border-radius:10px;background:var(--forest);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.journey-hint-icon svg{
+  width:16px;height:16px;stroke:var(--lime);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.journey-hint-text{
+  font-size:13px;font-weight:500;color:var(--ink-2);line-height:1.4;
+}
+.journey-hint-text strong{color:var(--ink);font-weight:700}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quick{
+  background:var(--cream-2);border:none;border-radius:18px;
+  padding:20px 18px;text-align:right;font-family:inherit;
+  cursor:pointer;transition:all .15s;
+  display:flex;flex-direction:column;gap:12px;min-height:110px;
+}
+.quick:hover{background:var(--cream-3);transform:translateY(-2px)}
+.quick:active{transform:translateY(0)}
+.quick-icon{
+  width:40px;height:40px;border-radius:12px;background:var(--forest);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.quick-icon svg{
+  width:20px;height:20px;stroke:var(--cream);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.quick:nth-child(2) .quick-icon{background:var(--accent)}
+.quick-title{
+  font-family:'Frank Ruhl Libre',serif;font-size:18px;font-weight:700;
+  color:var(--ink);letter-spacing:-.01em;line-height:1.15;margin-top:auto;
+}
+.quick-sub{font-size:12px;color:var(--ink-3);font-weight:500;line-height:1.3}
+.nav{
+  position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 32px);max-width:448px;
+  background:var(--forest);border-radius:22px;padding:8px;
+  display:flex;justify-content:space-around;
+  box-shadow:0 16px 40px -12px rgba(31,43,36,.6);z-index:50;
+}
+.nav-item{
+  flex:1;background:none;border:none;padding:12px 4px;
+  border-radius:14px;font-family:inherit;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  transition:all .15s;
+}
+.nav-item svg{
+  width:22px;height:22px;stroke:rgba(250,247,242,.5);fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:all .15s;
+}
+.nav-item span{
+  font-size:10px;font-weight:600;letter-spacing:.06em;
+  color:rgba(250,247,242,.5);transition:all .15s;
+}
+.nav-item:hover svg{stroke:rgba(250,247,242,.8)}
+.nav-item:hover span{color:rgba(250,247,242,.8)}
+.nav-item.on{background:rgba(250,247,242,.08)}
+.nav-item.on svg{stroke:var(--lime)}
+.nav-item.on span{color:var(--lime)}
+.toast{
+  position:fixed;bottom:100px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--forest);color:var(--cream);
+  padding:14px 24px;border-radius:100px;
+  font-size:14px;font-weight:600;
+  box-shadow:0 12px 32px -8px rgba(0,0,0,.4);
+  z-index:1000;opacity:0;
+  transition:all .35s cubic-bezier(.22,1.4,.4,1);
+  pointer-events:none;max-width:calc(100% - 48px);
+  text-align:center;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--accent)}
+
+/* ================ SHEET / MODAL ================ */
+.overlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(26,22,20,.5);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  z-index:200;opacity:0;pointer-events:none;
+  transition:opacity .25s;
+}
+.overlay.on{opacity:1;pointer-events:auto}
+.sheet{
+  position:fixed;bottom:0;left:50%;
+  transform:translateX(-50%) translateY(100%);
+  width:100%;max-width:480px;
+  max-height:85vh;
+  background:var(--cream);
+  border-radius:24px 24px 0 0;
+  z-index:201;
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+  overflow-y:auto;
+  padding-bottom:32px;
+}
+.sheet.on{transform:translateX(-50%) translateY(0)}
+.sheet-handle{
+  width:44px;height:4px;
+  background:var(--line);
+  border-radius:100px;
+  margin:12px auto 8px;
+}
+.sheet-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 24px 20px;
+  border-bottom:1px solid var(--line);
+}
+.sheet-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:24px;font-weight:700;letter-spacing:-.02em;
+}
+.sheet-close{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--cream-2);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.sheet-close:hover{background:var(--cream-3)}
+.sheet-close svg{
+  width:18px;height:18px;stroke:var(--ink-2);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.sheet-body{padding:24px}
+
+/* Settings sheet */
+.set-profile{
+  display:flex;gap:16px;align-items:center;
+  padding:20px;background:var(--cream-2);border-radius:16px;
+  margin-bottom:20px;
+}
+.set-avatar{
+  width:60px;height:60px;border-radius:50%;
+  background:var(--forest);color:var(--lime);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:24px;font-weight:700;flex-shrink:0;
+}
+.set-info{flex:1}
+.set-name{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:20px;font-weight:700;margin-bottom:4px;
+}
+.set-email{
+  font-size:13px;color:var(--ink-3);direction:ltr;text-align:right;
+}
+.set-list{
+  background:#FFFFFF;border-radius:16px;overflow:hidden;
+  margin-bottom:16px;border:1px solid var(--line-2);
+}
+.set-row{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:18px 20px;background:transparent;border:none;
+  border-bottom:1px solid var(--line-2);
+  font-family:inherit;font-size:15px;font-weight:500;
+  color:var(--ink);cursor:pointer;text-align:right;
+  transition:background .15s;
+}
+.set-row:last-child{border-bottom:none}
+.set-row:hover{background:var(--cream-2)}
+.set-row svg{
+  width:18px;height:18px;stroke:var(--ink-3);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.btn-sheet{
+  width:100%;min-height:54px;padding:16px 24px;
+  border:none;border-radius:14px;
+  font-family:inherit;font-size:16px;font-weight:700;
+  cursor:pointer;transition:all .15s;
+}
+.btn-sheet.dark{background:var(--forest);color:var(--cream)}
+.btn-sheet.dark:hover{background:var(--forest-2)}
+.btn-sheet.danger{
+  background:transparent;color:var(--accent);
+  border:1.5px solid rgba(232,90,44,.3);
+}
+.btn-sheet.danger:hover{background:rgba(232,90,44,.08)}
+
+/* Workout preview sheet */
+.wp-hero{
+  text-align:center;padding:8px 0 24px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:24px;
+}
+.wp-icon{
+  width:72px;height:72px;border-radius:22px;
+  background:var(--forest);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;
+  box-shadow:0 12px 28px -8px rgba(31,43,36,.4);
+}
+.wp-icon svg{
+  width:36px;height:36px;stroke:var(--lime);fill:none;
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
+}
+.wp-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:28px;font-weight:700;letter-spacing:-.02em;
+  margin-bottom:8px;
+}
+.wp-title em{font-style:normal;color:var(--accent)}
+.wp-meta{
+  font-size:14px;color:var(--ink-3);font-weight:500;
+  display:flex;justify-content:center;gap:12px;
+  margin-bottom:8px;
+}
+.wp-meta span{display:flex;align-items:center;gap:6px}
+.wp-steps{
+  background:#FFFFFF;border-radius:16px;overflow:hidden;
+  margin-bottom:24px;border:1px solid var(--line-2);
+}
+.wp-step{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;
+  border-bottom:1px solid var(--line-2);
+}
+.wp-step:last-child{border-bottom:none}
+.wp-step-num{
+  width:28px;height:28px;border-radius:8px;
+  background:var(--cream-2);color:var(--ink-2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces',serif;font-size:14px;font-weight:700;
+  flex-shrink:0;
+}
+.wp-step-name{font-size:14px;font-weight:600;color:var(--ink)}
+.wp-step-muscle{font-size:12px;color:var(--ink-3);margin-top:2px}
+
+/* Day details sheet */
+.day-detail{
+  text-align:center;padding:8px 0 24px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:24px;
+}
+.day-detail-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:100px;
+  font-size:12px;font-weight:700;letter-spacing:.06em;
+  background:var(--cream-2);color:var(--forest);
+  margin-bottom:12px;text-transform:uppercase;
+}
+.day-detail-badge.rest{
+  background:rgba(138,138,138,.12);color:var(--ink-3);
+}
+.day-detail-badge.done{
+  background:rgba(232,90,44,.12);color:var(--accent);
+}
+.day-detail-badge svg{
+  width:12px;height:12px;stroke:currentColor;fill:none;
+  stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;
+}
+.day-detail-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:30px;font-weight:700;letter-spacing:-.02em;
+  margin-bottom:6px;
+}
+.day-detail-title em{font-style:normal;color:var(--accent)}
+.day-detail-sub{font-size:15px;color:var(--ink-3);font-weight:500}
+
+/* Month view */
+.month-week{
+  background:#FFFFFF;border-radius:16px;
+  padding:20px;margin-bottom:14px;
+  border:1px solid var(--line-2);
+}
+.month-week-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:14px;
+}
+.month-week-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:18px;font-weight:700;
+}
+.month-week-status{
+  font-size:12px;font-weight:600;
+  color:var(--ink-3);letter-spacing:.04em;
+}
+.month-week-status.current{color:var(--accent)}
+.month-days{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:6px;
+}
+.month-day{
+  aspect-ratio:1;border-radius:10px;
+  background:var(--cream-2);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;
+  color:var(--ink-2);
+  position:relative;
+}
+.month-day.rest{
+  background:transparent;border:1px dashed var(--line);
+  color:var(--ink-3);
+}
+.month-day.today{
+  background:var(--forest);color:var(--cream);
+}
+.month-day.done{
+  background:var(--accent);color:#FFFFFF;
+}
+.month-day-mark{
+  width:4px;height:4px;border-radius:50%;
+  background:currentColor;opacity:.4;
+  position:absolute;bottom:6px;
+}
+
+@media (max-height:700px){
+  .hero{padding:22px 28px 32px}
+  .greeting-name{font-size:28px}
+  .hero-title{font-size:32px}
+}
+</style>
+</head>
+<body>
+
+<div class="screen">
+
+  <div class="hero">
+    <div class="hero-top">
+      <div class="greeting">
+        <span class="greeting-time" id="greetTime">בוקר טוב</span>
+        <h1 class="greeting-name" id="greetName">דניאל<i>.</i></h1>
+      </div>
+      <button class="hero-btn" id="settingsBtn" aria-label="הגדרות">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="hero-label" id="heroLabel">
+      <span class="dot"></span>
+      <span id="heroLabelText">האימון של היום</span>
+    </div>
+    <h2 class="hero-title" id="heroTitle">כוח גינה<br><em>יסודות</em></h2>
+    <div class="hero-meta">
+      <span>
+        <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>
+        <span id="metaEx">8 תרגילים</span>
+      </span>
+      <span class="divider-dot"></span>
+      <span>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <span id="metaDur">25 דקות</span>
+      </span>
+    </div>
+    <button class="hero-cta" id="startBtn">
+      <span class="play"><svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20"/></svg></span>
+      <span id="startBtnText">התחל אימון</span>
+    </button>
+  </div>
+
+  <div class="week-section">
+    <div class="section-head">
+      <h3 class="section-title">השבוע שלך</h3>
+      <button class="section-link" id="weekLink">תוכנית מלאה</button>
+    </div>
+    <div class="week-strip" id="weekStrip"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h3 class="section-title">המסע שלך</h3>
+    </div>
+    <div class="journey">
+      <div class="journey-head">
+        <div>
+          <div class="journey-title">שבוע <em>1</em> מתוך 4</div>
+          <div class="journey-sub">התחלת תוכנית של חודש שלם</div>
+        </div>
+        <div class="journey-badge">
+          <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>
+          <span>חדש</span>
+        </div>
+      </div>
+      <div class="journey-progress">
+        <div class="journey-progress-head">
+          <span class="journey-progress-label">אימונים שהושלמו</span>
+          <span class="journey-progress-num" id="progNum">0<small>/ 20</small></span>
+        </div>
+        <div class="journey-bar"><div class="journey-bar-fill" id="progFill"></div></div>
+      </div>
+      <div class="journey-stats">
+        <div class="journey-stat">
+          <div class="journey-stat-val" id="statStreak">0</div>
+          <div class="journey-stat-label">רצף ימים</div>
+        </div>
+        <div class="journey-stat">
+          <div class="journey-stat-val" id="statWeek">0</div>
+          <div class="journey-stat-label">השבוע</div>
+        </div>
+        <div class="journey-stat">
+          <div class="journey-stat-val" id="statMins">0</div>
+          <div class="journey-stat-label">דקות</div>
+        </div>
+      </div>
+      <div class="journey-hint">
+        <div class="journey-hint-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="journey-hint-text" id="hintText">
+          <strong>הצעד הבא:</strong> השלם את האימון הראשון שלך כדי להתחיל את הרצף
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h3 class="section-title">עוד פעילויות</h3>
+    </div>
+    <div class="quick-grid">
+      <button class="quick" id="toStretch">
+        <div class="quick-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 3v6M12 21v-6M3 12h6M21 12h-6M5.6 5.6l4.2 4.2M19.4 5.6l-4.2 4.2M5.6 18.4l4.2-4.2M19.4 18.4l-4.2-4.2"/></svg>
+        </div>
+        <div>
+          <div class="quick-title">מתיחות</div>
+          <div class="quick-sub">רצפים קצרים לבוקר ולערב</div>
+        </div>
+      </button>
+      <button class="quick" id="toProgress">
+        <div class="quick-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+        </div>
+        <div>
+          <div class="quick-title">התקדמות</div>
+          <div class="quick-sub">מה עשית מאז שהתחלת</div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button class="nav-item on" data-nav="home">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>בית</span>
+  </button>
+  <button class="nav-item" data-nav="stretch">
+    <svg viewBox="0 0 24 24"><path d="M12 3v6M12 21v-6M3 12h6M21 12h-6M5.6 5.6l4.2 4.2M19.4 5.6l-4.2 4.2M5.6 18.4l4.2-4.2M19.4 18.4l-4.2-4.2"/></svg>
+    <span>מתיחות</span>
+  </button>
+  <button class="nav-item" data-nav="progress">
+    <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+    <span>התקדמות</span>
+  </button>
+  <button class="nav-item" data-nav="settings">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span>עוד</span>
+  </button>
+</nav>
+
+<!-- ============ OVERLAY + SHEET ============ -->
+<div class="overlay" id="overlay"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h2 class="sheet-title" id="sheetTitle">כותרת</h2>
+    <button class="sheet-close" id="sheetClose">
+      <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body" id="sheetBody"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const $$ = s => document.querySelectorAll(s);
+
+/* ============ STATE ============ */
+const state = {
+  user: { displayName: 'דניאל כהן', firstName: 'דניאל', email: 'daniel@fit50.app' },
+  progress: { done: {}, total: 0, weekDone: 0, streak: 0, mins: 0, goal: 20 }
+};
+
+/* ============ WORKOUTS ============ */
+const WORKOUTS = [
+  { day: 0, title: 'כוח גינה', sub: 'יסודות', cat: 'strength', dur: 25, exercises: [
+    { n: 'סיבובי כתפיים', m: 'חימום · כתפיים' },
+    { n: 'הליכה במקום', m: 'חימום · רגליים' },
+    { n: 'שכיבות סמיכה בקיר', m: 'חזה · כתפיים' },
+    { n: 'סקוואט לכיסא', m: 'ירכיים · ישבן' },
+    { n: 'חתירה עם גומיה', m: 'גב · ביצפס' },
+    { n: 'פלאנק על ברכיים', m: 'ליבה' },
+    { n: 'מתיחת חזה בקיר', m: 'קירור' },
+    { n: 'נשימות עמוקות', m: 'קירור' }
+  ]},
+  { day: 1, title: 'מוביליטי בית', sub: 'טווחים', cat: 'mobility', dur: 20, exercises: [
+    { n: 'הטיית ראש', m: 'חימום' },
+    { n: 'סיבובי כתפיים', m: 'חימום' },
+    { n: "World's Greatest Stretch", m: 'ירכיים · מפשעה' },
+    { n: 'Pigeon Pose', m: 'ישבן · ירך' },
+    { n: "Child's Pose", m: 'גב תחתון' },
+    { n: 'פתיחת חזה', m: 'חזה' },
+    { n: 'מתיחת צוואר', m: 'קירור' },
+    { n: 'נשימות', m: 'קירור' }
+  ]},
+  { day: 2, title: 'כוח גינה', sub: 'יציבות', cat: 'strength', dur: 25, exercises: [
+    { n: 'סיבובי ירכיים', m: 'חימום' },
+    { n: 'צעדי צד', m: 'חימום' },
+    { n: 'שכיבות סמיכה על ברכיים', m: 'חזה · כתפיים' },
+    { n: 'סקוואט עם גומיה', m: 'ירכיים · ישבן' },
+    { n: 'לחיצת כתפיים', m: 'כתפיים' },
+    { n: 'גשר אגן', m: 'ישבן · גב' },
+    { n: 'העברת משקל', m: 'שיווי משקל' },
+    { n: 'מתיחת ירך', m: 'קירור' },
+    { n: 'מתיחת שוקיים', m: 'קירור' }
+  ]},
+  { day: 3, title: 'מנוחה פעילה', sub: 'נשימה', cat: 'rest', dur: 12, exercises: [
+    { n: 'נשימות עמוקות', m: 'רגיעה' },
+    { n: 'מתיחת צוואר', m: 'צוואר' },
+    { n: 'הליכה במקום', m: 'רגליים' },
+    { n: 'מתיחת גב תחתון', m: 'גב' }
+  ]},
+  { day: 4, title: 'כוח גינה', sub: 'איזון', cat: 'strength', dur: 25, exercises: [
+    { n: 'סיבובי כתפיים', m: 'חימום' },
+    { n: 'סיבובי קרסול', m: 'חימום' },
+    { n: 'עמידת עץ', m: 'שיווי משקל' },
+    { n: 'כפיפות מרפקים', m: 'ביצפס' },
+    { n: 'הרמת ידיים קדימה', m: 'כתפיים' },
+    { n: 'Bird-dog', m: 'ליבה · גב' },
+    { n: 'הליכה על קו', m: 'שיווי משקל' },
+    { n: 'מתיחת גב', m: 'קירור' },
+    { n: 'נשימות', m: 'קירור' }
+  ]},
+  { day: 5, title: 'מוביליטי בית', sub: 'גמישות', cat: 'mobility', dur: 20, exercises: [
+    { n: 'סיבובי ירכיים', m: 'חימום' },
+    { n: 'הליכה במקום', m: 'חימום' },
+    { n: "World's Greatest Stretch", m: 'ירכיים' },
+    { n: 'Pigeon Pose', m: 'ישבן' },
+    { n: "Child's Pose", m: 'גב' },
+    { n: 'פתיחת חזה', m: 'חזה' },
+    { n: 'מתיחת המסטרינג', m: 'קירור' },
+    { n: 'נשימות', m: 'קירור' }
+  ]},
+  { day: 6, title: 'מנוחה', sub: 'רגיעה', cat: 'rest', dur: 12, exercises: [
+    { n: 'נשימות עמוקות', m: 'רגיעה' },
+    { n: 'מתיחת כתפיים', m: 'כתפיים' },
+    { n: 'סיבובי קרסול', m: 'קרסוליים' },
+    { n: 'מתיחת שוקיים', m: 'שוקיים' }
+  ]}
+];
+
+/* ============ SHEET SYSTEM ============ */
+function openSheet(title, html) {
+  $('sheetTitle').textContent = title;
+  $('sheetBody').innerHTML = html;
+  $('overlay').classList.add('on');
+  $('sheet').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closeSheet() {
+  $('overlay').classList.remove('on');
+  $('sheet').classList.remove('on');
+  document.body.style.overflow = '';
+}
+$('overlay').onclick = closeSheet;
+$('sheetClose').onclick = closeSheet;
+
+/* ============ TOAST ============ */
+let toastT;
+function toast(msg, isErr) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast on' + (isErr ? ' err' : '');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('on'), 2200);
+}
+
+/* ============ GREETING ============ */
+function setGreeting() {
+  const h = new Date().getHours();
+  let time = 'שלום';
+  if (h >= 5 && h < 12) time = 'בוקר טוב';
+  else if (h >= 12 && h < 17) time = 'צהריים טובים';
+  else if (h >= 17 && h < 21) time = 'ערב טוב';
+  else time = 'לילה טוב';
+  $('greetTime').textContent = time;
+  $('greetName').innerHTML = state.user.firstName + '<i>.</i>';
+}
+
+/* ============ HERO ============ */
+function setHero() {
+  const today = new Date().getDay();
+  const workout = WORKOUTS[today];
+  const key = 'w1d' + (today + 1) + '-' + todayStr();
+  const isDone = state.progress.done[key];
+
+  if (workout && workout.cat !== 'rest') {
+    $('heroLabelText').textContent = isDone ? 'הושלם היום' : 'האימון של היום';
+    const dot = $('heroLabel').querySelector('.dot');
+    const color = isDone ? 'var(--accent)' : 'var(--lime)';
+    dot.style.background = color;
+    dot.style.boxShadow = '0 0 12px ' + color;
+    $('heroTitle').innerHTML = workout.title + '<br><em>' + workout.sub + '</em>';
+    $('metaEx').textContent = workout.exercises.length + ' תרגילים';
+    $('metaDur').textContent = workout.dur + ' דקות';
+    $('startBtnText').textContent = isDone ? 'חזור על האימון' : 'התחל אימון';
+  } else {
+    $('heroLabelText').textContent = 'יום מנוחה';
+    $('heroTitle').innerHTML = 'תנוח היום<em>.</em>';
+    $('metaEx').textContent = '—';
+    $('metaDur').textContent = '—';
+    $('startBtnText').textContent = 'תן לגוף להתאושש';
+  }
+}
+
+/* ============ WEEK STRIP ============ */
+function setWeek() {
+  const today = new Date();
+  const todayIdx = today.getDay();
+  const days = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
+
+  $('weekStrip').innerHTML = days.map((letter, i) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() - todayIdx + i);
+    const dayNum = date.getDate();
+    const isToday = i === todayIdx;
+    const workout = WORKOUTS[i];
+    const isRest = workout && workout.cat === 'rest' && !isToday;
+    const key = 'w1d' + (i + 1) + '-' + todayStr();
+    const isDone = state.progress.done[key];
+
+    let classes = 'day';
+    if (isToday) classes += ' today';
+    if (isDone) classes += ' done';
+    if (isRest) classes += ' rest';
+
+    return '<div class="' + classes + '" data-day="' + i + '">' +
+      '<span class="day-letter">' + letter + '</span>' +
+      '<span class="day-num">' + dayNum + '</span>' +
+      '<span class="day-mark"></span>' +
+    '</div>';
+  }).join('');
+
+  $$('.day').forEach(el => {
+    el.onclick = () => openDayDetail(parseInt(el.dataset.day));
+  });
+}
+
+/* ============ DAY DETAIL SHEET ============ */
+function openDayDetail(dayIdx) {
+  const workout = WORKOUTS[dayIdx];
+  if (!workout) return;
+  const isRest = workout.cat === 'rest';
+  const isToday = dayIdx === new Date().getDay();
+  const key = 'w1d' + (dayIdx + 1) + '-' + todayStr();
+  const isDone = state.progress.done[key];
+
+  let badgeClass = 'day-detail-badge';
+  let badgeText = 'אימון מתוכנן';
+  let badgeIcon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>';
+
+  if (isDone) {
+    badgeClass += ' done';
+    badgeText = 'הושלם';
+    badgeIcon = '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>';
+  } else if (isRest) {
+    badgeClass += ' rest';
+    badgeText = 'יום מנוחה';
+    badgeIcon = '<svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>';
+  } else if (isToday) {
+    badgeText = 'היום';
+  }
+
+  const stepsHtml = workout.exercises.map((ex, i) =>
+    '<div class="wp-step">' +
+      '<div class="wp-step-num">' + (i + 1) + '</div>' +
+      '<div>' +
+        '<div class="wp-step-name">' + ex.n + '</div>' +
+        '<div class="wp-step-muscle">' + ex.m + '</div>' +
+      '</div>' +
+    '</div>'
+  ).join('');
+
+  const actionBtn = !isRest && !isDone
+    ? '<button class="btn-sheet dark" id="sheetStartBtn">התחל אימון</button>'
+    : isDone
+    ? '<button class="btn-sheet dark" id="sheetStartBtn">חזור על האימון</button>'
+    : '';
+
+  const html =
+    '<div class="day-detail">' +
+      '<div class="' + badgeClass + '">' + badgeIcon + '<span>' + badgeText + '</span></div>' +
+      '<div class="day-detail-title">' + workout.title + ' <em>' + workout.sub + '</em></div>' +
+      '<div class="day-detail-sub">' + workout.exercises.length + ' תרגילים · ' + workout.dur + ' דקות</div>' +
+    '</div>' +
+    '<div class="wp-steps">' + stepsHtml + '</div>' +
+    actionBtn;
+
+  openSheet('יום ' + ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'][dayIdx], html);
+
+  const startBtn = document.getElementById('sheetStartBtn');
+  if (startBtn) {
+    startBtn.onclick = () => {
+      closeSheet();
+      setTimeout(() => toast('מתחיל אימון: ' + workout.title + ' · ' + workout.sub), 300);
+    };
+  }
+}
+
+/* ============ WORKOUT PREVIEW ============ */
+function openWorkoutPreview() {
+  const today = new Date().getDay();
+  const workout = WORKOUTS[today];
+  if (!workout) return;
+  const isRest = workout.cat === 'rest';
+
+  const stepsHtml = workout.exercises.map((ex, i) =>
+    '<div class="wp-step">' +
+      '<div class="wp-step-num">' + (i + 1) + '</div>' +
+      '<div>' +
+        '<div class="wp-step-name">' + ex.n + '</div>' +
+        '<div class="wp-step-muscle">' + ex.m + '</div>' +
+      '</div>' +
+    '</div>'
+  ).join('');
+
+  const html =
+    '<div class="wp-hero">' +
+      '<div class="wp-icon">' +
+        '<svg viewBox="0 0 24 24"><path d="M8 6v12M16 6v12M5 9h14M5 15h14"/></svg>' +
+      '</div>' +
+      '<div class="wp-title">' + workout.title + ' <em>' + workout.sub + '</em></div>' +
+      '<div class="wp-meta">' +
+        '<span>' + workout.exercises.length + ' תרגילים</span>' +
+        '<span>·</span>' +
+        '<span>' + workout.dur + ' דקות</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="wp-steps">' + stepsHtml + '</div>' +
+    (isRest
+      ? '<button class="btn-sheet dark" id="sheetStartBtn">התחל מנוחה פעילה</button>'
+      : '<button class="btn-sheet dark" id="sheetStartBtn">מתחילים — בואו נלך</button>');
+
+  openSheet('הכנה לאימון', html);
+
+  document.getElementById('sheetStartBtn').onclick = () => {
+    closeSheet();
+    setTimeout(() => toast('אימון התחיל! 🔥'), 300);
+  };
+}
+
+/* ============ MONTH PLAN SHEET ============ */
+function openMonthPlan() {
+  const weeks = [
+    { num: 1, title: 'יסודות', current: true, days: 7 },
+    { num: 2, title: 'העמקת טווחים', current: false, days: 7 },
+    { num: 3, title: 'עצימות', current: false, days: 7 },
+    { num: 4, title: 'שיפור', current: false, days: 7 }
+  ];
+
+  const html = weeks.map(w => {
+    const daysHtml = Array.from({ length: 7 }, (_, i) => {
+      const workout = WORKOUTS[i];
+      const isRest = workout && workout.cat === 'rest';
+      const isDone = w.num === 1 && i < 3;
+      const isToday = w.current && i === new Date().getDay();
+
+      let cls = 'month-day';
+      if (isRest) cls += ' rest';
+      if (isDone) cls += ' done';
+      if (isToday) cls += ' today';
+
+      return '<div class="' + cls + '">' + (i + 1) + '<div class="month-day-mark"></div></div>';
+    }).join('');
+
+    return '<div class="month-week">' +
+      '<div class="month-week-head">' +
+        '<div class="month-week-title">שבוע ' + w.num + ' · ' + w.title + '</div>' +
+        '<div class="month-week-status ' + (w.current ? 'current' : '') + '">' +
+          (w.current ? 'בפעילות' : 'ממתין') +
+        '</div>' +
+      '</div>' +
+      '<div class="month-days">' + daysHtml + '</div>' +
+    '</div>';
+  }).join('');
+
+  openSheet('תוכנית החודש', html);
+}
+
+/* ============ SETTINGS SHEET ============ */
+function openSettings() {
+  const html =
+    '<div class="set-profile">' +
+      '<div class="set-avatar">ד</div>' +
+      '<div class="set-info">' +
+        '<div class="set-name">' + state.user.displayName + '</div>' +
+        '<div class="set-email">' + state.user.email + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="set-list">' +
+      '<button class="set-row" data-action="profile">פרופיל אישי <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>' +
+      '<button class="set-row" data-action="notif">התראות <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>' +
+      '<button class="set-row" data-action="privacy">מדיניות פרטיות <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>' +
+      '<button class="set-row" data-action="terms">תנאי שימוש <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>' +
+      '<button class="set-row" data-action="help">עזרה ותמיכה <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>' +
+    '</div>' +
+    '<button class="btn-sheet dark" id="sheetLogout" style="margin-bottom:10px">התנתקות</button>' +
+    '<button class="btn-sheet danger" id="sheetDelete">מחיקת חשבון</button>';
+
+  openSheet('הגדרות', html);
+
+  $$('.set-row').forEach(row => {
+    row.onclick = () => toast('פתיחת ' + row.textContent.trim());
+  });
+
+  document.getElementById('sheetLogout').onclick = () => {
+    if (confirm('להתנתק מהחשבון?')) {
+      closeSheet();
+      setTimeout(() => toast('התנתקת בהצלחה'), 300);
+    }
+  };
+  document.getElementById('sheetDelete').onclick = () => {
+    if (confirm('למחוק את החשבון? כל הנתונים יימחקו לתמיד.')) {
+      closeSheet();
+      setTimeout(() => toast('החשבון נמחק', true), 300);
+    }
+  };
+}
+
+/* ============ STRETCH SHEET ============ */
+function openStretch() {
+  const sequences = [
+    { title: 'פתיחת בוקר', desc: 'רצף עדין להעיר את הגוף', dur: 8, level: 'מתחילים' },
+    { title: 'שחרור ערב', desc: 'הרפייה אחרי יום ארוך', dur: 12, level: 'מתחילים' },
+    { title: 'טווחים עמוקים', desc: 'רצף מתקדם למי שכבר מתאמן', dur: 18, level: 'מתקדמים' }
+  ];
+
+  const html = sequences.map(s =>
+    '<div class="journey" style="margin-bottom:12px;cursor:pointer" data-stretch="' + s.title + '">' +
+      '<div class="journey-head" style="margin-bottom:0">' +
+        '<div>' +
+          '<div class="journey-title">' + s.title + '</div>' +
+          '<div class="journey-sub">' + s.desc + '</div>' +
+        '</div>' +
+        '<div class="journey-badge">' +
+          '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>' +
+          '<span>' + s.dur + ' דק׳</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>'
+  ).join('');
+
+  openSheet('מתיחות', html);
+
+  $$('[data-stretch]').forEach(el => {
+    el.onclick = () => {
+      closeSheet();
+      setTimeout(() => toast('מתחיל: ' + el.dataset.stretch), 300);
+    };
+  });
+}
+
+/* ============ PROGRESS SHEET ============ */
+function openProgress() {
+  const html =
+    '<div class="wp-hero" style="border-bottom:none;padding-bottom:8px">' +
+      '<div class="wp-icon">' +
+        '<svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>' +
+      '</div>' +
+      '<div class="wp-title">ההתקדמות שלך</div>' +
+      '<div class="wp-meta" style="margin-bottom:0">' +
+        '<span>עוד אין נתונים להציג</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="journey-hint" style="margin-top:24px">' +
+      '<div class="journey-hint-icon">' +
+        '<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>' +
+      '</div>' +
+      '<div class="journey-hint-text">' +
+        '<strong>בואו נתחיל!</strong> השלם אימון ראשון כדי לראות כאן את ההתקדמות שלך' +
+      '</div>' +
+    '</div>' +
+    '<button class="btn-sheet dark" id="sheetProgressStart" style="margin-top:20px">התחל אימון ראשון</button>';
+
+  openSheet('התקדמות', html);
+
+  document.getElementById('sheetProgressStart').onclick = () => {
+    closeSheet();
+    setTimeout(openWorkoutPreview, 300);
+  };
+}
+
+/* ============ EVENT LISTENERS ============ */
+$('startBtn').onclick = () => {
+  const today = new Date().getDay();
+  const workout = WORKOUTS[today];
+  if (workout && workout.cat !== 'rest') openWorkoutPreview();
+  else toast('יום מנוחה — תחזור מחר');
+};
+
+$('settingsBtn').onclick = openSettings;
+$('weekLink').onclick = openMonthPlan;
+$('toStretch').onclick = openStretch;
+$('toProgress').onclick = openProgress;
+
+$$('.nav-item').forEach(item => {
+  item.onclick = () => {
+    const nav = item.dataset.nav;
+    if (nav === 'home') {
+      $$('.nav-item').forEach(i => i.classList.remove('on'));
+      item.classList.add('on');
+    } else if (nav === 'stretch') {
+      openStretch();
+    } else if (nav === 'progress') {
+      openProgress();
+    } else if (nav === 'settings') {
+      openSettings();
+    }
+  };
+});
+
+/* ============ UTILS ============ */
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+/* ============ INIT ============ */
+setGreeting();
+setHero();
+setWeek();
+</script>
+
+
+<script>
+(function(){
+  function nav(file){location.href=file+'.html'}
+  function bind(){
+    var map={settingsBtn:'settings',startBtn:'workout',toStretch:'stretch',toProgress:'progress'};
+    Object.keys(map).forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation();nav(map[id])},true)});
+    document.querySelectorAll('#sheetStartBtn').forEach(function(el){el.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation();nav('workout')},true)});
+    document.querySelectorAll('[data-nav]').forEach(function(el){el.addEventListener('click',function(e){var n=el.getAttribute('data-nav');if(n){e.preventDefault();e.stopImmediatePropagation();nav(n)}},true)});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
+</body>
+</html>
