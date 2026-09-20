@@ -25,7 +25,7 @@ jobs:
           ORG_GRADLE_PROJECT_FIT50_FIREBASE_APP_ID: ${{ secrets.FIT50_FIREBASE_APP_ID }}
           ORG_GRADLE_PROJECT_FIT50_FIREBASE_PROJECT_ID: ${{ secrets.FIT50_FIREBASE_PROJECT_ID }}
           ORG_GRADLE_PROJECT_FIT50_GOOGLE_WEB_CLIENT_ID: ${{ secrets.FIT50_GOOGLE_WEB_CLIENT_ID }}
-        run: gradle :app:assembleDebug --stacktrace
+        run: gradle :app:assembleDebug :app:lintDebug --stacktrace
       - uses: actions/upload-artifact@v4
         with:
           name: Fit50-debug-apk

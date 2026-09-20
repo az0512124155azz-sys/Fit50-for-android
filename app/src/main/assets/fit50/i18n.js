@@ -334,11 +334,7 @@
       'html[dir="ltr"] .list-arrow{transform:scaleX(-1)}' +
       'html[dir="rtl"] body{direction:rtl!important}' +
       'html,body{scrollbar-width:none!important}' +
-      'html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{width:0!important;height:0!important;display:none!important}' +
-      '.nav{bottom:calc(16px + var(--fit50-system-bottom,0px))!important}' +
-      '.toast{bottom:calc(100px + var(--fit50-system-bottom,0px))!important}' +
-      '.sheet,.share-sheet{padding-bottom:calc(32px + var(--fit50-system-bottom,0px))!important}' +
-      '.screen:has(.nav){padding-bottom:calc(110px + var(--fit50-system-bottom,0px))!important}';
+      'html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{width:0!important;height:0!important;display:none!important}';
   }
 
   const pendingTargets=new Map();

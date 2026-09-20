@@ -1,24 +1,33 @@
 package com.fit50.app
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.FrameLayout
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
     private lateinit var webView: WebView
     private lateinit var bridge: Fit50WebBridge
-    private var navigationBarInsetDp: Int = 0
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val systemBarColor = Color.rgb(28, 42, 34)
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(systemBarColor),
+            navigationBarStyle = SystemBarStyle.dark(systemBarColor)
+        )
 
         webView = WebView(this).apply {
             setBackgroundColor(android.graphics.Color.rgb(31, 43, 36))
@@ -37,12 +46,7 @@ class MainActivity : ComponentActivity() {
             settings.displayZoomControls = false
 
             webChromeClient = WebChromeClient()
-            webViewClient = object : WebViewClient() {
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
-                    applySystemInsetsToPage()
-                }
-            }
+            webViewClient = WebViewClient()
 
             bridge = Fit50WebBridge(this@MainActivity, this)
             addJavascriptInterface(
@@ -53,37 +57,42 @@ class MainActivity : ComponentActivity() {
             loadUrl("file:///android_asset/fit50/splash.html")
         }
 
-        setContentView(webView)
-
-        ViewCompat.setOnApplyWindowInsetsListener(webView) { _, insets ->
-            val navigationBars =
-                insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-
-            navigationBarInsetDp =
-                (navigationBars.bottom / resources.displayMetrics.density)
-                    .roundToInt()
-
-            applySystemInsetsToPage()
-            insets
+        // Resize the WebView itself, so every fixed element (including iframe
+        // content) stays inside the safe area before a page starts rendering.
+        val content = FrameLayout(this).apply {
+            setBackgroundColor(systemBarColor)
+            addView(webView, FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            ))
         }
+        ViewCompat.setOnApplyWindowInsetsListener(content) { view, insets ->
+            val safeArea = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or
+                    WindowInsetsCompat.Type.displayCutout() or
+                    WindowInsetsCompat.Type.ime()
+            )
+            view.setPadding(safeArea.left, safeArea.top, safeArea.right, safeArea.bottom)
+            // The container owns the insets; WebView must not apply them again.
+            WindowInsetsCompat.CONSUMED
+        }
+        setContentView(content)
+        ViewCompat.requestApplyInsets(content)
 
-        ViewCompat.requestApplyInsets(webView)
-    }
-
-    private fun applySystemInsetsToPage() {
-        if (!::webView.isInitialized) return
-
-        val bottom = navigationBarInsetDp.coerceAtLeast(0)
-
-        webView.post {
-            if (!isFinishing && !isDestroyed) {
-                webView.evaluateJavascript(
-                    "document.documentElement.style.setProperty('--fit50-system-bottom', '${bottom}px');" +
-                        "window.dispatchEvent(new CustomEvent('fit50SystemInsetsChanged'));",
-                    null
-                )
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (webView.canGoBack()) {
+                    webView.goBack()
+                } else {
+                    isEnabled = false
+                    try {
+                        onBackPressedDispatcher.onBackPressed()
+                    } finally {
+                        isEnabled = true
+                    }
+                }
             }
-        }
+        })
     }
 
     override fun onResume() {
@@ -99,15 +108,6 @@ class MainActivity : ComponentActivity() {
                     bridge.continueSignedInSession()
                 }
             }, 650)
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        if (::webView.isInitialized && webView.canGoBack()) {
-            webView.goBack()
-        } else {
-            super.onBackPressed()
         }
     }
 
