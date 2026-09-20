@@ -27,12 +27,15 @@ jobs:
           test -n "$FIT50_DEBUG_KEYSTORE_BASE64"
           mkdir -p "$HOME/.android"
           printf '%s' "$FIT50_DEBUG_KEYSTORE_BASE64" | base64 --decode > "$HOME/.android/debug.keystore"
+          keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey \
+            | grep -Fq 'SHA1: D5:6B:AC:8A:18:03:1F:AB:8B:1E:59:5D:1C:26:AA:DD:FF:55:1D:74'
       - name: Build debug APK
         env:
           ORG_GRADLE_PROJECT_FIT50_FIREBASE_API_KEY: ${{ secrets.FIT50_FIREBASE_API_KEY }}
           ORG_GRADLE_PROJECT_FIT50_FIREBASE_APP_ID: ${{ secrets.FIT50_FIREBASE_APP_ID }}
           ORG_GRADLE_PROJECT_FIT50_FIREBASE_PROJECT_ID: ${{ secrets.FIT50_FIREBASE_PROJECT_ID }}
           ORG_GRADLE_PROJECT_FIT50_GOOGLE_WEB_CLIENT_ID: ${{ secrets.FIT50_GOOGLE_WEB_CLIENT_ID }}
+          ORG_GRADLE_PROJECT_FIT50_DEBUG_KEYSTORE_PATH: /home/runner/.android/debug.keystore
         run: gradle :app:assembleDebug :app:lintDebug --stacktrace
       - uses: actions/upload-artifact@v4
         with:

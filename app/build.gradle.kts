@@ -22,6 +22,17 @@ android {
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", fit50Prop("FIT50_GOOGLE_WEB_CLIENT_ID", "1570044363-5jone06j0rr5affoi0c2hb94p6ngjttb.apps.googleusercontent.com").asBuildConfigString())
     }
 
+    signingConfigs {
+        getByName("debug") {
+            providers.gradleProperty("FIT50_DEBUG_KEYSTORE_PATH").orNull?.let { path ->
+                storeFile = file(path)
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
+    }
+
     buildFeatures {
         compose = true
         buildConfig = true
