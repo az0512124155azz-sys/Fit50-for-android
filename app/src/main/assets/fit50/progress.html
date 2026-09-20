@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1F2B24">
+<title>Fit50+ — התקדמות</title>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#1F2B24;
+  --forest-2:#2D3D33;
+  --cream:#FAF7F2;
+  --cream-2:#F2EDE4;
+  --cream-3:#E8E1D5;
+  --ink:#1A1A1A;
+  --ink-2:#4A4A4A;
+  --ink-3:#8A8A8A;
+  --line:rgba(26,26,26,.12);
+  --accent:#E85A2C;
+  --accent-2:#C44A22;
+  --lime:#D4E85C;
+  --lime-dark:#7A9E10;
+  --whatsapp:#25D366;
+  --facebook:#1877F2;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  font-family:'Assistant',-apple-system,sans-serif;
+  background:var(--cream);color:var(--ink);
+  direction:rtl;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;user-select:none;
+}
+.screen{
+  max-width:480px;margin:0 auto;
+  min-height:100vh;display:flex;flex-direction:column;
+  background:var(--cream);padding-bottom:100px;
+}
+
+.top{
+  padding:24px 24px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.top-back,.top-action{
+  width:44px;height:44px;background:transparent;border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--ink-2);border-radius:50%;
+  transition:background .15s;
+}
+.top-back:hover,.top-action:hover{background:var(--cream-2)}
+.top-back svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.top-action svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.top-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.01em;
+}
+
+.hero-progress{padding:8px 24px 28px}
+.hero-eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:16px;
+}
+.hero-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:52px;font-weight:700;line-height:1;letter-spacing:-.03em;
+  color:var(--ink);margin-bottom:12px;
+}
+.hero-title em{font-style:normal;color:var(--accent)}
+.hero-sub{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:17px;font-style:italic;color:var(--ink-3);
+  line-height:1.5;max-width:340px;margin-bottom:28px;
+}
+.period-tabs{
+  display:flex;background:var(--cream-2);border-radius:14px;
+  padding:4px;gap:2px;
+}
+.period-tab{
+  flex:1;padding:10px 8px;background:transparent;border:none;
+  border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;
+  color:var(--ink-3);cursor:pointer;transition:all .15s;
+}
+.period-tab:hover{color:var(--ink-2)}
+.period-tab.on{
+  background:var(--forest);color:var(--cream);
+  box-shadow:0 2px 8px -2px rgba(31,43,36,.3);
+}
+
+.big-stats{
+  display:grid;grid-template-columns:1fr 1fr;
+  margin:0 24px;border-top:2px solid var(--ink);
+}
+.big-stat{
+  padding:28px 20px;display:flex;flex-direction:column;gap:10px;
+  border-bottom:1px solid var(--line);
+}
+.big-stat:nth-child(1){border-left:1px solid var(--line)}
+.big-stat:nth-child(3){border-left:1px solid var(--line)}
+.big-stat-num{
+  font-family:'Fraunces',serif;
+  font-size:52px;font-weight:900;line-height:.9;
+  letter-spacing:-.05em;color:var(--ink);
+  direction:ltr;text-align:right;font-variant-numeric:tabular-nums;
+}
+.big-stat-num.coral{color:var(--accent)}
+.big-stat-num.lime{color:var(--lime-dark)}
+.big-stat-num.forest{color:var(--forest)}
+.big-stat-lbl{
+  font-size:11px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);line-height:1.4;
+}
+.big-stat-lbl small{
+  display:block;font-size:10px;font-weight:500;
+  letter-spacing:.02em;text-transform:none;
+  color:var(--ink-3);margin-top:3px;opacity:.7;
+}
+
+.chart-section{padding:36px 24px 24px}
+.section-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:20px;
+}
+.section-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:22px;font-weight:700;letter-spacing:-.01em;
+}
+.section-meta{
+  font-size:12px;font-weight:600;color:var(--ink-3);letter-spacing:.08em;
+}
+.chart{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:12px;height:150px;padding:0 4px;position:relative;
+}
+.chart::before{
+  content:'';position:absolute;left:0;right:0;bottom:0;
+  height:1px;background:var(--line);
+}
+.chart-bar-wrap{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  gap:8px;height:100%;justify-content:flex-end;
+}
+.chart-bar{
+  width:100%;max-width:48px;background:var(--cream-2);
+  border-radius:8px 8px 0 0;
+  transition:height .8s cubic-bezier(.22,1,.36,1);
+  min-height:4px;
+}
+.chart-bar.current{background:var(--forest)}
+.chart-bar-num{
+  font-family:'Fraunces',serif;font-size:14px;font-weight:700;
+  color:var(--ink-2);margin-bottom:2px;direction:ltr;
+}
+.chart-bar-wrap.current .chart-bar-num{color:var(--ink)}
+.chart-lbl{font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:.04em}
+.chart-bar-wrap.current .chart-lbl{color:var(--ink);font-weight:700}
+
+.records-section{padding:16px 24px 24px}
+.records-list{border-top:1px solid var(--line)}
+.record-row{
+  display:grid;grid-template-columns:44px 1fr auto;
+  align-items:center;gap:14px;padding:18px 0;
+  border-bottom:1px solid var(--line);
+}
+.record-row:last-child{border-bottom:none}
+.record-icon{
+  width:44px;height:44px;border-radius:12px;background:var(--cream-2);
+  display:flex;align-items:center;justify-content:center;
+}
+.record-icon svg{
+  width:20px;height:20px;stroke:var(--ink);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.record-info{text-align:right;min-width:0}
+.record-name{
+  font-family:'Frank Ruhl Libre',serif;font-size:17px;font-weight:700;
+  color:var(--ink);letter-spacing:-.01em;line-height:1.2;
+}
+.record-name small{
+  display:block;font-family:'Assistant',sans-serif;font-size:12px;
+  font-weight:500;color:var(--ink-3);letter-spacing:.02em;margin-top:3px;
+}
+.record-val{
+  font-family:'Fraunces',serif;font-size:28px;font-weight:900;
+  letter-spacing:-.03em;color:var(--ink);line-height:1;
+  direction:ltr;display:flex;align-items:baseline;gap:3px;flex-shrink:0;
+}
+.record-val small{
+  font-family:'Assistant',sans-serif;font-size:12px;font-weight:600;
+  color:var(--ink-3);letter-spacing:.02em;
+}
+.record-empty{
+  display:flex;flex-direction:column;align-items:center;
+  padding:40px 24px;text-align:center;
+}
+.record-empty-icon{
+  width:64px;height:64px;border-radius:50%;background:var(--cream-2);
+  display:flex;align-items:center;justify-content:center;margin-bottom:16px;
+}
+.record-empty-icon svg{
+  width:28px;height:28px;stroke:var(--ink-3);fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+.record-empty-title{
+  font-family:'Frank Ruhl Libre',serif;font-size:19px;font-weight:700;
+  color:var(--ink);margin-bottom:8px;letter-spacing:-.01em;
+}
+.record-empty-sub{
+  font-size:14px;color:var(--ink-3);line-height:1.5;max-width:260px;
+}
+
+.history-section{padding:16px 24px 24px}
+.history-list{border-top:1px solid var(--line)}
+.history-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 0;border-bottom:1px solid var(--line);gap:14px;
+}
+.history-row:last-child{border-bottom:none}
+.history-check{
+  width:32px;height:32px;border-radius:50%;background:var(--forest);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.history-check svg{
+  width:14px;height:14px;stroke:var(--lime);fill:none;
+  stroke-width:3;stroke-linecap:round;stroke-linejoin:round;
+}
+.history-info{flex:1;text-align:right}
+.history-title{
+  font-family:'Frank Ruhl Libre',serif;font-size:16px;font-weight:700;
+  color:var(--ink);letter-spacing:-.01em;line-height:1.2;margin-bottom:4px;
+}
+.history-meta{font-size:12px;color:var(--ink-3);font-weight:500;letter-spacing:.02em}
+.history-dur{
+  font-family:'Fraunces',serif;font-size:16px;font-weight:700;
+  color:var(--ink-2);direction:ltr;flex-shrink:0;
+}
+.empty{padding:40px 24px;text-align:center;border-top:1px solid var(--line)}
+.empty-mark{
+  width:56px;height:56px;border-radius:50%;background:var(--cream-2);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 14px;
+}
+.empty-mark svg{
+  width:26px;height:26px;stroke:var(--ink-3);fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+.empty-title{
+  font-family:'Frank Ruhl Libre',serif;font-size:17px;font-weight:700;
+  color:var(--ink);margin-bottom:6px;
+}
+.empty-sub{font-size:13px;color:var(--ink-3);line-height:1.5;max-width:240px;margin:0 auto}
+
+.nav{
+  position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 32px);max-width:448px;
+  background:var(--forest);border-radius:22px;padding:8px;
+  display:flex;justify-content:space-around;
+  box-shadow:0 16px 40px -12px rgba(31,43,36,.6);z-index:50;
+}
+.nav-item{
+  flex:1;background:none;border:none;padding:12px 4px;
+  border-radius:14px;font-family:inherit;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  transition:all .15s;
+}
+.nav-item svg{
+  width:22px;height:22px;stroke:rgba(250,247,242,.5);fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+.nav-item span{
+  font-size:10px;font-weight:600;letter-spacing:.06em;
+  color:rgba(250,247,242,.5);
+}
+.nav-item.on{background:rgba(250,247,242,.08)}
+.nav-item.on svg{stroke:var(--lime)}
+.nav-item.on span{color:var(--lime)}
+
+/* SHARE OVERLAY */
+.share-overlay{
+  position:fixed;inset:0;background:rgba(15,22,18,.6);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.share-overlay.on{opacity:1;pointer-events:auto}
+.share-sheet{
+  position:fixed;left:50%;bottom:0;
+  transform:translateX(-50%) translateY(100%);
+  width:100%;max-width:480px;background:var(--cream);
+  border-radius:28px 28px 0 0;z-index:301;
+  transition:transform .4s cubic-bezier(.22,1,.36,1);
+  padding-bottom:24px;max-height:92vh;overflow-y:auto;
+}
+.share-sheet.on{transform:translateX(-50%) translateY(0)}
+.share-handle{
+  width:44px;height:4px;background:var(--line);
+  border-radius:100px;margin:12px auto 4px;
+}
+.share-head{
+  padding:16px 24px 20px;display:flex;align-items:center;
+  justify-content:space-between;border-bottom:1px solid var(--line);
+}
+.share-head-title{
+  font-family:'Frank Ruhl Libre',serif;font-size:20px;
+  font-weight:700;letter-spacing:-.02em;
+}
+.share-close{
+  width:36px;height:36px;border-radius:50%;background:var(--cream-2);
+  border:none;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .15s;
+}
+.share-close:hover{background:var(--cream-3)}
+.share-close svg{
+  width:18px;height:18px;stroke:var(--ink-2);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* ============================================================
+   SHARE CARD - IDENTICAL TO APP DESIGN
+   Background: CREAM (same as app)
+   ============================================================ */
+.share-card-wrap{padding:24px}
+.share-card{
+  background:var(--cream);
+  border-radius:20px;
+  padding:28px 24px 24px;
+  border:1px solid var(--line);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 4px 20px -8px rgba(0,0,0,.08);
+}
+
+/* Top row: logo + date */
+.share-card-top{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:32px;
+}
+.share-card-logo{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:22px;font-weight:700;letter-spacing:-.03em;
+  color:var(--ink);display:flex;align-items:flex-start;
+  direction:ltr;line-height:1;
+}
+.share-card-logo .f{font-weight:500}
+.share-card-logo .n{font-family:'Fraunces',serif;font-weight:900;color:var(--accent);margin-left:1px}
+.share-card-logo .p{font-size:13px;font-weight:700;color:var(--ink);margin-top:1px;margin-left:2px}
+.share-card-date{
+  font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);direction:ltr;
+}
+
+/* Hero section - IDENTICAL to app */
+.share-card-eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink-3);
+  margin-bottom:12px;
+}
+.share-card-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:38px;font-weight:700;letter-spacing:-.03em;
+  line-height:1.05;color:var(--ink);
+  margin-bottom:8px;
+}
+.share-card-title em{font-style:normal;color:var(--accent)}
+.share-card-sub{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:15px;font-style:italic;
+  color:var(--ink-3);
+  line-height:1.4;
+  margin-bottom:28px;
+}
+
+/* 4 stats - IDENTICAL to app */
+.share-card-stats{
+  display:grid;grid-template-columns:1fr 1fr;
+  border-top:2px solid var(--ink);
+}
+.share-card-stat{
+  padding:22px 0;
+  display:flex;flex-direction:column;gap:8px;
+  border-bottom:1px solid var(--line);
+}
+.share-card-stat:nth-child(1){
+  padding-left:16px;
+  border-left:1px solid var(--line);
+}
+.share-card-stat:nth-child(2){
+  padding-right:16px;
+}
+.share-card-stat:nth-child(3){
+  padding-left:16px;
+  border-left:1px solid var(--line);
+  border-bottom:none;
+}
+.share-card-stat:nth-child(4){
+  padding-right:16px;
+  border-bottom:none;
+}
+.share-card-stat-num{
+  font-family:'Fraunces',serif;
+  font-size:44px;font-weight:900;line-height:.9;
+  letter-spacing:-.05em;
+  direction:ltr;text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+.share-card-stat-num.coral{color:var(--accent)}
+.share-card-stat-num.forest{color:var(--forest)}
+.share-card-stat-num.lime{color:var(--lime-dark)}
+.share-card-stat-num.ink{color:var(--ink)}
+.share-card-stat-lbl{
+  font-size:10px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);line-height:1.3;
+}
+.share-card-stat-lbl small{
+  display:block;font-size:9px;font-weight:500;
+  letter-spacing:.02em;text-transform:none;
+  color:var(--ink-3);margin-top:3px;opacity:.7;
+}
+
+/* Footer */
+.share-card-footer{
+  margin-top:24px;padding-top:16px;
+  border-top:1px solid var(--line);
+  font-size:10px;font-weight:600;
+  color:var(--ink-3);
+  letter-spacing:.24em;text-transform:uppercase;
+  text-align:center;
+}
+
+/* Share targets */
+.share-targets{padding:20px 24px 8px}
+.share-targets-lbl{
+  font-size:11px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:16px;
+}
+.share-targets-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+}
+.share-target{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  background:transparent;border:none;cursor:pointer;
+  padding:8px 4px;border-radius:12px;transition:background .15s;
+}
+.share-target:hover{background:var(--cream-2)}
+.share-target-icon{
+  width:56px;height:56px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  color:#FFFFFF;box-shadow:0 4px 12px -4px rgba(0,0,0,.15);
+}
+.share-target-icon svg{width:26px;height:26px}
+.share-target.whatsapp .share-target-icon{background:var(--whatsapp)}
+.share-target.instagram .share-target-icon{background:linear-gradient(45deg,#F58529 0%,#DD2A7B 50%,#8134AF 100%)}
+.share-target.facebook .share-target-icon{background:var(--facebook)}
+.share-target.twitter .share-target-icon{background:#000}
+.share-target.copy .share-target-icon{background:var(--ink-2)}
+.share-target.save .share-target-icon{background:var(--forest)}
+.share-target.stories .share-target-icon{background:linear-gradient(135deg,#405DE6 0%,#E1306C 100%)}
+.share-target.more .share-target-icon{background:var(--ink-3)}
+.share-target-lbl{
+  font-size:11px;font-weight:600;color:var(--ink-2);letter-spacing:.02em;
+}
+
+.toast{
+  position:fixed;bottom:100px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--forest);color:var(--cream);
+  padding:14px 24px;border-radius:100px;
+  font-size:14px;font-weight:600;
+  box-shadow:0 12px 32px -8px rgba(0,0,0,.4);
+  z-index:1000;opacity:0;
+  transition:all .35s cubic-bezier(.22,1.4,.4,1);
+  pointer-events:none;max-width:calc(100% - 48px);text-align:center;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-height:700px){
+  .hero-title{font-size:40px}
+  .big-stat-num{font-size:42px}
+}
+</style>
+</head>
+<body>
+
+<div class="screen">
+
+  <div class="top">
+    <button class="top-back" id="backBtn">
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <span class="top-title">ההתקדמות שלי</span>
+    <button class="top-action" id="shareBtn" aria-label="שיתוף">
+      <svg viewBox="0 0 24 24">
+        <circle cx="18" cy="5" r="3"/>
+        <circle cx="6" cy="12" r="3"/>
+        <circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="hero-progress">
+    <div class="hero-eyebrow">מאז שהתחלת</div>
+    <h1 class="hero-title">המסע <em>שלך</em></h1>
+    <p class="hero-sub" id="heroSub">עוד לא התחלת. השלם את האימון הראשון שלך כדי לראות כאן את ההתקדמות שלך.</p>
+
+    <div class="period-tabs">
+      <button class="period-tab on" data-period="week">השבוע</button>
+      <button class="period-tab" data-period="month">החודש</button>
+      <button class="period-tab" data-period="all">הכל</button>
+    </div>
+  </div>
+
+  <div class="big-stats">
+    <div class="big-stat">
+      <div class="big-stat-num coral" id="statStreak">0</div>
+      <div class="big-stat-lbl">רצף נוכחי<small>ימים רצופים</small></div>
+    </div>
+    <div class="big-stat">
+      <div class="big-stat-num forest" id="statTotal">0</div>
+      <div class="big-stat-lbl">אימונים<small>סה״כ</small></div>
+    </div>
+    <div class="big-stat">
+      <div class="big-stat-num lime" id="statMins">0</div>
+      <div class="big-stat-lbl">דקות תנועה<small>סה״כ</small></div>
+    </div>
+    <div class="big-stat">
+      <div class="big-stat-num" id="statWeek">0</div>
+      <div class="big-stat-lbl">השבוע<small>אימונים שהושלמו</small></div>
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <div class="section-head">
+      <h2 class="section-title">4 שבועות אחרונים</h2>
+      <span class="section-meta" id="chartMeta">0 אימונים</span>
+    </div>
+    <div class="chart">
+      <div class="chart-bar-wrap">
+        <div class="chart-bar-num" data-week="0">0</div>
+        <div class="chart-bar" data-week="0" style="height:4px"></div>
+        <div class="chart-lbl">שבוע 1</div>
+      </div>
+      <div class="chart-bar-wrap">
+        <div class="chart-bar-num" data-week="1">0</div>
+        <div class="chart-bar" data-week="1" style="height:4px"></div>
+        <div class="chart-lbl">שבוע 2</div>
+      </div>
+      <div class="chart-bar-wrap">
+        <div class="chart-bar-num" data-week="2">0</div>
+        <div class="chart-bar" data-week="2" style="height:4px"></div>
+        <div class="chart-lbl">שבוע 3</div>
+      </div>
+      <div class="chart-bar-wrap current">
+        <div class="chart-bar-num" data-week="3">0</div>
+        <div class="chart-bar current" data-week="3" style="height:4px"></div>
+        <div class="chart-lbl">השבוע</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="records-section">
+    <div class="section-head">
+      <h2 class="section-title">שיאים אישיים</h2>
+      <span class="section-meta" id="recordsMeta">—</span>
+    </div>
+    <div class="records-list" id="recordsList"></div>
+  </div>
+
+  <div class="history-section">
+    <div class="section-head">
+      <h2 class="section-title">היסטוריה</h2>
+      <span class="section-meta" id="histMeta">—</span>
+    </div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button class="nav-item" data-nav="home">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>בית</span>
+  </button>
+  <button class="nav-item" data-nav="stretch">
+    <svg viewBox="0 0 24 24"><path d="M12 3v6M12 21v-6M3 12h6M21 12h-6M5.6 5.6l4.2 4.2M19.4 5.6l-4.2 4.2M5.6 18.4l4.2-4.2M19.4 18.4l-4.2-4.2"/></svg>
+    <span>מתיחות</span>
+  </button>
+  <button class="nav-item on" data-nav="progress">
+    <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+    <span>התקדמות</span>
+  </button>
+  <button class="nav-item" data-nav="settings">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span>עוד</span>
+  </button>
+</nav>
+
+<!-- ============ SHARE SHEET ============ -->
+<div class="share-overlay" id="shareOverlay"></div>
+<div class="share-sheet" id="shareSheet">
+  <div class="share-handle"></div>
+  <div class="share-head">
+    <div class="share-head-title">שתף את ההתקדמות</div>
+    <button class="share-close" id="shareClose">
+      <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <!-- ============ SHARE CARD - IDENTICAL TO APP ============ -->
+  <div class="share-card-wrap">
+    <div class="share-card">
+
+      <!-- Top: logo + date -->
+      <div class="share-card-top">
+        <div class="share-card-logo">
+          <span class="f">Fit</span><span class="n">50</span><span class="p">+</span>
+        </div>
+        <span class="share-card-date" id="shareDate">17 SEP 2026</span>
+      </div>
+
+      <!-- Hero - IDENTICAL to app -->
+      <div class="share-card-eyebrow">מאז שהתחלתי</div>
+      <div class="share-card-title">המסע <em>שלי</em></div>
+      <div class="share-card-sub" id="shareCardSub">עם Fit50+</div>
+
+      <!-- 4 stats - IDENTICAL to app -->
+      <div class="share-card-stats">
+        <div class="share-card-stat">
+          <div class="share-card-stat-num coral" id="shareStatStreak">0</div>
+          <div class="share-card-stat-lbl">רצף נוכחי<small>ימים רצופים</small></div>
+        </div>
+        <div class="share-card-stat">
+          <div class="share-card-stat-num forest" id="shareStatTotal">0</div>
+          <div class="share-card-stat-lbl">אימונים<small>סה״כ</small></div>
+        </div>
+        <div class="share-card-stat">
+          <div class="share-card-stat-num lime" id="shareStatMins">0</div>
+          <div class="share-card-stat-lbl">דקות תנועה<small>סה״כ</small></div>
+        </div>
+        <div class="share-card-stat">
+          <div class="share-card-stat-num ink" id="shareStatWeek">0</div>
+          <div class="share-card-stat-lbl">השבוע<small>אימונים שהושלמו</small></div>
+        </div>
+      </div>
+
+      <div class="share-card-footer">fit50.app</div>
+    </div>
+  </div>
+
+  <!-- Targets -->
+  <div class="share-targets">
+    <div class="share-targets-lbl">שתף עם</div>
+    <div class="share-targets-grid">
+
+      <button class="share-target whatsapp" onclick="shareTo('WhatsApp')">
+        <div class="share-target-icon">
+          <svg viewBox="0 0 24 24" fill="#fff">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.119.555 4.11 1.523 5.833L.065 23.065l5.386-1.413A11.96 11.96 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.895 0-3.665-.516-5.18-1.417l-.371-.221-3.845 1.008 1.026-3.747-.242-.385A9.932 9.932 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+          </svg>
+        </div>
+        <span class="share-target-lbl">WhatsApp</span>
+      </button>
+
+      <button class="share-target instagram" onclick="shareTo('Instagram')">
+        <div class="share-target-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+          </svg>
+        </div>
+        <span class="share-target-lbl">אינסטגרם</span>
+      </button>
+
+      <button class="share-target stories" onclick="shareTo('Stories')">
+        <div class="share-target-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="10 8 16 12 10 16 10 8" fill="#fff" stroke="none"/>
+          </svg>
+        </div>
+        <span class="share-target-lbl">סטורי</span>
+      </button>
+
+      <button class="share-target facebook" onclick="shareTo('Facebook')">
+        <div class="share-target-icon">
+          <svg viewBox="0 0 24 24" fill="#fff">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+        </div>
+        <span class="share-target-lbl">פייסבוק</span>
+      </button>
+
+      <button class="share-target copy" onclick="shareTo('הועתק')">
+        <div class="share-target-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </div>
+        <span class="share-target-lbl">העתק</span>
+      </button>
+
+      <button class="share-target save" onclick="shareTo('נשמר')">
+        <div class="share-target-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </div>
+        <span class="share-target-lbl">שמור</span>
+      </button>
+
+      <button class="share-target twitter" onclick="shareTo('X')">
+        <div class="share-target-icon">
+          <svg viewBox="0 0 24 24" fill="#fff">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </div>
+        <span class="share-target-lbl">X</span>
+      </button>
+
+      <button class="share-target more" onclick="shareTo('עוד')">
+        <div class="share-target-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="1.5" fill="#fff"/>
+            <circle cx="19" cy="12" r="1.5" fill="#fff"/>
+            <circle cx="5" cy="12" r="1.5" fill="#fff"/>
+          </svg>
+        </div>
+        <span class="share-target-lbl">עוד</span>
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const $$ = s => document.querySelectorAll(s);
+
+const state = {
+  progress: {
+    total: 0, streak: 0, maxStreak: 0, mins: 0, week: 0,
+    history: [], weeklyCounts: [0, 0, 0, 0],
+    exercisePRs: {}
+  }
+};
+
+const RECORD_DEFS = [
+  { id: 'plank', name: 'החזקת פלאנק', desc: 'הזמן הארוך ביותר', unit: 'שנ׳', icon: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>' },
+  { id: 'pushups', name: 'שכיבות סמיכה', desc: 'מקסימום חזרות', unit: 'חזרות', icon: '<path d="M6 9v6M18 9v6M6 12h12"/>' },
+  { id: 'tree', name: 'עמידת עץ', desc: 'שיווי משקל מקסימלי', unit: 'שנ׳', icon: '<path d="M12 2v20M2 12h20"/>' },
+  { id: 'squat', name: 'סקוואט', desc: 'מקסימום חזרות', unit: 'חזרות', icon: '<path d="M8 6v12M16 6v12M5 9h14M5 15h14"/>' },
+  { id: 'bridge', name: 'גשר אגן', desc: 'מקסימום חזרות', unit: 'חזרות', icon: '<path d="M4 14c4-4 12-4 16 0"/>' },
+  { id: 'birddog', name: 'Bird-dog', desc: 'שיווי משקל מקסימלי', unit: 'שנ׳', icon: '<circle cx="6" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 8l8 8"/>' }
+];
+
+let toastT;
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast on';
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('on'), 2200);
+}
+
+function render() {
+  const p = state.progress;
+  if (p.total === 0) {
+    $('heroSub').textContent = 'עוד לא התחלת. השלם את האימון הראשון שלך כדי לראות כאן את ההתקדמות שלך.';
+  } else if (p.total < 5) {
+    $('heroSub').textContent = 'התחלת את המסע. ' + p.total + ' אימונים מאחוריך.';
+  } else if (p.total < 15) {
+    $('heroSub').textContent = 'אתה בעניינים. ' + p.total + ' אימונים ו-' + p.mins + ' דקות תנועה.';
+  } else {
+    $('heroSub').textContent = 'השגת כבר ' + p.total + ' אימונים.';
+  }
+
+  $('statStreak').textContent = p.streak;
+  $('statTotal').textContent = p.total;
+  $('statMins').textContent = p.mins;
+  $('statWeek').textContent = p.week;
+
+  const maxCount = Math.max(1, ...p.weeklyCounts);
+  $$('.chart-bar').forEach(bar => {
+    const idx = parseInt(bar.dataset.week, 10);
+    const count = p.weeklyCounts[idx] || 0;
+    bar.style.height = Math.max(4, (count / maxCount) * 100) + '%';
+  });
+  $$('.chart-bar-num').forEach(num => {
+    const idx = parseInt(num.dataset.week, 10);
+    num.textContent = p.weeklyCounts[idx] || 0;
+  });
+  const totalInChart = p.weeklyCounts.reduce((a, b) => a + b, 0);
+  $('chartMeta').textContent = totalInChart + (totalInChart === 1 ? ' אימון' : ' אימונים');
+
+  renderRecords();
+  renderHistory();
+  updateShareCard();
+}
+
+function renderRecords() {
+  const list = $('recordsList');
+  const prs = state.progress.exercisePRs || {};
+  const active = RECORD_DEFS.filter(d => prs[d.id] !== undefined && prs[d.id] !== null);
+
+  if (active.length === 0) {
+    list.innerHTML =
+      '<div class="record-empty">' +
+        '<div class="record-empty-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>' +
+        '<div class="record-empty-title">השיאים שלך יופיעו כאן</div>' +
+        '<div class="record-empty-sub">אחרי שתשלים את האימון הראשון, נתחיל לעקוב אחרי השיאים שלך בתרגילים המרכזיים.</div>' +
+      '</div>';
+    $('recordsMeta').textContent = 'אין עדיין';
+    return;
+  }
+
+  list.innerHTML = active.map(def => {
+    const value = prs[def.id];
+    return '<div class="record-row">' +
+      '<div class="record-icon"><svg viewBox="0 0 24 24">' + def.icon + '</svg></div>' +
+      '<div class="record-info"><div class="record-name">' + def.name + '<small>' + def.desc + '</small></div></div>' +
+      '<div class="record-val">' + value + '<small>' + def.unit + '</small></div>' +
+    '</div>';
+  }).join('');
+  $('recordsMeta').textContent = active.length + ' מתוך ' + RECORD_DEFS.length;
+}
+
+function renderHistory() {
+  const list = $('historyList');
+  const history = state.progress.history;
+
+  if (!history || history.length === 0) {
+    list.innerHTML =
+      '<div class="empty">' +
+        '<div class="empty-mark"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg></div>' +
+        '<div class="empty-title">אין עדיין היסטוריה</div>' +
+        '<div class="empty-sub">כשתשלים את האימון הראשון שלך, הוא יופיע כאן.</div>' +
+      '</div>';
+    $('histMeta').textContent = 'ריק';
+    return;
+  }
+
+  list.innerHTML = history.slice(0, 10).map(h => {
+    const date = new Date(h.date);
+    const dateStr = date.toLocaleDateString('he-IL', { day: 'numeric', month: 'short' });
+    const daysAgo = Math.floor((Date.now() - date.getTime()) / 86400000);
+    const whenStr = daysAgo === 0 ? 'היום' : daysAgo === 1 ? 'אתמול' : 'לפני ' + daysAgo + ' ימים';
+    return '<div class="history-row">' +
+      '<div class="history-check"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>' +
+      '<div class="history-info"><div class="history-title">' + h.title + '</div><div class="history-meta">' + dateStr + ' · ' + whenStr + '</div></div>' +
+      '<div class="history-dur">' + h.mins + ' דק׳</div>' +
+    '</div>';
+  }).join('');
+  $('histMeta').textContent = history.length + ' אימונים';
+}
+
+function updateShareCard() {
+  const p = state.progress;
+  $('shareStatStreak').textContent = p.streak;
+  $('shareStatTotal').textContent = p.total;
+  $('shareStatMins').textContent = p.mins;
+  $('shareStatWeek').textContent = p.week;
+}
+
+function openShare() {
+  $('shareOverlay').classList.add('on');
+  $('shareSheet').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closeShare() {
+  $('shareOverlay').classList.remove('on');
+  $('shareSheet').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+$('shareBtn').onclick = openShare;
+$('shareClose').onclick = closeShare;
+$('shareOverlay').onclick = closeShare;
+
+function shareTo(platform) {
+  closeShare();
+  setTimeout(() => toast('שותף ל' + platform), 300);
+}
+
+$('backBtn').onclick = () => toast('חזרה למסך הבית');
+
+$$('.period-tab').forEach(tab => {
+  tab.onclick = () => {
+    $$('.period-tab').forEach(t => t.classList.remove('on'));
+    tab.classList.add('on');
+    toast('מציג: ' + tab.textContent);
+  };
+});
+
+$$('.nav-item').forEach(item => {
+  item.onclick = () => {
+    const nav = item.dataset.nav;
+    if (nav === 'progress') return;
+    if (nav === 'home') toast('חזרה למסך הבית');
+    else if (nav === 'stretch') toast('מסך מתיחות');
+    else if (nav === 'settings') toast('מסך הגדרות');
+  };
+});
+
+const now = new Date();
+const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+$('shareDate').textContent = now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+
+render();
+</script>
+
+
+<script>
+(function(){
+ function nav(n){location.href=n+'.html'}
+ function bind(){
+  var b=document.getElementById('backBtn');if(b)b.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation();nav('home')},true);
+  document.querySelectorAll('[data-nav]').forEach(function(el){el.addEventListener('click',function(e){var n=el.getAttribute('data-nav');if(n){e.preventDefault();e.stopImmediatePropagation();nav(n)}},true)});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
+</body>
+</html>
