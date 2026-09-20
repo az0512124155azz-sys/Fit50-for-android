@@ -146,6 +146,8 @@ function processPasswordResetQueue() {
       .trim()
       .toLowerCase();
 
+    const submittedAge = Number(value_(fields.age));
+
     Logger.log(
       'Checking ' +
       email +
@@ -182,6 +184,36 @@ function processPasswordResetQueue() {
           stringValue: ''
         }
       });
+
+      const profile = findFit50UserByEmail_(email);
+
+      if (!profile) {
+        updateResetRequest_(docName, {
+          status: { stringValue: 'rejected' },
+          gmailStatus: { stringValue: 'not_sent' },
+          gmailError: { stringValue: '' }
+        });
+        Logger.log('Reset request rejected without revealing account existence.');
+        return;
+      }
+
+      const storedAge = Number(
+        profile.fields &&
+        profile.fields.questionnaire &&
+        profile.fields.questionnaire.mapValue &&
+        profile.fields.questionnaire.mapValue.fields &&
+        value_(profile.fields.questionnaire.mapValue.fields.age)
+      );
+
+      if (!Number.isFinite(submittedAge) || storedAge !== submittedAge) {
+        updateResetRequest_(docName, {
+          status: { stringValue: 'rejected' },
+          gmailStatus: { stringValue: 'not_sent' },
+          gmailError: { stringValue: '' }
+        });
+        Logger.log('Reset request rejected after profile verification.');
+        return;
+      }
 
       const resetLink = generatePasswordResetLink_(email);
 
@@ -258,6 +290,39 @@ function listResetRequests_() {
   );
 
   return body.documents || [];
+}
+
+
+function findFit50UserByEmail_(email) {
+  const url =
+    'https://firestore.googleapis.com/v1/projects/' +
+    encodeURIComponent(PROJECT_ID) +
+    '/databases/' +
+    encodeURIComponent(DATABASE) +
+    '/documents:runQuery';
+
+  const body = {
+    structuredQuery: {
+      from: [{ collectionId: 'users' }],
+      where: {
+        fieldFilter: {
+          field: { fieldPath: 'email' },
+          op: 'EQUAL',
+          value: { stringValue: email }
+        }
+      },
+      limit: 1
+    }
+  };
+
+  const response = googleRequest_(url, 'post', body);
+  const rows = JSON.parse(response.getContentText() || '[]');
+
+  if (!Array.isArray(rows) || !rows.length || !rows[0].document) {
+    return null;
+  }
+
+  return rows[0].document;
 }
 
 function generatePasswordResetLink_(email) {
