@@ -499,58 +499,60 @@ $('privacyLink').onclick = () => toast('מדיניות הפרטיות תיפתח
     var args=[].slice.call(arguments,1);
     try{ window.Fit50Native[name].apply(window.Fit50Native,args); return true; }catch(e){ return false; }
   }
+
   window.fit50NativeResult=function(action,ok,message,destination){
     var t=document.getElementById('toast');
-    if(t){t.textContent=message||'';t.className='toast show'+(ok?'':' error');setTimeout(function(){t.classList.remove('show')},3000);}
+    if(t){
+      t.textContent=message||'';
+      t.className='toast show'+(ok?'':' error');
+      setTimeout(function(){t.classList.remove('show')},3000);
+    }
     var loginBtn=document.getElementById('loginBtn');
     if(loginBtn){loginBtn.disabled=false;loginBtn.innerHTML='<span>התחברות</span>';}
     var googleBtn=document.getElementById('googleBtn');
     if(googleBtn){googleBtn.disabled=false;}
-    if(ok && (action==='login'||action==='register'||action==='google')){
+    if(ok && (action==='login'||action==='google')){
       var next=(destination==='home'?'home':'questionnaire')+'.html';
       setTimeout(function(){location.href=next},350);
     }
   };
+
   function bind(){
-    var login=document.getElementById('loginBtn');
-    if(login) login.addEventListener('click',function(e){
+    var loginBtn=document.getElementById('loginBtn');
+    var googleBtn=document.getElementById('googleBtn');
+    var forgotBtn=document.getElementById('forgotBtn');
+    var registerBtn=document.getElementById('registerBtn');
+
+    if(loginBtn) loginBtn.addEventListener('click',function(e){
       e.preventDefault();e.stopImmediatePropagation();
       var email=(document.getElementById('emailIn')||{}).value||'';
       var pass=(document.getElementById('passIn')||{}).value||'';
       if(!email.includes('@')) return toast('נא להזין כתובת אימייל תקינה',true);
       if(pass.length<6) return toast('הסיסמה חייבת להכיל לפחות 6 תווים',true);
       if(!window.Fit50Native) return toast('שירות ההתחברות אינו זמין',true);
-      login.disabled=true;login.innerHTML='<span class="spinner"></span><span>מתחבר...</span>';
+      loginBtn.disabled=true;
+      loginBtn.innerHTML='<span class="spinner"></span><span>מתחבר...</span>';
       nativeCall('login',email.trim(),pass);
     },true);
-    var google=document.getElementById('googleBtn');
-    if(google) google.addEventListener('click',function(e){
+
+    if(googleBtn) googleBtn.addEventListener('click',function(e){
       e.preventDefault();e.stopImmediatePropagation();
       if(!window.Fit50Native) return toast('Google Sign-In אינו זמין',true);
-      google.disabled=true;
+      googleBtn.disabled=true;
       nativeCall('googleSignIn');
     },true);
-    var forgot=document.getElementById('forgotBtn');
-    if(forgot) forgot.addEventListener('click',function(e){
+
+    if(forgotBtn) forgotBtn.addEventListener('click',function(e){
       e.preventDefault();e.stopImmediatePropagation();
-      var email=(document.getElementById('emailIn')||{}).value||'';
-      if(!email.includes('@')){toast('כתוב קודם את כתובת האימייל שלך',true);document.getElementById('emailIn').focus();return;}
-      if(!window.Fit50Native) return toast('שירות איפוס הסיסמה אינו זמין',true);
-      toast('שולח קישור לאיפוס...');
-      nativeCall('resetPassword',email.trim());
+      location.href='forgot.html';
     },true);
-    var reg=document.getElementById('registerBtn');
-    if(reg) reg.addEventListener('click',function(e){
+
+    if(registerBtn) registerBtn.addEventListener('click',function(e){
       e.preventDefault();e.stopImmediatePropagation();
-      var email=(document.getElementById('emailIn')||{}).value||'';
-      var pass=(document.getElementById('passIn')||{}).value||'';
-      if(!email.includes('@')){toast('נא להזין כתובת אימייל תקינה',true);document.getElementById('emailIn').focus();return;}
-      if(pass.length<6){toast('בחר סיסמה של לפחות 6 תווים',true);document.getElementById('passIn').focus();return;}
-      if(!window.Fit50Native) return toast('שירות ההרשמה אינו זמין',true);
-      toast('יוצר חשבון...');
-      nativeCall('register',email.trim(),pass);
+      location.href='register.html';
     },true);
   }
+
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
 })();
 </script>
