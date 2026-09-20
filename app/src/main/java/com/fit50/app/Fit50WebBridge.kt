@@ -1,5 +1,8 @@
 package com.fit50.app
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.media.AudioManager
@@ -44,6 +47,29 @@ class Fit50WebBridge(
         jsCallback("fit50NativeResult", action, ok, message ?: "", destination)
     }
 
+    private fun navigateTo(destination: String) {
+        val page = if (destination == "home") "home" else "questionnaire"
+        activity.runOnUiThread {
+            if (!activity.isFinishing && !activity.isDestroyed) {
+                webView.loadUrl("file:///android_asset/fit50/${page}.html")
+            }
+        }
+    }
+
+    private fun launchShareIntent(intent: Intent) {
+        activity.runOnUiThread {
+            runCatching {
+                activity.startActivity(intent)
+            }.onFailure {
+                val fallback = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, intent.getStringExtra(Intent.EXTRA_TEXT).orEmpty())
+                }
+                activity.startActivity(Intent.createChooser(fallback, "שיתוף"))
+            }
+        }
+    }
+
     @JavascriptInterface
     fun login(email: String, password: String) {
         activity.runOnUiThread {
@@ -54,6 +80,7 @@ class Fit50WebBridge(
                     data.bootstrapUser { _, _ ->
                         data.resolveStartPage { destination ->
                             authCallback("login", true, "התחברת בהצלחה", destination)
+                            navigateTo(destination)
                         }
                     }
                 }
@@ -111,6 +138,7 @@ class Fit50WebBridge(
                         data.bootstrapUser { _, _ ->
                             data.resolveStartPage { destination ->
                                 authCallback("google", true, "התחברת עם Google", destination)
+                                navigateTo(destination)
                             }
                         }
                     }
@@ -210,12 +238,43 @@ class Fit50WebBridge(
 
     @JavascriptInterface
     fun shareText(text: String) {
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, text)
+        }
         activity.runOnUiThread {
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, text)
-            }
             activity.startActivity(Intent.createChooser(intent, "שיתוף"))
+        }
+    }
+
+    @JavascriptInterface
+    fun shareJourney(platform: String, text: String) {
+        val normalized = platform.trim().lowercase()
+
+        if (normalized == "copy" || normalized == "הועתק") {
+            val clipboard = activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboard.setPrimaryClip(ClipData.newPlainText("Fit50+ journey", text))
+            jsCallback("fit50ShareResult", true, "ההתקדמות הועתקה ללוח")
+            return
+        }
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, text)
+            putExtra(Intent.EXTRA_SUBJECT, "Fit50+ · המסע שלי")
+        }
+
+        when (normalized) {
+            "whatsapp" -> intent.setPackage("com.whatsapp")
+            "instagram", "stories" -> intent.setPackage("com.instagram.android")
+            "facebook" -> intent.setPackage("com.facebook.katana")
+        }
+
+        try {
+            launchShareIntent(intent)
+            jsCallback("fit50ShareResult", true, "חלון השיתוף נפתח")
+        } catch (_: Throwable) {
+            jsCallback("fit50ShareResult", false, "לא הצלחנו לפתוח את אפליקציית השיתוף")
         }
     }
 
