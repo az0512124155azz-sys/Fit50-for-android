@@ -1243,5 +1243,50 @@ setWeek();
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',loadPlan);else loadPlan();
 })();
 </script>
+
+<script>
+(function(){
+  const PAUSED_WORKOUT_KEY='fit50_paused_workout_v1';
+
+  function todayKey(){
+    const d=new Date();
+    return d.getFullYear()+'-'+
+      String(d.getMonth()+1).padStart(2,'0')+'-'+
+      String(d.getDate()).padStart(2,'0');
+  }
+
+  function refreshPausedWorkoutButton(){
+    const btn=document.getElementById('startBtn');
+    const text=document.getElementById('startBtnText');
+    if(!btn || !text) return;
+
+    let paused=false;
+    try{
+      const raw=localStorage.getItem(PAUSED_WORKOUT_KEY);
+      if(raw){
+        const saved=JSON.parse(raw);
+        if(saved && saved.dateKey===todayKey() && saved.workout && saved.workout.exercises){
+          paused=true;
+        }else{
+          localStorage.removeItem(PAUSED_WORKOUT_KEY);
+        }
+      }
+    }catch(e){}
+
+    text.textContent=paused?'המשך אימון':'התחל אימון';
+    btn.setAttribute('aria-label', paused?'המשך אימון':'התחל אימון');
+    btn.dataset.resume = paused ? '1' : '0';
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',refreshPausedWorkoutButton);
+  }else{
+    refreshPausedWorkoutButton();
+  }
+
+  window.addEventListener('pageshow',refreshPausedWorkoutButton);
+})();
+</script>
+
 </body>
 </html>
