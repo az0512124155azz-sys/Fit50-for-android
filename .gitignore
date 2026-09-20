@@ -5,3 +5,6 @@ local.properties
 **/build/
 *.iml
 .DS_Store
+functions/.env
+functions/.env.*
+!functions/.env.example
