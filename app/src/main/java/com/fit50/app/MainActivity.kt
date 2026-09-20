@@ -7,10 +7,14 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
     private lateinit var webView: WebView
     private lateinit var bridge: Fit50WebBridge
+    private var navigationBarInsetDp: Int = 0
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +35,12 @@ class MainActivity : ComponentActivity() {
             settings.displayZoomControls = false
 
             webChromeClient = WebChromeClient()
-            webViewClient = WebViewClient()
+            webViewClient = object : WebViewClient() {
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+                    applySystemInsetsToPage()
+                }
+            }
 
             bridge = Fit50WebBridge(this@MainActivity, this)
             addJavascriptInterface(
@@ -43,6 +52,36 @@ class MainActivity : ComponentActivity() {
         }
 
         setContentView(webView)
+
+        ViewCompat.setOnApplyWindowInsetsListener(webView) { _, insets ->
+            val navigationBars =
+                insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+
+            navigationBarInsetDp =
+                (navigationBars.bottom / resources.displayMetrics.density)
+                    .roundToInt()
+
+            applySystemInsetsToPage()
+            insets
+        }
+
+        ViewCompat.requestApplyInsets(webView)
+    }
+
+    private fun applySystemInsetsToPage() {
+        if (!::webView.isInitialized) return
+
+        val bottom = navigationBarInsetDp.coerceAtLeast(0)
+
+        webView.post {
+            if (!isFinishing && !isDestroyed) {
+                webView.evaluateJavascript(
+                    "document.documentElement.style.setProperty('--fit50-system-bottom', '${bottom}px');" +
+                        "window.dispatchEvent(new CustomEvent('fit50SystemInsetsChanged'));",
+                    null
+                )
+            }
+        }
     }
 
     override fun onResume() {
