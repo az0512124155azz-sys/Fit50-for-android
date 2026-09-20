@@ -56,12 +56,24 @@ class Fit50DataManager(private val context: Context) {
         val ref = userDoc() ?: return done("questionnaire")
         ref.get()
             .addOnSuccessListener { snap ->
-                val completed = snap.getBoolean("onboardingComplete") == true
+                val questionnaire = snap.get("questionnaire") as? Map<*, *>
+                val completed =
+                    snap.getBoolean("onboardingComplete") == true ||
+                    !questionnaire.isNullOrEmpty()
+
                 if (completed) {
                     onboardingKey()?.let { key ->
                         prefs.edit().putBoolean(key, true).apply()
                     }
+
+                    if (snap.getBoolean("onboardingComplete") != true) {
+                        ref.set(
+                            mapOf("onboardingComplete" to true),
+                            com.google.firebase.firestore.SetOptions.merge()
+                        )
+                    }
                 }
+
                 done(if (completed) "home" else "questionnaire")
             }
             .addOnFailureListener {
