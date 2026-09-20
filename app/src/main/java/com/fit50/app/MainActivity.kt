@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 
 class MainActivity : ComponentActivity() {
     private lateinit var webView: WebView
+    private lateinit var bridge: Fit50WebBridge
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +33,9 @@ class MainActivity : ComponentActivity() {
             webChromeClient = WebChromeClient()
             webViewClient = WebViewClient()
 
+            bridge = Fit50WebBridge(this@MainActivity, this)
             addJavascriptInterface(
-                Fit50WebBridge(this@MainActivity, this),
+                bridge,
                 "Fit50Native"
             )
 
@@ -41,6 +43,22 @@ class MainActivity : ComponentActivity() {
         }
 
         setContentView(webView)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (::webView.isInitialized && ::bridge.isInitialized) {
+            webView.postDelayed({
+                val currentUrl = webView.url.orEmpty()
+                if (
+                    currentUrl.contains("/fit50/login.html") ||
+                    currentUrl.contains("/fit50/splash.html")
+                ) {
+                    bridge.continueSignedInSession()
+                }
+            }, 650)
+        }
     }
 
     @Deprecated("Deprecated in Java")
