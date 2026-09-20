@@ -10,6 +10,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.functions.FirebaseFunctions
 
 class AuthManager(private val context: Context) {
     private var firebaseAuth: FirebaseAuth? = null
@@ -82,10 +83,42 @@ class AuthManager(private val context: Context) {
     fun resetPassword(email: String, done: (Boolean, String?) -> Unit) {
         val auth = ensureFirebase()
             ?: return done(false, initializationError ?: "Firebase עדיין לא הוגדר בפרויקט")
-        auth.sendPasswordResetEmail(email.trim())
-            .addOnCompleteListener { task ->
-                done(task.isSuccessful, task.exception?.localizedMessage)
-            }
+
+        val normalized = email.trim()
+        if (!normalized.contains("@")) {
+            return done(false, "כתובת אימייל אינה תקינה")
+        }
+
+        runCatching {
+            FirebaseFunctions.getInstance()
+                .getHttpsCallable("requestPasswordReset")
+                .call(mapOf("email" to normalized))
+                .addOnSuccessListener { result ->
+                    val data = result.data as? Map<*, *>
+                    val message = data?.get("message")?.toString()
+                        ?: "אם קיים חשבון עם האימייל הזה, קישור האיפוס נשלח."
+                    done(true, message)
+                }
+                .addOnFailureListener {
+                    auth.sendPasswordResetEmail(normalized)
+                        .addOnCompleteListener { fallback ->
+                            if (fallback.isSuccessful) {
+                                done(true, "בקשת האיפוס אושרה על ידי Firebase. בדוק גם ספאם וקידומי מכירות.")
+                            } else {
+                                done(false, fallback.exception?.localizedMessage ?: "שליחת קישור האיפוס נכשלה")
+                            }
+                        }
+                }
+        }.getOrElse {
+            auth.sendPasswordResetEmail(normalized)
+                .addOnCompleteListener { fallback ->
+                    done(
+                        fallback.isSuccessful,
+                        if (fallback.isSuccessful) "בקשת האיפוס אושרה על ידי Firebase."
+                        else fallback.exception?.localizedMessage ?: "שליחת קישור האיפוס נכשלה"
+                    )
+                }
+        }
     }
 
     suspend fun signInWithGoogle(activity: Activity, done: (Boolean, String?) -> Unit) {
