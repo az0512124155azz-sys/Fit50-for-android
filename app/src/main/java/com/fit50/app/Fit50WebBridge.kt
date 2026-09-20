@@ -24,6 +24,7 @@ class Fit50WebBridge(
     private val auth by lazy { AuthManager(activity.applicationContext) }
     private val data by lazy { Fit50DataManager(activity.applicationContext) }
     private var pendingDisplayName: String? = null
+    private var authNavigationInProgress = false
 
     private fun jsCallback(function: String, vararg args: Any?) {
         val serialized = args.joinToString(",") { value ->
@@ -56,6 +57,9 @@ class Fit50WebBridge(
     }
 
     private fun finishAuthenticatedSignIn(action: String, message: String) {
+        if (authNavigationInProgress) return
+        authNavigationInProgress = true
+
         val handler = Handler(Looper.getMainLooper())
         var navigated = false
 
@@ -243,6 +247,7 @@ class Fit50WebBridge(
     @JavascriptInterface
     fun logout() {
         auth.signOut()
+        authNavigationInProgress = false
         authCallback("logout", true, "התנתקת בהצלחה")
     }
 
