@@ -63,7 +63,19 @@ class AuthManager(private val context: Context) {
             ?: return done(false, initializationError ?: "Firebase עדיין לא הוגדר בפרויקט")
         auth.createUserWithEmailAndPassword(email.trim(), password)
             .addOnCompleteListener { task ->
-                done(task.isSuccessful, task.exception?.localizedMessage)
+                if (!task.isSuccessful) {
+                    done(false, task.exception?.localizedMessage)
+                } else {
+                    val user = auth.currentUser
+                    if (user == null) {
+                        done(false, "החשבון נוצר אך המשתמש לא נטען")
+                    } else {
+                        user.sendEmailVerification()
+                            .addOnCompleteListener {
+                                done(true, null)
+                            }
+                    }
+                }
             }
     }
 
