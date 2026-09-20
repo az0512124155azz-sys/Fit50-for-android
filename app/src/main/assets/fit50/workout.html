@@ -617,6 +617,81 @@ html,body{
 }
 .finish-cta:hover{background:var(--accent-2)}
 
+
+/* EXERCISE EXPLANATION */
+.wk-name{
+  cursor:pointer;
+  text-decoration:underline;
+  text-decoration-style:dotted;
+  text-decoration-thickness:1px;
+  text-underline-offset:7px;
+}
+.wk-name::after{
+  content:'  ⓘ';
+  font-family:'Assistant',sans-serif;
+  font-size:15px;
+  color:rgba(250,247,242,.55);
+  vertical-align:middle;
+}
+.exercise-help-overlay{
+  position:fixed;inset:0;
+  background:rgba(8,13,10,.68);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  z-index:500;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+}
+.exercise-help-overlay.on{display:flex}
+.exercise-help-sheet{
+  width:100%;max-width:480px;
+  max-height:82vh;
+  overflow-y:auto;
+  background:var(--cream);
+  color:var(--ink);
+  border-radius:28px 28px 0 0;
+  padding:12px 24px 30px;
+  box-shadow:0 -20px 50px rgba(0,0,0,.25);
+}
+.exercise-help-handle{
+  width:44px;height:4px;
+  background:rgba(26,26,26,.15);
+  border-radius:999px;
+  margin:0 auto 18px;
+}
+.exercise-help-head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:16px;margin-bottom:20px;
+}
+.exercise-help-title{
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:28px;font-weight:700;line-height:1.15;
+}
+.exercise-help-close{
+  width:38px;height:38px;border-radius:50%;
+  border:0;background:var(--cream-2);
+  font-size:23px;line-height:1;cursor:pointer;
+  color:var(--ink);
+}
+.exercise-help-section{
+  padding:16px 0;border-top:1px solid var(--line);
+}
+.exercise-help-label{
+  font-size:11px;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:7px;
+}
+.exercise-help-text{
+  font-size:16px;line-height:1.65;
+  color:var(--ink-2);white-space:pre-line;
+}
+.exercise-help-note{
+  margin-top:16px;padding:14px 16px;
+  border-radius:14px;background:var(--cream-2);
+  font-size:13px;line-height:1.55;color:var(--ink-2);
+}
+
 @media (max-height:750px){
   .reps-num{font-size:120px}
   .hold-time{font-size:130px}
@@ -716,6 +791,33 @@ html,body{
   </div>
 </div>
 
+
+<!-- EXERCISE EXPLANATION -->
+<div class="exercise-help-overlay" id="exerciseHelpOverlay">
+  <div class="exercise-help-sheet" role="dialog" aria-modal="true" aria-labelledby="exerciseHelpTitle">
+    <div class="exercise-help-handle"></div>
+    <div class="exercise-help-head">
+      <div>
+        <div class="exercise-help-title" id="exerciseHelpTitle">—</div>
+      </div>
+      <button class="exercise-help-close" id="exerciseHelpClose" type="button" aria-label="סגור">×</button>
+    </div>
+    <div class="exercise-help-section">
+      <div class="exercise-help-label">איך לבצע</div>
+      <div class="exercise-help-text" id="exerciseHelpHow">—</div>
+    </div>
+    <div class="exercise-help-section">
+      <div class="exercise-help-label">מינון באימון</div>
+      <div class="exercise-help-text" id="exerciseHelpDose">—</div>
+    </div>
+    <div class="exercise-help-section">
+      <div class="exercise-help-label">דגש חשוב</div>
+      <div class="exercise-help-text" id="exerciseHelpSafety">—</div>
+    </div>
+    <div class="exercise-help-note">אם מופיע כאב חד, סחרחורת או תחושה חריגה — עצור את התרגיל.</div>
+  </div>
+</div>
+
 <!-- FINISH -->
 <div class="finish-overlay" id="finishScreen">
   <div class="finish-mark">
@@ -742,6 +844,109 @@ html,body{
 
 <script>
 const $ = id => document.getElementById(id);
+
+const EXERCISE_GUIDES = {
+  shoulder_roll:'עמוד או שב זקוף. העלה את הכתפיים מעט לכיוון האוזניים, גלגל אותן לאחור ולמטה במעגל חלק. לאחר מכן החלף כיוון.',
+  march:'עמוד זקוף ליד קיר או כיסא אם צריך. הרם ברך אחת ואז את השנייה בקצב נוח, כמו הליכה במקום. שמור על נשימה רציפה.',
+  ankle_circle:'שב או עמוד עם תמיכה. הרם מעט כף רגל וסובב את הקרסול במעגלים איטיים. החלף כיוון ואז רגל.',
+  hip_circle:'עמוד בפיסוק נוח עם ידיים על המותניים. בצע מעגל קטן ואיטי עם האגן בלי לסובב את הגב בחדות.',
+  arm_swing:'עמוד זקוף ופתח את הידיים לצדדים ואז הבא אותן קדימה ברכות. התנועה צריכה להיות חופשית ולא כואבת.',
+  sit_to_stand:'שב בקצה כיסא יציב, כפות רגליים ברוחב אגן. הטה מעט את הגוף קדימה, לחץ דרך כפות הרגליים וקום. שב חזרה לאט.',
+  chair_squat:'עמוד מול כיסא עם רגליים ברוחב אגן. דחוף אגן לאחור כאילו אתה מתיישב, גע קלות בכיסא וחזור לעמידה.',
+  wall_push:'עמוד מול קיר והנח כפות ידיים בגובה החזה. כופף מרפקים והתקרב לקיר כשהגוף נשאר בקו ישר, ואז דחוף חזרה.',
+  counter_push:'הנח ידיים על משטח יציב בגובה נוח. הטה את הגוף קדימה בקו ישר, כופף מרפקים ואז דחוף את המשטח וחזור.',
+  knee_push:'כרע על הברכיים והנח ידיים מעט רחבות מהכתפיים. שמור קו ישר מהראש לברכיים, הורד את החזה ושלוט בעלייה.',
+  band_row:'אחוז גומיה מתוחה לפנים. משוך מרפקים לאחור לכיוון הצלעות, קרב שכמות בעדינות ואז החזר לאט.',
+  towel_row:'אחוז מגבת בשתי ידיים ומשוך כל יד לכיוון הפוך כאילו אתה מנסה לקרוע אותה. החזק מתח מתון בלי לעצור נשימה.',
+  wall_angels:'הישען בגב על קיר. החזק מרפקים כפופים והחלק את הידיים למעלה ולמטה בטווח שנוח לכתפיים.',
+  heel_raise:'עמוד זקוף, אפשר ליד קיר. עלה לאט על כריות כפות הרגליים, עצור רגע והורד עקבים בשליטה.',
+  toe_raise:'עמוד עם עקבים על הרצפה והרם את קדמת כפות הרגליים והאצבעות כלפי מעלה. הורד לאט.',
+  side_step:'כופף ברכיים מעט וצעד הצידה, ואז קרב את הרגל השנייה. שמור ברכיים וכפות רגליים פונות קדימה.',
+  band_side_step:'מקם גומיה קלה סביב הרגליים. שמור מתח קל בגומיה וצעד הצידה בצעדים קטנים תוך שמירה על ברכיים יציבות.',
+  glute_bridge:'שכב על הגב עם ברכיים כפופות. לחץ דרך העקבים והרם את האגן עד שהכתפיים, האגן והברכיים בקו נוח. הורד לאט.',
+  clamshell:'שכב על הצד עם ברכיים כפופות. השאר כפות רגליים יחד והרם את הברך העליונה בלי לגלגל את האגן לאחור.',
+  dead_bug:'שכב על הגב עם ברכיים מורמות. אסוף בטן בעדינות והורד לסירוגין יד ורגל נגדית בלי שהגב התחתון יתרומם.',
+  bird_dog:'עמוד על שש. שלח יד אחת ורגל נגדית לכיוונים מנוגדים, שמור אגן יציב, חזור והחלף צד.',
+  knee_plank:'הישען על האמות והברכיים. שמור גוף בקו ישר מהראש לברכיים, אסוף בטן ונשום רגיל.',
+  wall_plank:'הנח אמות או ידיים על קיר והתרחק מעט לאחור. שמור גוף ישר ובטן אסופה תוך נשימה רגילה.',
+  step_touch:'צעד ימינה וקרב את רגל שמאל, ואז שמאלה וקרב את ימין. המשך בקצב נוח ורציף.',
+  low_step:'עלה עם רגל אחת על מדרגה נמוכה ויציבה, העבר משקל ועלה, ואז רד בשליטה. החלף רגל מובילה לפי ההנחיה.',
+  chair_knee_lift:'שב זקוף על כיסא. הרם ברך אחת לכיוון החזה בלי להתכופף לאחור, הורד והחלף צד.',
+  seated_leg_extend:'שב זקוף. ישר ברך אחת קדימה עד שנוח, עצור לרגע והורד לאט. החלף רגל.',
+  chair_row:'שב זקוף ואחוז גומיה. משוך מרפקים לאחור לצד הגוף, קרב שכמות ואז החזר לאט.',
+  wall_slide:'עמוד מול או עם הגב לקיר והחלק את הידיים למעלה ולמטה בטווח נוח, בלי להרים כתפיים.',
+  single_leg_support:'עמוד ליד משטח יציב. העבר משקל לרגל אחת והרם מעט את השנייה. השתמש בתמיכה לפי הצורך.',
+  tandem_stance:'עמוד כשרגל אחת ממש לפני השנייה, עקב מול אצבעות. החזק גוף זקוף והיעזר בקיר אם צריך.',
+  line_walk:'לך לאט בקו ישר כך שהעקב של רגל אחת מתקרב לאצבעות הרגל השנייה. הסתכל קדימה.',
+  clock_reach:'עמוד על רגל תומכת עם תמיכה לפי הצורך. שלח את הרגל השנייה קלות לכיוונים שונים כמו מחוגי שעון וחזור למרכז.',
+  weight_shift:'עמוד בפיסוק נוח והעבר משקל מצד לצד בלי להרים את כפות הרגליים. שמור גו זקוף וברכיים רכות.',
+  cat_cow:'על שש, עגל את הגב בעדינות ואז פתח אותו לכיוון ההפוך בטווח קטן ונוח. התנועה איטית ומסונכרנת עם הנשימה.',
+  child_pose:'מעבר לעמידת שש, שלח אגן מעט לאחור לכיוון העקבים והושט ידיים קדימה רק עד טווח נוח.',
+  chest_wall_stretch:'עמוד לצד קיר והנח עליו כף יד או אמה. סובב בעדינות את הגוף הרחק מהקיר עד שמרגישים מתיחה בחזה.',
+  neck_side:'שב או עמוד זקוף. הטה אוזן לכיוון כתף בלי להרים את הכתף. אין למשוך את הראש בכוח.',
+  hamstring_chair:'שב בקצה כיסא, ישר רגל אחת עם עקב על הרצפה. הטה את הגוף קדימה מהאגן עם גב ארוך.',
+  calf_wall:'עמוד מול קיר, שלח רגל אחת לאחור והשאר עקב על הרצפה. כופף מעט את הברך הקדמית עד למתיחה בשוק.',
+  hip_flexor_chair:'עמוד ליד כיסא לתמיכה, שלח רגל אחת מעט לאחור ודחוף אגן בעדינות קדימה בלי לקשת את הגב.',
+  thoracic_open:'שב זקוף, שלב ידיים או הנח ידיים על החזה וסובב את בית החזה בעדינות לצד אחד ואז לשני.',
+  deep_breath:'שב או שכב בנוחות. שאף לאט דרך האף, הרגש את הבטן ובית החזה מתרחבים, ונשוף לאט דרך הפה.',
+  box_breath:'שאף במשך 4 שניות, עצור בנוחות, נשוף במשך 4 שניות והמשך בקצב רגוע. אל תכריח עצירת נשימה.',
+  seated_twist:'שב זקוף עם כפות רגליים על הרצפה. סובב בעדינות את בית החזה לצד אחד בלי למשוך בכוח, חזור והחלף.',
+  wall_calf_raise:'עמוד מול קיר עם ידיים לתמיכה. עלה על כריות כפות הרגליים, עצור והורד עקבים לאט.',
+  mini_lunge:'עמוד ליד תמיכה ושלח רגל אחת מעט לאחור. כופף מעט את שתי הברכיים וירד רק מספר סנטימטרים, ואז חזור.',
+  hip_hinge:'עמוד מעט לפני קיר עם הגב אליו. דחוף את האגן לאחור עד נגיעה קלה בקיר תוך גב ניטרלי, ואז חזור לעמידה.',
+  good_morning:'עמוד זקוף עם ברכיים רכות. דחוף אגן לאחור והטה את הגו קדימה עם גב ארוך, ואז לחץ דרך הרגליים וחזור.',
+  biceps_band:'דרוך על מרכז גומיה ואחוז קצוות. שמור מרפקים ליד הגוף וכופף אותם עד שהידיים מתקרבות לכתפיים, ואז הורד לאט.',
+  triceps_wall:'עמוד מול קיר והנח ידיים. כופף מרפקים כך שהראש מתקרב לקיר, ואז ישר את המרפקים בלי להזיז כתפיים.',
+  front_raise:'עמוד זקוף והרם ידיים ישרות קדימה עד גובה כתפיים או פחות. הורד לאט בלי למשוך כתפיים למעלה.',
+  lateral_raise:'עמוד זקוף והרם ידיים לצדדים עד גובה נוח, לכל היותר סביב גובה כתפיים, ואז הורד בשליטה.',
+  wall_press_iso:'עמוד מול קיר והנח כפות ידיים. לחץ אל הקיר בעוצמה מתונה בלי לזוז והמשך לנשום.',
+  seated_march:'שב זקוף על כיסא והרם ברך אחת ואז את השנייה כמו צעידה, בלי להישען לאחור.',
+  chair_punch:'שב זקוף עם ידיים ליד החזה. שלח אגרוף אחד קדימה בלי לנעול מרפק, החזר והחלף צד.',
+  standing_knee_drive:'עמוד זקוף עם תמיכה לפי הצורך. הרם ברך לכיוון החזה בטווח נוח, הורד בשליטה והחלף.',
+  back_step:'עמוד ליד תמיכה. שלח רגל אחת צעד קטן לאחור, גע ברצפה וחזור למרכז. החלף צד.',
+  wall_sit_short:'הישען עם הגב על קיר והחלק מעט למטה, לא עמוק. החזק את המנח כשהברכיים נוחות ואז עלה חזרה.',
+  pillow_squeeze:'שב או שכב עם כרית בין הברכיים. לחץ את הברכיים בעדינות אל הכרית, החזק ושחרר.',
+  scap_squeeze:'שב או עמוד זקוף. משוך את השכמות בעדינות זו לכיוון זו ולמטה, בלי להרים כתפיים.',
+  chin_tuck:'הסתכל ישר קדימה ומשוך את הסנטר מעט לאחור כאילו יוצרים סנטר כפול. אל תטה את הראש למטה.',
+  pelvic_tilt:'שכב על הגב עם ברכיים כפופות. הטה את האגן בעדינות כך שהגב התחתון מתקרב לרצפה, ואז שחרר.',
+  figure_four_chair:'שב זקוף והנח קרסול אחד על הירך הנגדית. הטה מעט קדימה עד שמרגישים מתיחה בישבן.',
+  wrist_mobility:'החזק ידיים לפנים ובצע מעגלים איטיים בשורשי כפות הידיים או כיפוף ויישור עדין בטווח נוח.',
+  side_reach:'עמוד זקוף, הרם יד אחת מעל הראש והטה את הגוף מעט לצד הנגדי בלי להסתובב קדימה.'
+};
+
+function exerciseGuide(ex){
+  const how = EXERCISE_GUIDES[ex.id] || EXERCISE_GUIDES_BY_NAME[ex.n] || ('בצע את התרגיל "' + ex.n + '" לאט ובשליטה, בטווח תנועה שנוח לך.');
+  let dose = '';
+  if(ex.type === 'hold') dose = (ex.hold || 0) + ' שניות' + (ex.sets ? ' × ' + ex.sets + (ex.sets===1?' סט':' סטים') : '');
+  else if(ex.type === 'breath') dose = (ex.breaths || 0) + ' נשימות';
+  else dose = (ex.reps || '') + ' חזרות' + (ex.sets ? ' × ' + ex.sets + (ex.sets===1?' סט':' סטים') : '');
+  return {how:how,dose:dose,safety:ex.safety || 'בצע בטווח נוח וללא כאב חד.'};
+}
+const EXERCISE_GUIDES_BY_NAME = {
+  'סיבובי כתפיים':EXERCISE_GUIDES.shoulder_roll,
+  'הליכה במקום':EXERCISE_GUIDES.march,
+  'שכיבות סמיכה בקיר':EXERCISE_GUIDES.wall_push,
+  'סקוואט לכיסא':EXERCISE_GUIDES.chair_squat,
+  'חתירה עם גומיה':EXERCISE_GUIDES.band_row,
+  'פלאנק על ברכיים':EXERCISE_GUIDES.knee_plank,
+  'מתיחת חזה בקיר':EXERCISE_GUIDES.chest_wall_stretch,
+  'נשימות עמוקות':EXERCISE_GUIDES.deep_breath
+};
+
+function openExerciseHelp(){
+  const ex=WORKOUT.exercises[state.exIndex];
+  if(!ex) return;
+  const guide=exerciseGuide(ex);
+  $('exerciseHelpTitle').textContent=ex.n || 'הסבר תרגיל';
+  $('exerciseHelpHow').textContent=guide.how;
+  $('exerciseHelpDose').textContent=guide.dose;
+  $('exerciseHelpSafety').textContent=guide.safety;
+  $('exerciseHelpOverlay').classList.add('on');
+}
+function closeExerciseHelp(){
+  $('exerciseHelpOverlay').classList.remove('on');
+}
+
 
 /* ============ WORKOUT DATA ============ */
 /* Types:
@@ -1186,6 +1391,9 @@ function cancelWorkout() {
 
 /* ============ EVENTS ============ */
 $('setBtn').onclick = completeSet;
+$('exName').onclick = openExerciseHelp;
+$('exerciseHelpClose').onclick = closeExerciseHelp;
+$('exerciseHelpOverlay').onclick = function(e){ if(e.target===this) closeExerciseHelp(); };
 $('exitBtn').onclick = exitWorkout;
 $('suspendBtn').onclick = suspendWorkout;
 $('cancelBtn').onclick = cancelWorkout;
