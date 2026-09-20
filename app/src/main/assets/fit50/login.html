@@ -472,71 +472,23 @@
 
 <script>
 const $ = id => document.getElementById(id);
-
 let toastT;
 function toast(msg, isError) {
   const t = $('toast');
+  if(!t) return;
   t.textContent = msg;
   t.className = 'toast show' + (isError ? ' error' : '');
   clearTimeout(toastT);
-  toastT = setTimeout(() => t.classList.remove('show'), 2400);
+  toastT = setTimeout(() => t.classList.remove('show'), 3000);
 }
-
 $('passToggle').onclick = () => {
   const inp = $('passIn');
   const btn = $('passToggle');
-  if (inp.type === 'password') {
-    inp.type = 'text';
-    btn.textContent = 'הסתר';
-  } else {
-    inp.type = 'password';
-    btn.textContent = 'הצג';
-  }
+  if (inp.type === 'password') { inp.type='text'; btn.textContent='הסתר'; }
+  else { inp.type='password'; btn.textContent='הצג'; }
 };
-
-$('googleBtn').onclick = () => {
-  const btn = $('googleBtn');
-  btn.classList.add('loading');
-  btn.innerHTML = '<span class="spinner"></span><span>מתחבר...</span>';
-  setTimeout(() => {
-    btn.classList.remove('loading');
-    btn.innerHTML = `<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg><span>המשך עם Google</span>`;
-    toast('התחברת בהצלחה');
-  }, 1100);
-};
-
-$('loginBtn').onclick = () => {
-  const email = $('emailIn').value.trim();
-  const pass = $('passIn').value;
-
-  if (!email) return toast('נא להזין אימייל', true);
-  if (!email.includes('@')) return toast('כתובת אימייל לא תקינה', true);
-  if (pass.length < 6) return toast('סיסמה חייבת להיות לפחות 6 תווים', true);
-
-  const btn = $('loginBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span><span>מתחבר...</span>';
-
-  setTimeout(() => {
-    btn.disabled = false;
-    btn.innerHTML = '<span>התחברות</span>';
-    toast('התחברת בהצלחה');
-  }, 900);
-};
-
-$('forgotBtn').onclick = () => {
-  const email = $('emailIn').value.trim();
-  if (!email || !email.includes('@')) {
-    toast('נא להזין אימייל לאיפוס', true);
-    $('emailIn').focus();
-    return;
-  }
-  toast('נשלח אליך קישור לאיפוס');
-};
-
-$('registerBtn').onclick = () => toast('הרשמה תיפתח בקרוב');
-$('termsLink').onclick = () => toast('תנאי שימוש');
-$('privacyLink').onclick = () => toast('מדיניות הפרטיות');
+$('termsLink').onclick = () => toast('תנאי השימוש ייפתחו מתוך האפליקציה');
+$('privacyLink').onclick = () => toast('מדיניות הפרטיות תיפתח מתוך האפליקציה');
 </script>
 
 
@@ -549,7 +501,11 @@ $('privacyLink').onclick = () => toast('מדיניות הפרטיות');
   }
   window.fit50NativeResult=function(action,ok,message,destination){
     var t=document.getElementById('toast');
-    if(t){t.textContent=message||'';t.className='toast show'+(ok?'':' error');setTimeout(function(){t.classList.remove('show')},2200);}
+    if(t){t.textContent=message||'';t.className='toast show'+(ok?'':' error');setTimeout(function(){t.classList.remove('show')},3000);}
+    var loginBtn=document.getElementById('loginBtn');
+    if(loginBtn){loginBtn.disabled=false;loginBtn.innerHTML='<span>התחברות</span>';}
+    var googleBtn=document.getElementById('googleBtn');
+    if(googleBtn){googleBtn.disabled=false;}
     if(ok && (action==='login'||action==='register'||action==='google')){
       var next=(destination==='home'?'home':'questionnaire')+'.html';
       setTimeout(function(){location.href=next},350);
@@ -558,22 +514,41 @@ $('privacyLink').onclick = () => toast('מדיניות הפרטיות');
   function bind(){
     var login=document.getElementById('loginBtn');
     if(login) login.addEventListener('click',function(e){
+      e.preventDefault();e.stopImmediatePropagation();
       var email=(document.getElementById('emailIn')||{}).value||'';
       var pass=(document.getElementById('passIn')||{}).value||'';
-      if(window.Fit50Native && email.includes('@') && pass.length>=6){e.preventDefault();e.stopImmediatePropagation();nativeCall('login',email.trim(),pass);}
+      if(!email.includes('@')) return toast('נא להזין כתובת אימייל תקינה',true);
+      if(pass.length<6) return toast('הסיסמה חייבת להכיל לפחות 6 תווים',true);
+      if(!window.Fit50Native) return toast('שירות ההתחברות אינו זמין',true);
+      login.disabled=true;login.innerHTML='<span class="spinner"></span><span>מתחבר...</span>';
+      nativeCall('login',email.trim(),pass);
     },true);
     var google=document.getElementById('googleBtn');
-    if(google) google.addEventListener('click',function(e){if(window.Fit50Native){e.preventDefault();e.stopImmediatePropagation();nativeCall('googleSignIn');}},true);
+    if(google) google.addEventListener('click',function(e){
+      e.preventDefault();e.stopImmediatePropagation();
+      if(!window.Fit50Native) return toast('Google Sign-In אינו זמין',true);
+      google.disabled=true;
+      nativeCall('googleSignIn');
+    },true);
     var forgot=document.getElementById('forgotBtn');
     if(forgot) forgot.addEventListener('click',function(e){
+      e.preventDefault();e.stopImmediatePropagation();
       var email=(document.getElementById('emailIn')||{}).value||'';
-      if(window.Fit50Native && email.includes('@')){e.preventDefault();e.stopImmediatePropagation();nativeCall('resetPassword',email.trim());}
+      if(!email.includes('@')){toast('כתוב קודם את כתובת האימייל שלך',true);document.getElementById('emailIn').focus();return;}
+      if(!window.Fit50Native) return toast('שירות איפוס הסיסמה אינו זמין',true);
+      toast('שולח קישור לאיפוס...');
+      nativeCall('resetPassword',email.trim());
     },true);
     var reg=document.getElementById('registerBtn');
     if(reg) reg.addEventListener('click',function(e){
+      e.preventDefault();e.stopImmediatePropagation();
       var email=(document.getElementById('emailIn')||{}).value||'';
       var pass=(document.getElementById('passIn')||{}).value||'';
-      if(window.Fit50Native && email.includes('@') && pass.length>=6){e.preventDefault();e.stopImmediatePropagation();nativeCall('register',email.trim(),pass);}
+      if(!email.includes('@')){toast('נא להזין כתובת אימייל תקינה',true);document.getElementById('emailIn').focus();return;}
+      if(pass.length<6){toast('בחר סיסמה של לפחות 6 תווים',true);document.getElementById('passIn').focus();return;}
+      if(!window.Fit50Native) return toast('שירות ההרשמה אינו זמין',true);
+      toast('יוצר חשבון...');
+      nativeCall('register',email.trim(),pass);
     },true);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();

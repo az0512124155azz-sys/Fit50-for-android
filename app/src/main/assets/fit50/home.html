@@ -1221,5 +1221,27 @@ setWeek();
   else loadRealDashboard();
 })();
 </script>
+
+<script>
+(function(){
+  window.fit50WorkoutPlanResult=function(ok,message,plan){
+    if(!ok || !plan || !plan.exercises) return;
+    try{
+      var count=plan.exercises.length;
+      if(document.getElementById('heroLabelText')) document.getElementById('heroLabelText').textContent='האימון המותאם שלך';
+      if(document.getElementById('heroTitle')) document.getElementById('heroTitle').innerHTML=plan.title+'<br><em>'+plan.sub+'</em>';
+      if(document.getElementById('metaEx')) document.getElementById('metaEx').textContent=count+' תרגילים';
+      if(document.getElementById('metaDur')) document.getElementById('metaDur').textContent=plan.dur+' דקות';
+      window.__fit50Plan=plan;
+    }catch(e){}
+  };
+  function loadPlan(){
+    if(window.Fit50Native && typeof window.Fit50Native.getWorkoutPlan==='function'){
+      try{window.Fit50Native.getWorkoutPlan();}catch(e){}
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',loadPlan);else loadPlan();
+})();
+</script>
 </body>
 </html>

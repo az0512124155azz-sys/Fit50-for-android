@@ -964,5 +964,28 @@ render();
   else loadRealProgress();
 })();
 </script>
+
+<script>
+(function(){
+  function shareReal(e){
+    var target=e.target.closest('.share-target');
+    if(!target) return;
+    e.preventDefault();e.stopImmediatePropagation();
+    closeShare();
+    var p=state.progress||{};
+    var text='Fit50+ · ההתקדמות שלי\n'+
+      'אימונים: '+(p.total||0)+'\n'+
+      'דקות תנועה: '+(p.mins||0)+'\n'+
+      'רצף: '+(p.streak||0)+' ימים\n'+
+      'השבוע: '+(p.week||0)+' אימונים';
+    if(window.Fit50Native && typeof window.Fit50Native.shareText==='function'){
+      window.Fit50Native.shareText(text);
+    }else{
+      toast('שיתוף מערכת אינו זמין כרגע');
+    }
+  }
+  document.addEventListener('click',shareReal,true);
+})();
+</script>
 </body>
 </html>
