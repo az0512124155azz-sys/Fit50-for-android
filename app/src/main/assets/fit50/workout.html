@@ -982,6 +982,51 @@ const state = {
   lastSetDuration: null
 };
 
+const PAUSED_WORKOUT_KEY = 'fit50_paused_workout_v1';
+
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0');
+}
+
+function savePausedWorkout() {
+  try {
+    localStorage.setItem(PAUSED_WORKOUT_KEY, JSON.stringify({
+      dateKey: todayKey(),
+      workout: WORKOUT,
+      exIndex: state.exIndex,
+      setIndex: state.setIndex,
+      startedAt: state.startedAt
+    }));
+  } catch(e) {}
+}
+
+function clearPausedWorkout() {
+  try { localStorage.removeItem(PAUSED_WORKOUT_KEY); } catch(e) {}
+}
+
+function loadPausedWorkout() {
+  try {
+    const raw = localStorage.getItem(PAUSED_WORKOUT_KEY);
+    if (!raw) return false;
+    const saved = JSON.parse(raw);
+    if (!saved || saved.dateKey !== todayKey() || !saved.workout || !saved.workout.exercises) {
+      clearPausedWorkout();
+      return false;
+    }
+    WORKOUT = saved.workout;
+    state.exIndex = Math.max(0, Math.min(Number(saved.exIndex) || 0, WORKOUT.exercises.length - 1));
+    state.setIndex = Math.max(0, Number(saved.setIndex) || 0);
+    state.startedAt = Number(saved.startedAt) || Date.now();
+    return true;
+  } catch(e) {
+    clearPausedWorkout();
+    return false;
+  }
+}
+
 let holdInterval = null;
 let repsInterval = null;
 let breathTimeout = null;
@@ -1331,6 +1376,7 @@ function endRest() {
 
 /* ============ FINISH ============ */
 function finishWorkout() {
+  clearPausedWorkout();
   stopAllTimers();
   beep(523, 150, 0.3);
   setTimeout(() => beep(659, 150, 0.3), 180);
@@ -1374,14 +1420,16 @@ function stopAllTimers() {
 function exitWorkout() { $('exitOverlay').classList.add('on'); }
 
 function suspendWorkout() {
+  savePausedWorkout();
   stopAllTimers();
   if (restInterval) { clearInterval(restInterval); restInterval = null; }
   $('exitOverlay').classList.remove('on');
   $('restScreen').classList.remove('on');
-  alert('האימון הושהה. תוכל לחזור אליו מהמסך הראשי.');
+  alert('האימון הושהה. במסך הבית יופיע "המשך אימון".');
 }
 
 function cancelWorkout() {
+  clearPausedWorkout();
   stopAllTimers();
   if (restInterval) { clearInterval(restInterval); restInterval = null; }
   $('exitOverlay').classList.remove('on');
@@ -1405,7 +1453,8 @@ $('finishBack').onclick = () => {
 
 /* ============ INIT ============ */
 window.fit50WorkoutPlanResult = function(ok, message, plan) {
-  if (ok && plan && plan.exercises && plan.exercises.length) {
+  const resumed = loadPausedWorkout();
+  if (!resumed && ok && plan && plan.exercises && plan.exercises.length) {
     WORKOUT = plan;
     state.exIndex = 0;
     state.setIndex = 0;
@@ -1413,7 +1462,9 @@ window.fit50WorkoutPlanResult = function(ok, message, plan) {
   }
   renderExercise();
 };
-if (window.Fit50Native && typeof window.Fit50Native.getWorkoutPlan === 'function') {
+if (loadPausedWorkout()) {
+  renderExercise();
+} else if (window.Fit50Native && typeof window.Fit50Native.getWorkoutPlan === 'function') {
   try { window.Fit50Native.getWorkoutPlan(); }
   catch(e) { renderExercise(); }
 } else {
