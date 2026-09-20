@@ -179,8 +179,19 @@ let currentPage = 'login';
 
 // FIT50_BOOT_WATCHDOG: Android WebView may not dispatch iframe load reliably.
 const FIT50_BOOT_WATCHDOG = setTimeout(() => {
-  try { boot.classList.add('hide'); } catch (_) {}
+  try {
+    const d = frame.contentWindow && frame.contentWindow.document;
+    const hasContent = !!(d && d.body && d.body.children && d.body.children.length);
+    if(!hasContent){
+      renderPageIntoFrame(currentPage || 'login');
+    }
+    setTimeout(() => boot.classList.add('hide'), 180);
+  } catch (_) {
+    boot.classList.add('hide');
+  }
 }, 2400);
+
+// FIT50_RENDER_RECOVERY
 
 window.addEventListener('error', () => {
   setTimeout(() => {
@@ -188,9 +199,51 @@ window.addEventListener('error', () => {
   }, 400);
 });
 
+function renderPageIntoFrame(name){
+  const page = PAGES[name];
+  if(!page) return false;
+
+  try{
+    const doc = frame.contentWindow && frame.contentWindow.document;
+    if(!doc) throw new Error('iframe document unavailable');
+
+    doc.open();
+    doc.write(page);
+    doc.close();
+
+    // WebView fallback: verify that the page really rendered.
+    setTimeout(() => {
+      try{
+        const d = frame.contentWindow && frame.contentWindow.document;
+        const hasContent = !!(d && d.body && d.body.children && d.body.children.length);
+        if(!hasContent){
+          frame.srcdoc = page;
+        } else {
+          wirePage();
+          clearTimeout(FIT50_BOOT_WATCHDOG);
+          boot.classList.add('hide');
+        }
+      }catch(_){
+        frame.srcdoc = page;
+      }
+    }, 120);
+
+    return true;
+  }catch(err){
+    console.error('Fit50 frame render failed', err);
+    try{
+      frame.srcdoc = page;
+      return true;
+    }catch(_){
+      return false;
+    }
+  }
+}
+
 function navigate(name, replace=false){
   if(!PAGES[name]) return;
   currentPage = name;
+
   if(location.protocol !== 'file:'){
     const url = new URL(location.href);
     url.hash = name;
@@ -199,7 +252,8 @@ function navigate(name, replace=false){
   } else {
     location.hash = name;
   }
-  frame.srcdoc = PAGES[name];
+
+  renderPageIntoFrame(name);
 }
 
 function addClick(doc, selector, fn, opts={}){
@@ -309,11 +363,14 @@ function wirePage(){
     addClick(doc, '#logoutConfirm', () => setTimeout(() => navigate('login'), 140));
   }
 
-  // Hide splash after the first real page is ready.
-  requestAnimationFrame(() => {
-    clearTimeout(FIT50_BOOT_WATCHDOG);
-    boot.classList.add('hide');
-  });
+  // Hide splash only after a real Fit50 page exists in the iframe.
+  const hasRealPage = !!(doc.body && doc.body.children && doc.body.children.length);
+  if(hasRealPage){
+    requestAnimationFrame(() => {
+      clearTimeout(FIT50_BOOT_WATCHDOG);
+      boot.classList.add('hide');
+    });
+  }
 }
 
 frame.addEventListener('load', wirePage);
