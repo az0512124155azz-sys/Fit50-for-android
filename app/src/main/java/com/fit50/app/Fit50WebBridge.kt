@@ -2,6 +2,8 @@ package com.fit50.app
 
 import android.content.Intent
 import android.net.Uri
+import android.media.AudioManager
+import android.media.ToneGenerator
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -119,6 +121,26 @@ class Fit50WebBridge(
     fun getDashboard() {
         data.getDashboard { ok, error, dashboard ->
             jsCallback("fit50DashboardResult", ok, error ?: "", dashboard)
+        }
+    }
+
+    @JavascriptInterface
+    fun getWorkoutPlan() {
+        data.getWorkoutPlan { ok, error, plan ->
+            jsCallback("fit50WorkoutPlanResult", ok, error ?: "", plan)
+        }
+    }
+
+    @JavascriptInterface
+    fun playCountdownTone(kind: Int) {
+        activity.runOnUiThread {
+            runCatching {
+                val tone = ToneGenerator(AudioManager.STREAM_ALARM, 100)
+                val type = if (kind >= 2) ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD else ToneGenerator.TONE_PROP_BEEP2
+                val duration = if (kind >= 2) 350 else 180
+                tone.startTone(type, duration)
+                webView.postDelayed({ tone.release() }, (duration + 120).toLong())
+            }
         }
     }
 
