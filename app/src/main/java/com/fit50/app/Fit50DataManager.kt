@@ -40,15 +40,32 @@ class Fit50DataManager(private val context: Context) {
     }
 
 
+    private fun onboardingKey(): String? = uid()?.let { "onboardingComplete_$it" }
+
+    fun localStartPage(): String {
+        val key = onboardingKey()
+        return if (key != null && prefs.getBoolean(key, false)) "home" else "questionnaire"
+    }
+
     fun resolveStartPage(done: (String) -> Unit) {
+        if (localStartPage() == "home") {
+            done("home")
+            return
+        }
+
         val ref = userDoc() ?: return done("questionnaire")
         ref.get()
             .addOnSuccessListener { snap ->
-                done(if (snap.getBoolean("onboardingComplete") == true) "home" else "questionnaire")
+                val completed = snap.getBoolean("onboardingComplete") == true
+                if (completed) {
+                    onboardingKey()?.let { key ->
+                        prefs.edit().putBoolean(key, true).apply()
+                    }
+                }
+                done(if (completed) "home" else "questionnaire")
             }
             .addOnFailureListener {
-                val hasLocal = prefs.getString("questionnaire", null) != null
-                done(if (hasLocal) "home" else "questionnaire")
+                done(localStartPage())
             }
     }
 
@@ -56,7 +73,9 @@ class Fit50DataManager(private val context: Context) {
         val ref = userDoc() ?: return done(false, "יש להתחבר לחשבון")
         val data = jsonObjectToMap(JSONObject(json))
         data["completedAt"] = Timestamp.now()
-        prefs.edit().putString("questionnaire", json).apply()
+        val editor = prefs.edit().putString("questionnaire", json)
+        onboardingKey()?.let { key -> editor.putBoolean(key, true) }
+        editor.apply()
 
         ref.set(
             mapOf(
