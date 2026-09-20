@@ -565,7 +565,25 @@ $('privacyLink').onclick = () => toast('מדיניות הפרטיות תיפתח
     },true);
   }
 
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
+  function continueExistingSession(){
+    if(window.Fit50Native && typeof window.Fit50Native.continueSignedInSession==='function'){
+      try{ window.Fit50Native.continueSignedInSession(); }catch(e){}
+    }
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){
+      bind();
+      setTimeout(continueExistingSession,120);
+    });
+  }else{
+    bind();
+    setTimeout(continueExistingSession,120);
+  }
+
+  window.addEventListener('focus',function(){
+    setTimeout(continueExistingSession,180);
+  });
 })();
 </script>
 </body>
