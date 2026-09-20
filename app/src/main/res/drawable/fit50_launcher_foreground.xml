@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <inset
-            android:drawable="@drawable/fit50_logo"
-            android:insetLeft="24dp"
-            android:insetTop="34dp"
-            android:insetRight="24dp"
-            android:insetBottom="34dp" />
-    </item>
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Fit -->
+    <path
+        android:fillColor="#FAF7F2"
+        android:pathData="M23,44 H34 V48 H27 V52 H33 V56 H27 V65 H23 Z" />
+    <path
+        android:fillColor="#FAF7F2"
+        android:pathData="M36,44 H40 V48 H36 Z M36,51 H40 V65 H36 Z" />
+    <path
+        android:fillColor="#FAF7F2"
+        android:pathData="M43,47 H47 V51 H51 V55 H47 V65 H43 V55 H41 V51 H43 Z" />
+
+    <!-- 5 -->
+    <path
+        android:fillColor="#E85A2C"
+        android:pathData="M53,44 H64 V48 H57 V52 H62 C65,52 67,54 67,57 V61 C67,64 65,66 62,66 H53 V62 H61 C62,62 63,61 63,60 V58 C63,57 62,56 61,56 H53 Z" />
+
+    <!-- 0 -->
+    <path
+        android:fillColor="#E85A2C"
+        android:fillType="evenOdd"
+        android:pathData="M70,44 H76 C80,44 82,47 82,51 V59 C82,64 80,66 76,66 H70 C66,66 64,64 64,59 V51 C64,47 66,44 70,44 Z M71,48 C69,48 68,49 68,51 V59 C68,61 69,62 71,62 H75 C77,62 78,61 78,59 V51 C78,49 77,48 75,48 Z" />
+
+    <!-- + -->
+    <path
+        android:fillColor="#FAF7F2"
+        android:pathData="M86,50 H89 V55 H94 V58 H89 V63 H86 V58 H81 V55 H86 Z" />
+</vector>
