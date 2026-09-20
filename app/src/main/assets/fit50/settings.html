@@ -665,6 +665,7 @@ html,body{
   .hero-title{font-size:40px}
 }
 </style>
+  <script src="i18n.js"></script>
 </head>
 <body>
 
@@ -1168,6 +1169,11 @@ function openPasswordChange() {
 
 /* ============ LANGUAGE ============ */
 function openLanguage() {
+  if (window.Fit50I18n && typeof window.Fit50I18n.openLanguagePicker === 'function') {
+    window.Fit50I18n.openLanguagePicker();
+    return;
+  }
+
   const html =
     '<div class="list" style="margin-bottom:20px">' +
       '<button class="list-row" data-lang="he" style="cursor:pointer">' +
