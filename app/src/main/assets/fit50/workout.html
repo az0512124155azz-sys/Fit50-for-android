@@ -633,25 +633,6 @@ html,body{
   color:rgba(250,247,242,.55);
   vertical-align:middle;
 }
-.exercise-help-trigger{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  margin-top:10px;
-  margin-bottom:6px;
-  padding:9px 13px;
-  border-radius:999px;
-  border:1px solid rgba(250,247,242,.16);
-  background:rgba(250,247,242,.07);
-  color:var(--cream);
-  font-family:inherit;
-  font-size:13px;
-  font-weight:700;
-  cursor:pointer;
-}
-.exercise-help-trigger:active{
-  transform:scale(.98);
-}
 .exercise-help-overlay{
   position:fixed;inset:0;
   background:rgba(8,13,10,.68);
@@ -744,10 +725,6 @@ html,body{
   <div class="wk-main">
     <h1 class="wk-name" id="exName">—</h1>
     <div class="wk-muscle" id="exMuscle">—</div>
-    <button class="exercise-help-trigger" id="exerciseHelpBtn" type="button">
-      <span>ⓘ</span>
-      <span>איך עושים את התרגיל?</span>
-    </button>
 
     <div class="wk-chips" id="chipsRow"></div>
 
@@ -1463,7 +1440,6 @@ function cancelWorkout() {
 /* ============ EVENTS ============ */
 $('setBtn').onclick = completeSet;
 $('exName').onclick = openExerciseHelp;
-$('exerciseHelpBtn').onclick = openExerciseHelp;
 $('exerciseHelpClose').onclick = closeExerciseHelp;
 $('exerciseHelpOverlay').onclick = function(e){ if(e.target===this) closeExerciseHelp(); };
 $('exitBtn').onclick = exitWorkout;
