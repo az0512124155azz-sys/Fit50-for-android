@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#1F2B24">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1F2B24}
+body{display:flex;align-items:center;justify-content:center;font-family:Georgia,'Times New Roman',serif}
+.logo{direction:ltr;unicode-bidi:isolate;display:flex;align-items:flex-start;line-height:.82;position:relative}
+.fit{font-size:64px;font-weight:700;color:#FAF7F2;opacity:0;transform:translateX(-42px) scale(.9);animation:a .62s cubic-bezier(.2,.9,.25,1) .08s forwards}
+.fifty{font-size:84px;font-weight:900;color:#E85A2C;opacity:0;transform:scale(.52) rotate(-8deg);animation:b .72s cubic-bezier(.18,1.35,.32,1) .33s forwards}
+.plus{font-family:Arial,sans-serif;font-size:38px;font-weight:900;color:#FAF7F2;margin-left:5px;margin-top:2px;opacity:0;transform:translateY(-22px) scale(.4);animation:c .48s cubic-bezier(.18,1.45,.3,1) .78s forwards}
+.ring{position:absolute;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(232,90,44,.20),transparent 66%);opacity:0;animation:d 1.25s ease-out .2s forwards}
+@keyframes a{to{opacity:1;transform:none}}
+@keyframes b{65%{opacity:1;transform:scale(1.08) rotate(1deg)}100%{opacity:1;transform:none}}
+@keyframes c{70%{opacity:1;transform:translateY(3px) scale(1.2)}100%{opacity:1;transform:none}}
+@keyframes d{35%{opacity:1;transform:scale(.9)}100%{opacity:0;transform:scale(1.5)}}
+.fade{animation:e .38s ease forwards}
+@keyframes e{to{opacity:0;transform:scale(1.03)}}
+</style>
+</head>
+<body>
+<div class="ring"></div>
+<div class="logo" id="logo"><span class="fit">Fit</span><span class="fifty">50</span><span class="plus">+</span></div>
+<script>
+setTimeout(function(){document.body.classList.add('fade')},1450);
+setTimeout(function(){location.replace('login.html')},1780);
+</script>
+</body>
+</html>
