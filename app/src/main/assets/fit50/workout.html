@@ -88,6 +88,26 @@ html,body{
   display:flex;flex-direction:column;
   position:relative;z-index:2;
 }
+.exercise-heading{
+  display:grid;grid-template-columns:minmax(0,1fr) 116px;
+  gap:14px;align-items:start;direction:rtl;margin-bottom:22px;
+}
+html[dir="ltr"] .exercise-heading{direction:ltr}
+.exercise-heading-copy{min-width:0;padding-top:5px}
+.exercise-coach-card{
+  width:116px;height:132px;position:relative;direction:ltr;
+  border-radius:22px;overflow:hidden;
+  background:radial-gradient(circle at 50% 28%,rgba(212,232,92,.16),transparent 48%),linear-gradient(160deg,rgba(250,247,242,.12),rgba(250,247,242,.035));
+  border:1px solid rgba(250,247,242,.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 14px 28px rgba(5,25,19,.18);
+}
+.exercise-coach-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.08),transparent 36%)}
+.exercise-coach-live{
+  position:absolute;top:9px;left:9px;z-index:2;width:8px;height:8px;border-radius:50%;background:var(--lime);
+  box-shadow:0 0 0 4px rgba(212,232,92,.13),0 0 14px rgba(212,232,92,.65);animation:coachLive 1.8s ease-in-out infinite;
+}
+@keyframes coachLive{50%{opacity:.52;transform:scale(.82)}}
+.exercise-coach-canvas{display:block;width:100%;height:100%}
 .wk-name{
   font-family:'Frank Ruhl Libre',serif;
   font-size:36px;font-weight:700;
@@ -99,7 +119,7 @@ html,body{
   font-size:15px;font-weight:500;
   color:var(--lime);
   letter-spacing:.02em;
-  margin-bottom:28px;
+  margin-bottom:0;
   display:flex;align-items:center;gap:8px;
 }
 .wk-muscle::before{
@@ -107,6 +127,12 @@ html,body{
   width:4px;height:4px;border-radius:50%;
   background:var(--lime);
 }
+@media(max-width:370px){
+  .exercise-heading{grid-template-columns:minmax(0,1fr) 98px;gap:10px}
+  .exercise-coach-card{width:98px;height:118px;border-radius:19px}
+  .wk-name{font-size:32px}
+}
+@media(prefers-reduced-motion:reduce){.exercise-coach-live{animation:none}}
 .wk-chips{
   display:flex;gap:8px;flex-wrap:wrap;
   margin-bottom:24px;
@@ -724,8 +750,16 @@ html,body{
   </div>
 
   <div class="wk-main">
+    <div class="exercise-heading">
+      <div class="exercise-heading-copy">
     <h1 class="wk-name" id="exName">—</h1>
     <div class="wk-muscle" id="exMuscle">—</div>
+      </div>
+      <div class="exercise-coach-card" aria-hidden="true">
+        <span class="exercise-coach-live"></span>
+        <canvas class="exercise-coach-canvas" id="exerciseCoachCanvas" role="img"></canvas>
+      </div>
+    </div>
 
     <div class="wk-chips" id="chipsRow"></div>
 
@@ -843,8 +877,11 @@ html,body{
   <button class="finish-cta" id="finishBack">חזרה לבית</button>
 </div>
 
+<script src="exercise-coach-3d.js"></script>
 <script>
 const $ = id => document.getElementById(id);
+const exerciseCoach3D = new Fit50ExerciseCoach3D($('exerciseCoachCanvas'));
+const FALLBACK_EXERCISE_IDS = ['shoulder_roll','march','wall_push','chair_squat','band_row','knee_plank','chest_wall_stretch','deep_breath'];
 
 const EXERCISE_GUIDES = {
   shoulder_roll:'עמוד או שב זקוף. העלה את הכתפיים מעט לכיוון האוזניים, גלגל אותן לאחור ולמטה במעגל חלק. לאחר מכן החלף כיוון.',
@@ -1105,6 +1142,7 @@ function renderExercise() {
   $('exTotal').textContent = '/' + total;
   $('exName').textContent = ex.n;
   $('exMuscle').textContent = ex.m;
+  exerciseCoach3D.setExercise(ex.id || FALLBACK_EXERCISE_IDS[state.exIndex]);
   $('safetyText').textContent = ex.safety;
 
   const chips = [];
