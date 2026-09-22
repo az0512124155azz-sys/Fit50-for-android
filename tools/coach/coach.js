@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import modelBytes from '../../app/src/main/assets/fit50/models/fit50-coach.glb';
+import {fullBodyPose, applyFullBody} from './full-body.mjs';
 
 const key = name => name.replace(/[^a-z0-9]/gi, '');
 const seated = new Set(['seated_march','chair_knee_lift','seated_leg_extend','chair_row','chair_punch','pillow_squeeze','figure_four_chair','hamstring_chair','seated_twist','thoracic_open']);
@@ -9,6 +10,7 @@ const floor = new Set(['knee_push','knee_plank','bird_dog','cat_cow','child_pose
 // Angles are authored in the human's anatomical frame: +Z is forward,
 // +Y is up. Neutral/rest transforms are retained for every bone.
 function movement(id, seconds) {
+  if(!id)return null;
   const cycle = seconds * Math.PI * 2 / (id.includes('breath') ? 8 : 4);
   const s = Math.sin(cycle), u = (1-Math.cos(cycle))/2;
   const left = Math.max(0,s), right = Math.max(0,-s);
@@ -103,7 +105,8 @@ class ExerciseCoach3D {
       canvas.addEventListener('webglcontextrestored',()=>{this.failed=false;this.card.dataset.coachState='ready';});
       new GLTFLoader().parse(modelBytes.buffer.slice(modelBytes.byteOffset,modelBytes.byteOffset+modelBytes.byteLength),'',gltf=>{
         this.model=gltf.scene;this.pivot.add(this.model);this.model.updateMatrixWorld(true);
-        this.model.traverse(o=>{if(o.isBone){this.bones.set(key(o.name),o);this.rest.set(key(o.name),{q:o.quaternion.clone(),parent:o.parent.getWorldQuaternion(new THREE.Quaternion())});}if(o.isMesh)o.frustumCulled=false;});
+        this.model.traverse(o=>{if(o.isBone){this.bones.set(key(o.name),o);this.rest.set(key(o.name),{q:o.quaternion.clone(),world:o.getWorldQuaternion(new THREE.Quaternion()),parent:o.parent.getWorldQuaternion(new THREE.Quaternion())});}if(o.isMesh)o.frustumCulled=false;});
+        this.hipOrigin=this.bones.get('upperleg01L').getWorldPosition(new THREE.Vector3()).add(this.bones.get('upperleg01R').getWorldPosition(new THREE.Vector3())).multiplyScalar(.5);
         this.model.position.y=-.9;this.pivot.position.y=.9;this.card.dataset.coachState='ready';
       },()=>{this.failed=true;this.card.dataset.coachState='unavailable';});
       this.frame=this.frame.bind(this);requestAnimationFrame(this.frame);
@@ -125,7 +128,13 @@ class ExerciseCoach3D {
     if(document.hidden||this.failed||!this.model||now-(this.lastFrame||0)<33)return;
     const dt=Math.min(.1,(now-(this.lastFrame||now))/1000);
     this.lastFrame=now;if(!this.paused)this.time=(this.time||0)+dt;
-    const pose=movement(this.exercise,this.time||0);this.pivot.visible=!!pose;if(!pose){this.card.dataset.coachState='unavailable';return;}
+    this.renderAt(this.time||0);
+  }
+  poseAt(time){
+    const coordinated=fullBodyPose(this.exercise,time);
+    if(coordinated){this.contactErrors=applyFullBody(this,coordinated);return true;}
+    const pose=movement(this.exercise,time);if(!pose)return false;
+    this.model.position.set(0,-.9,0);this.pivot.position.set(0,.9,0);
     this.card.dataset.coachState='ready';
     for(const [name,bone]of this.bones)bone.quaternion.copy(this.rest.get(name).q);
     for(const [name,angles]of Object.entries(pose.bones)){
@@ -139,9 +148,19 @@ class ExerciseCoach3D {
     const lowest=Math.min(...supports.map(name=>this.bones.get(key(name)).getWorldPosition(new THREE.Vector3()).y));
     this.pivot.position.y+=(floor.has(this.exercise)?.045:.075)-lowest;
     this.pivot.updateMatrixWorld(true);
+    return true;
+  }
+  renderAt(time){
+    if(!this.model)return;
+    const valid=this.poseAt(time);this.pivot.visible=valid;if(!valid){this.card.dataset.coachState='unavailable';return;}
+    this.card.dataset.coachState='ready';
     const low=floor.has(this.exercise);
     this.stage.visible=!low;this.mat.visible=low;
-    const points=[...this.bones.values()].map(b=>b.getWorldPosition(new THREE.Vector3()));
+    // Fit the entire cycle once, never follow the hips or zoom with each rep.
+    const framingKey=this.exercise+':'+this.camera.aspect;
+    if(this.framingKey!==framingKey){
+    const points=[];
+    for(let t=0;t<8;t+=.25){this.poseAt(t);for(const b of this.bones.values())points.push(b.getWorldPosition(new THREE.Vector3()));}
     const box=new THREE.Box3().setFromPoints(points).expandByScalar(.13);
     const center=box.getCenter(new THREE.Vector3());
     const view=new THREE.Vector3(low?3.2:1.1,low?1.25:.4,low?1.8:3).normalize();
@@ -152,6 +171,8 @@ class ExerciseCoach3D {
     for(const point of points){const d=point.clone().sub(center);distance=Math.max(distance,Math.abs(d.dot(up))/tan+d.dot(view),Math.abs(d.dot(right))/(tan*this.camera.aspect)+d.dot(view));}
     distance=(distance+.55)*1.08;
     this.camera.position.copy(center).addScaledVector(view,distance);this.camera.lookAt(center);
+    this.framingKey=framingKey;this.poseAt(time);
+    }
     this.renderer.render(this.scene,this.camera);
   }
 }
