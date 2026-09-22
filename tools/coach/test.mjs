@@ -1,11 +1,21 @@
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
+import {resolveExercise} from './resolve-exercise.mjs';
 const source=readFileSync('tools/coach/coach.js','utf8').replace(/^import .*;\n/gm,'').split('class ExerciseCoach3D')[0];
 const context=vm.createContext({THREE:{MathUtils:{clamp:(x,a,b)=>Math.min(b,Math.max(a,x))}}});
 vm.runInContext(source+';this.pose=movement;',context);
 const catalog=readFileSync('app/src/main/java/com/fit50/app/WorkoutPlanEngine.kt','utf8');
 const ids=[...catalog.matchAll(/Ex\("([^"]+)"/g)].map(m=>m[1]);
+for(const [,id,name] of catalog.matchAll(/Ex\("([^"]+)","([^"]+)"/g)){
+  assert.equal(resolveExercise({id,n:'translated name'}),id);
+  assert.equal(resolveExercise({n:name}),id,'Name-only saved workout: '+name);
+  assert.equal(resolveExercise({id:'old-id',n:'\u200f '+name+' '}),id);
+}
+assert.equal(resolveExercise({id:'unknown',n:'unknown'}),null);
+const html=readFileSync('app/src/main/assets/fit50/workout.html','utf8');
+const defaults=html.split('let WORKOUT = {')[1].split('/*')[0];
+for(const [,name]of defaults.matchAll(/\{ n: '([^']+)'/g))assert.ok(resolveExercise({n:name}),'Default workout: '+name);
 const glb=readFileSync('app/src/main/assets/fit50/models/fit50-coach.glb');
 assert.equal(glb.toString('utf8',0,4),'glTF');
 const gltf=JSON.parse(glb.toString('utf8',20,20+glb.readUInt32LE(12)));

@@ -1150,7 +1150,7 @@ function renderExercise() {
   $('exTotal').textContent = '/' + total;
   $('exName').textContent = ex.n;
   $('exMuscle').textContent = ex.m;
-  const coachId = ex.id || Object.keys(EXERCISE_GUIDES).find(id => EXERCISE_GUIDES[id] === EXERCISE_GUIDES_BY_NAME[ex.n]);
+  const coachId = Fit50ExerciseCoach3D.resolveExercise(ex);
   exerciseCoach3D.setExercise(coachId);
   $('safetyText').textContent = ex.safety;
 

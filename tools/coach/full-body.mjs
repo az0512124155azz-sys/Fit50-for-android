@@ -9,6 +9,14 @@ export function fullBodyPose(id,t){
   const p={hips:[0,.91,0],rotation:[0,0,0],feet:{L:[.14,.075,0],R:[-.14,.075,0]},hands:{L:[.29,1,.03],R:[-.29,1,.03]},knees:{L:[.14,.45,.7],R:[-.14,.45,.7]},elbows:{L:[.65,1.2,-.2],R:[-.65,1.2,-.2]},spine:0,head:0,footPitch:0};
   const both=(fn)=>['L','R'].forEach(a=>fn(a,a==='L'?1:-1));
   switch(id){
+    case 'ankle_circle':{
+      const local=((t%4)+4)%4,lift=smooth(Math.min(1,local/.5,(4-local)/.5));
+      const sign=side==='L'?1:-1;p.hips[0]=-.045*sign*lift;
+      p.feet[side][1]+=.18*lift;p.feet[side][2]+=.12*lift;
+      // Raise the foot, then articulate the ankle itself in two planes.
+      // Both directions finish at neutral before changing legs.
+      p.ankles={[side]:[.28*Math.sin(Math.PI*local)*lift,0,.22*(1-Math.cos(Math.PI*local))*lift*(local<2?1:-1)]};
+      both(a=>p.hands[a][0]+=p.hips[0]);break;}
     case 'front_raise':case 'lateral_raise':case 'band_row':case 'biceps_band':{
       both((a,sign)=>{
         if(id==='front_raise')p.hands[a]=[sign*.23,1+.42*u,.03+.43*u];
@@ -93,7 +101,8 @@ export function applyFullBody(rig,pose){
   for(const side of ['L','R']){
     errors.push(solveLimb(bones,'upperleg01.'+side,'lowerleg01.'+side,'foot.'+side,pose.feet[side],pose.knees[side]));
     const foot=bones.get(key('foot.'+side));
-    const world=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),pose.footPitch).multiply(rest.get(key('foot.'+side)).world);
+    const angles=pose.ankles?.[side]||[pose.footPitch,0,0];
+    const world=new THREE.Quaternion().setFromEuler(new THREE.Euler(...angles)).multiply(rest.get(key('foot.'+side)).world);
     foot.quaternion.copy(foot.parent.getWorldQuaternion(new THREE.Quaternion()).invert()).multiply(world);foot.updateMatrixWorld(true);
     errors.push(solveLimb(bones,'upperarm01.'+side,'lowerarm01.'+side,'wrist.'+side,pose.hands[side],pose.elbows[side]));
     if(pose.palms){const wrist=bones.get(key('wrist.'+side)),pos=name=>bones.get(key(name+'.'+side)).getWorldPosition(new THREE.Vector3());

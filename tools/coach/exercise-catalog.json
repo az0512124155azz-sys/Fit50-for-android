@@ -1,0 +1,266 @@
+[
+  {
+    "id": "shoulder_roll",
+    "name": "סיבובי כתפיים"
+  },
+  {
+    "id": "march",
+    "name": "הליכה במקום"
+  },
+  {
+    "id": "ankle_circle",
+    "name": "סיבובי קרסול"
+  },
+  {
+    "id": "hip_circle",
+    "name": "סיבובי אגן"
+  },
+  {
+    "id": "arm_swing",
+    "name": "פתיחת ידיים"
+  },
+  {
+    "id": "sit_to_stand",
+    "name": "קימה וישיבה מכיסא"
+  },
+  {
+    "id": "chair_squat",
+    "name": "סקוואט לכיסא"
+  },
+  {
+    "id": "wall_push",
+    "name": "שכיבות סמיכה בקיר"
+  },
+  {
+    "id": "counter_push",
+    "name": "שכיבות סמיכה על משטח"
+  },
+  {
+    "id": "knee_push",
+    "name": "שכיבות סמיכה על ברכיים"
+  },
+  {
+    "id": "band_row",
+    "name": "חתירה עם גומיה"
+  },
+  {
+    "id": "towel_row",
+    "name": "משיכת מגבת איזומטרית"
+  },
+  {
+    "id": "wall_angels",
+    "name": "מלאכי קיר"
+  },
+  {
+    "id": "heel_raise",
+    "name": "עליות עקב"
+  },
+  {
+    "id": "toe_raise",
+    "name": "הרמות אצבעות"
+  },
+  {
+    "id": "side_step",
+    "name": "צעדי צד"
+  },
+  {
+    "id": "band_side_step",
+    "name": "צעדי צד עם גומיה"
+  },
+  {
+    "id": "glute_bridge",
+    "name": "גשר אגן"
+  },
+  {
+    "id": "clamshell",
+    "name": "פתיחת צד בשכיבה"
+  },
+  {
+    "id": "dead_bug",
+    "name": "Dead Bug מותאם"
+  },
+  {
+    "id": "bird_dog",
+    "name": "Bird-dog"
+  },
+  {
+    "id": "knee_plank",
+    "name": "פלאנק על ברכיים"
+  },
+  {
+    "id": "wall_plank",
+    "name": "פלאנק קיר"
+  },
+  {
+    "id": "step_touch",
+    "name": "Step Touch"
+  },
+  {
+    "id": "low_step",
+    "name": "עלייה למדרגה נמוכה"
+  },
+  {
+    "id": "chair_knee_lift",
+    "name": "הרמת ברך בישיבה"
+  },
+  {
+    "id": "seated_leg_extend",
+    "name": "יישור ברך בישיבה"
+  },
+  {
+    "id": "chair_row",
+    "name": "חתירה בישיבה עם גומיה"
+  },
+  {
+    "id": "wall_slide",
+    "name": "החלקת ידיים על קיר"
+  },
+  {
+    "id": "single_leg_support",
+    "name": "עמידה על רגל עם תמיכה"
+  },
+  {
+    "id": "tandem_stance",
+    "name": "עמידת עקב-אצבע"
+  },
+  {
+    "id": "line_walk",
+    "name": "הליכה על קו"
+  },
+  {
+    "id": "clock_reach",
+    "name": "נגיעות שעון"
+  },
+  {
+    "id": "weight_shift",
+    "name": "העברת משקל"
+  },
+  {
+    "id": "cat_cow",
+    "name": "Cat-Cow עדין"
+  },
+  {
+    "id": "child_pose",
+    "name": "Child's Pose מותאם"
+  },
+  {
+    "id": "chest_wall_stretch",
+    "name": "מתיחת חזה בקיר"
+  },
+  {
+    "id": "neck_side",
+    "name": "מתיחת צוואר צדית"
+  },
+  {
+    "id": "hamstring_chair",
+    "name": "מתיחת ירך אחורית בכיסא"
+  },
+  {
+    "id": "calf_wall",
+    "name": "מתיחת שוק בקיר"
+  },
+  {
+    "id": "hip_flexor_chair",
+    "name": "מתיחת מכופפי ירך בעמידה"
+  },
+  {
+    "id": "thoracic_open",
+    "name": "פתיחת גב עליון בישיבה"
+  },
+  {
+    "id": "deep_breath",
+    "name": "נשימות עמוקות"
+  },
+  {
+    "id": "box_breath",
+    "name": "נשימת 4-4"
+  },
+  {
+    "id": "seated_twist",
+    "name": "סיבוב גב עדין בישיבה"
+  },
+  {
+    "id": "wall_calf_raise",
+    "name": "עליות עקב ליד קיר"
+  },
+  {
+    "id": "mini_lunge",
+    "name": "לאנג׳ קצר עם תמיכה"
+  },
+  {
+    "id": "hip_hinge",
+    "name": "Hip Hinge לקיר"
+  },
+  {
+    "id": "good_morning",
+    "name": "Good Morning קל"
+  },
+  {
+    "id": "biceps_band",
+    "name": "כפיפת מרפקים עם גומיה"
+  },
+  {
+    "id": "triceps_wall",
+    "name": "פשיטת מרפקים בקיר"
+  },
+  {
+    "id": "front_raise",
+    "name": "הרמת ידיים קדימה ללא משקל"
+  },
+  {
+    "id": "lateral_raise",
+    "name": "הרמת ידיים לצדדים ללא משקל"
+  },
+  {
+    "id": "wall_press_iso",
+    "name": "לחיצת קיר איזומטרית"
+  },
+  {
+    "id": "seated_march",
+    "name": "צעידה בישיבה"
+  },
+  {
+    "id": "chair_punch",
+    "name": "אגרופים קדימה בישיבה"
+  },
+  {
+    "id": "standing_knee_drive",
+    "name": "הרמת ברך בעמידה"
+  },
+  {
+    "id": "back_step",
+    "name": "צעד לאחור קצר"
+  },
+  {
+    "id": "wall_sit_short",
+    "name": "ישיבת קיר קצרה"
+  },
+  {
+    "id": "pillow_squeeze",
+    "name": "לחיצת כרית בין הברכיים"
+  },
+  {
+    "id": "scap_squeeze",
+    "name": "כיווץ שכמות"
+  },
+  {
+    "id": "chin_tuck",
+    "name": "הכנסת סנטר עדינה"
+  },
+  {
+    "id": "pelvic_tilt",
+    "name": "הטיית אגן עדינה"
+  },
+  {
+    "id": "figure_four_chair",
+    "name": "מתיחת Figure-4 בכיסא"
+  },
+  {
+    "id": "wrist_mobility",
+    "name": "תנועתיות שורש כף יד"
+  },
+  {
+    "id": "side_reach",
+    "name": "הטיית צד בעמידה"
+  }
+]

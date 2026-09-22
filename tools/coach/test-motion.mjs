@@ -27,4 +27,15 @@ for(const id of ids){let max=0,previous=null;for(let t=0;t<=8;t+=1/60){const err
 }
 for(const id of ['chair_squat','sit_to_stand','hip_hinge']){for(let t=0;t<4;t+=.05){const p=fullBodyPose(id,t);applyFullBody(rig,p);for(const side of ['L','R'])assert.ok(bones.get('foot'+side).getWorldPosition(new THREE.Vector3()).distanceTo(new THREE.Vector3(...p.feet[side]))<.01,id+' planted foot');}}
 assert.ok(fullBodyPose('chair_squat',2).hips[1]<fullBodyPose('chair_squat',0).hips[1]-.25);
+for(const [side,offset]of [['L',0],['R',4]]){
+  const quaternions=[];
+  for(const t of [.5,1,1.5,2.5,3]){
+    const p=fullBodyPose('ankle_circle',offset+t);applyFullBody(rig,p);
+    const moving=bones.get('foot'+side),support=bones.get('foot'+(side==='L'?'R':'L'));
+    assert.ok(moving.getWorldPosition(new THREE.Vector3()).y>.20,'Rotating foot must be lifted');
+    assert.ok(Math.abs(support.getWorldPosition(new THREE.Vector3()).y-.075)<.005,'Support foot planted');
+    quaternions.push(moving.getWorldQuaternion(new THREE.Quaternion()));
+  }
+  assert.ok(quaternions[0].angleTo(quaternions[2])>.4,'Ankle must rotate, not just lift');
+}
 console.log(ids.length+' coordinated cycles: finite skeletons, loop continuity, planted feet and squat depth verified.');

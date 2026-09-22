@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import modelBytes from '../../app/src/main/assets/fit50/models/fit50-coach.glb';
 import {fullBodyPose, applyFullBody} from './full-body.mjs';
+import {resolveExercise} from './resolve-exercise.mjs';
 
 const key = name => name.replace(/[^a-z0-9]/gi, '');
 const seated = new Set(['seated_march','chair_knee_lift','seated_leg_extend','chair_row','chair_punch','pillow_squeeze','figure_four_chair','hamstring_chair','seated_twist','thoracic_open']);
@@ -90,6 +91,7 @@ function movement(id, seconds) {
 }
 
 class ExerciseCoach3D {
+  static resolveExercise(ex){return resolveExercise(ex);}
   constructor(canvas){
     this.canvas=canvas;this.card=canvas.parentElement;this.exercise=null;this.started=performance.now();this.bones=new Map();this.rest=new Map();this.failed=false;
     // The demonstration is essential exercise content and starts immediately.
@@ -164,13 +166,13 @@ class ExerciseCoach3D {
     const valid=this.poseAt(time);this.pivot.visible=valid;if(!valid){this.card.dataset.coachState='unavailable';return;}
     this.card.dataset.coachState='ready';
     const low=floor.has(this.exercise);
-    const closeup=this.exercise==='shoulder_roll';
+    const closeup=this.exercise==='shoulder_roll',ankle=this.exercise==='ankle_circle';
     this.stage.visible=!low&&!closeup;this.mat.visible=low;
     // Fit the entire cycle once, never follow the hips or zoom with each rep.
     const framingKey=this.exercise+':'+this.camera.aspect;
     if(this.framingKey!==framingKey){
     const points=[];
-    for(let t=0;t<8;t+=.25){this.poseAt(t);for(const b of this.bones.values()){const point=b.getWorldPosition(new THREE.Vector3());if(!closeup||point.y>1.02)points.push(point);}}
+    for(let t=0;t<8;t+=.25){this.poseAt(t);for(const b of this.bones.values()){const point=b.getWorldPosition(new THREE.Vector3());if((!closeup||point.y>1.02)&&(!ankle||point.y<.85))points.push(point);}}
     const box=new THREE.Box3().setFromPoints(points).expandByScalar(.13);
     const center=box.getCenter(new THREE.Vector3());
     const view=new THREE.Vector3(low?3.2:1.1,low?1.25:.4,low?1.8:3).normalize();
@@ -179,7 +181,7 @@ class ExerciseCoach3D {
     const tan=Math.tan(THREE.MathUtils.degToRad(this.camera.fov/2));
     let distance=0;
     for(const point of points){const d=point.clone().sub(center);distance=Math.max(distance,Math.abs(d.dot(up))/tan+d.dot(view),Math.abs(d.dot(right))/(tan*this.camera.aspect)+d.dot(view));}
-    distance=(distance+(closeup?.30:.35))*1.06;
+    distance=(distance+(closeup||ankle?.30:.35))*1.06;
     this.camera.position.copy(center).addScaledVector(view,distance);this.camera.lookAt(center);
     this.framingKey=framingKey;this.poseAt(time);
     }
