@@ -108,6 +108,15 @@ html[dir="ltr"] .exercise-heading{direction:ltr}
 }
 @keyframes coachLive{50%{opacity:.52;transform:scale(.82)}}
 .exercise-coach-canvas{display:block;width:100%;height:100%}
+.exercise-coach-card{cursor:zoom-in}
+.exercise-coach-card:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+.exercise-coach-card[data-coach-state="unavailable"]{display:none}
+.coach-dialog{margin:auto;padding:0;width:min(92vw,560px);height:min(78vh,720px);border:1px solid #688473;border-radius:24px;background:#20372c;color:#faf7f2;overflow:hidden}
+.coach-dialog::backdrop{background:rgba(0,0,0,.75)}
+.coach-dialog .exercise-coach-canvas{height:100%;width:100%}
+.coach-close,.coach-pause{position:absolute;z-index:2;width:44px;height:44px;border-radius:50%;border:1px solid #789181;background:#284536;color:#fff;font-size:25px;cursor:pointer}
+.coach-close{top:12px;inset-inline-end:12px}.coach-pause{bottom:18px;left:calc(50% - 22px)}
+.coach-title{position:absolute;top:22px;left:60px;right:60px;text-align:center;font:600 18px 'Assistant',sans-serif}
 .wk-name{
   font-family:'Frank Ruhl Libre',serif;
   font-size:36px;font-weight:700;
@@ -881,7 +890,6 @@ html[dir="ltr"] .exercise-heading{direction:ltr}
 <script>
 const $ = id => document.getElementById(id);
 const exerciseCoach3D = new Fit50ExerciseCoach3D($('exerciseCoachCanvas'));
-const FALLBACK_EXERCISE_IDS = ['shoulder_roll','march','wall_push','chair_squat','band_row','knee_plank','chest_wall_stretch','deep_breath'];
 
 const EXERCISE_GUIDES = {
   shoulder_roll:'עמוד או שב זקוף. העלה את הכתפיים מעט לכיוון האוזניים, גלגל אותן לאחור ולמטה במעגל חלק. לאחר מכן החלף כיוון.',
@@ -1142,7 +1150,8 @@ function renderExercise() {
   $('exTotal').textContent = '/' + total;
   $('exName').textContent = ex.n;
   $('exMuscle').textContent = ex.m;
-  exerciseCoach3D.setExercise(ex.id || FALLBACK_EXERCISE_IDS[state.exIndex]);
+  const coachId = ex.id || Object.keys(EXERCISE_GUIDES).find(id => EXERCISE_GUIDES[id] === EXERCISE_GUIDES_BY_NAME[ex.n]);
+  exerciseCoach3D.setExercise(coachId);
   $('safetyText').textContent = ex.safety;
 
   const chips = [];
