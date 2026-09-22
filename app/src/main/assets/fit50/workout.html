@@ -89,13 +89,13 @@ html,body{
   position:relative;z-index:2;
 }
 .exercise-heading{
-  display:grid;grid-template-columns:minmax(0,1fr) 116px;
+  display:grid;grid-template-columns:minmax(0,1fr) 144px;
   gap:14px;align-items:start;direction:rtl;margin-bottom:22px;
 }
 html[dir="ltr"] .exercise-heading{direction:ltr}
 .exercise-heading-copy{min-width:0;padding-top:5px}
 .exercise-coach-card{
-  width:116px;height:132px;position:relative;direction:ltr;
+  width:144px;height:178px;position:relative;direction:ltr;
   border-radius:22px;overflow:hidden;
   background:radial-gradient(circle at 50% 28%,rgba(212,232,92,.16),transparent 48%),linear-gradient(160deg,rgba(250,247,242,.12),rgba(250,247,242,.035));
   border:1px solid rgba(250,247,242,.16);
@@ -137,8 +137,8 @@ html[dir="ltr"] .exercise-heading{direction:ltr}
   background:var(--lime);
 }
 @media(max-width:370px){
-  .exercise-heading{grid-template-columns:minmax(0,1fr) 98px;gap:10px}
-  .exercise-coach-card{width:98px;height:118px;border-radius:19px}
+  .exercise-heading{grid-template-columns:minmax(0,1fr) 120px;gap:10px}
+  .exercise-coach-card{width:120px;height:154px;border-radius:19px}
   .wk-name{font-size:32px}
 }
 @media(prefers-reduced-motion:reduce){.exercise-coach-live{animation:none}}

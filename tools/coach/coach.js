@@ -23,7 +23,14 @@ function movement(id, seconds) {
   arm('L');arm('R');elbow('L');elbow('R');
   if(seated.has(id)){p.height=-.42;leg('L',-1.45);leg('R',-1.45);knee('L',1.45);knee('R',1.45);}
   switch(id){
-    case 'shoulder_roll': for(const side of ['L','R'])r('clavicle.'+side,.10*Math.sin(cycle),.10*Math.cos(cycle), (side==='L'?1:-1)*.10*Math.sin(cycle));break;
+    case 'shoulder_roll':
+      for(const side of ['L','R']){
+        const sign=side==='L'?1:-1;
+        r('clavicle.'+side,.12*s,sign*.18*Math.cos(cycle),sign*.16*s);
+        r('shoulder01.'+side,0,sign*.10*Math.cos(cycle),sign*.10*s);
+        arm(side,.08*Math.cos(cycle),0,-sign*.05*s);elbow(side,-.04*u);
+      }
+      r('spine03',-.035*Math.cos(cycle));break;
     case 'march':case 'standing_knee_drive':leg('L',-.75*left);leg('R',-.75*right);knee('L',.8*left);knee('R',.8*right);arm('L',.28*s);arm('R',-.28*s);break;
     case 'seated_march':case 'chair_knee_lift':leg('L',-1.45-.3*left);leg('R',-1.45-.3*right);break;
     case 'seated_leg_extend':knee('L',1.45-1.35*left);knee('R',1.45-1.35*right);break;
@@ -85,7 +92,9 @@ function movement(id, seconds) {
 class ExerciseCoach3D {
   constructor(canvas){
     this.canvas=canvas;this.card=canvas.parentElement;this.exercise=null;this.started=performance.now();this.bones=new Map();this.rest=new Map();this.failed=false;
-    this.reduced=matchMedia('(prefers-reduced-motion: reduce)');this.paused=this.reduced.matches;
+    // The demonstration is essential exercise content and starts immediately.
+    // Keep an explicit pause control; reduced-motion still disables decorative CSS.
+    this.paused=false;
     try{
       this.renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});
       this.renderer.setPixelRatio(Math.min(devicePixelRatio,2));this.renderer.setClearColor(0,0);
@@ -112,7 +121,7 @@ class ExerciseCoach3D {
       this.frame=this.frame.bind(this);requestAnimationFrame(this.frame);
     }catch(e){this.failed=true;this.card.dataset.coachState='unavailable';console.warn('3D coach unavailable',e);}
   }
-  setExercise(id){this.exercise=id;this.started=performance.now();this.time=0;this.card.dataset.exercise=id||'';if(this.dialog)this.dialog.querySelector('.coach-title').textContent=document.getElementById('exName').textContent;}
+  setExercise(id){if(id!==this.exercise)this.paused=false;this.exercise=id;this.started=performance.now();this.time=0;this.card.dataset.exercise=id||'';if(this.dialog){this.dialog.querySelector('.coach-title').textContent=document.getElementById('exName').textContent;this.dialog.querySelector('.coach-pause').textContent=this.paused?'▶':'Ⅱ';}}
   expand(){
     if(this.dialog||this.failed)return;
     const dialog=document.createElement('dialog');dialog.className='coach-dialog';
@@ -155,12 +164,13 @@ class ExerciseCoach3D {
     const valid=this.poseAt(time);this.pivot.visible=valid;if(!valid){this.card.dataset.coachState='unavailable';return;}
     this.card.dataset.coachState='ready';
     const low=floor.has(this.exercise);
-    this.stage.visible=!low;this.mat.visible=low;
+    const closeup=this.exercise==='shoulder_roll';
+    this.stage.visible=!low&&!closeup;this.mat.visible=low;
     // Fit the entire cycle once, never follow the hips or zoom with each rep.
     const framingKey=this.exercise+':'+this.camera.aspect;
     if(this.framingKey!==framingKey){
     const points=[];
-    for(let t=0;t<8;t+=.25){this.poseAt(t);for(const b of this.bones.values())points.push(b.getWorldPosition(new THREE.Vector3()));}
+    for(let t=0;t<8;t+=.25){this.poseAt(t);for(const b of this.bones.values()){const point=b.getWorldPosition(new THREE.Vector3());if(!closeup||point.y>1.02)points.push(point);}}
     const box=new THREE.Box3().setFromPoints(points).expandByScalar(.13);
     const center=box.getCenter(new THREE.Vector3());
     const view=new THREE.Vector3(low?3.2:1.1,low?1.25:.4,low?1.8:3).normalize();
@@ -169,7 +179,7 @@ class ExerciseCoach3D {
     const tan=Math.tan(THREE.MathUtils.degToRad(this.camera.fov/2));
     let distance=0;
     for(const point of points){const d=point.clone().sub(center);distance=Math.max(distance,Math.abs(d.dot(up))/tan+d.dot(view),Math.abs(d.dot(right))/(tan*this.camera.aspect)+d.dot(view));}
-    distance=(distance+.55)*1.08;
+    distance=(distance+(closeup?.30:.35))*1.06;
     this.camera.position.copy(center).addScaledVector(view,distance);this.camera.lookAt(center);
     this.framingKey=framingKey;this.poseAt(time);
     }
