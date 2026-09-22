@@ -41,19 +41,17 @@ hair=material('Dark cropped hair',(.038,.023,.014),.95)
 white=material('Eye sclera',(.8,.76,.69),.35)
 iris=material('Brown iris',(.075,.035,.012),.3)
 pupil=material('Pupil',(.006,.005,.004),.22)
-shoe=material('Training shoes',(.075,.083,.09),.85)
 
 mesh=bpy.data.meshes.new('Human anatomical surface')
 index={old:new for new,old in enumerate(used)}
 mesh.from_pydata([points[i] for i in used],[],[[index[i] for i in f] for f in faces]); mesh.update()
 body=bpy.data.objects.new('Fit50 Human Coach',mesh); bpy.context.collection.objects.link(body)
-for mat in [skin,shirt,shorts,hair,shoe]: mesh.materials.append(mat)
+for mat in [skin,shirt,shorts,hair]: mesh.materials.append(mat)
 for poly in mesh.polygons:
     c=sum((mesh.vertices[i].co for i in poly.vertices),Vector())/len(poly.vertices)
-    # A fully clothed athletic base: torso, short sleeves, shorts and shoes.
+    # Athletic clothing with bare anatomical feet for visible ankle movement.
     if .87 < c.z < 1.43 and abs(c.x)<(.25 if c.z>1.25 else .20): poly.material_index=1
     elif .59 < c.z <= .89: poly.material_index=2
-    elif c.z < .09: poly.material_index=4
     elif c.z > 1.70 or (c.z>1.60 and c.y>-.005): poly.material_index=3
     poly.use_smooth=True
 
@@ -119,10 +117,6 @@ for side in ['L','R']:
     sphere('Eyeball '+side,c,(r,r,r),white)
     sphere('Iris '+side,c+Vector((0,-r*.9,0)),(.0046,.002,.0046),iris)
     sphere('Pupil '+side,c+Vector((0,-r*1.05,0)),(.0022,.001,.0022),pupil)
-    foot_points=[v.co for v in body.data.vertices if v.co.z<.08 and (v.co.x>0)==(side=='L')]
-    center=sum(foot_points,Vector())/len(foot_points);center.z=.052
-    sphere('Trainer '+side,center,(.060,.128,.057),shoe,'foot.'+side)
-    sphere('Sole '+side,center+Vector((0,0,-.035)),(.061,.130,.023),shorts,'foot.'+side)
 
 out=ROOT/'app/src/main/assets/fit50/models'; out.mkdir(parents=True,exist_ok=True)
 bpy.ops.object.select_all(action='SELECT')
