@@ -100,6 +100,23 @@ class Fit50DataManager(private val context: Context) {
          .addOnFailureListener { done(false, it.localizedMessage) }
     }
 
+    fun getQuestionnaire(done: (Boolean, String?, JSONObject?) -> Unit) {
+        val ref = userDoc() ?: return done(false, "יש להתחבר לחשבון", null)
+        fun cached() = prefs.getString("questionnaire", null)?.let { runCatching { JSONObject(it) }.getOrNull() }
+        ref.get()
+            .addOnSuccessListener { snap ->
+                val saved = snap.get("questionnaire") as? Map<*, *>
+                val fields = saved?.entries?.mapNotNull { (key, value) ->
+                    (key as? String)?.takeIf { it != "completedAt" }?.let { it to value }
+                }?.toMap()
+                done(true, null, if (!fields.isNullOrEmpty()) JSONObject(fields) else cached() ?: JSONObject())
+            }
+            .addOnFailureListener { error ->
+                val local = cached()
+                done(local != null, if (local == null) error.localizedMessage else null, local)
+            }
+    }
+
     fun savePausedWorkout(json: String) {
         prefs.edit().putString("pausedWorkout", json).apply()
     }

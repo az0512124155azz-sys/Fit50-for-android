@@ -127,6 +127,8 @@ html,body{
   display:flex;align-items:center;justify-content:center;
 }
 .hero-cta .play svg{width:12px;height:12px;fill:#FFFFFF;stroke:none;margin-right:2px}
+.review-answers{display:none;position:relative;z-index:1;width:100%;margin-top:12px;padding:13px 16px;border:1px solid rgba(250,247,242,.55);border-radius:14px;background:transparent;color:var(--cream);font:700 15px 'Assistant',sans-serif;cursor:pointer}
+.review-answers:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
 .week-section{padding:28px 24px 8px}
 .section-head{
   display:flex;justify-content:space-between;align-items:baseline;
@@ -604,6 +606,7 @@ html,body{
       <span class="play"><svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20"/></svg></span>
       <span id="startBtnText">התחל אימון</span>
     </button>
+    <button class="review-answers" id="reviewAnswersBtn" type="button">בדוק או עדכן את תשובות שאלון הבריאות</button>
   </div>
 
   <div class="week-section">
@@ -876,6 +879,7 @@ function setHero() {
   const isDone = state.progress.done[key];
   const paused = getPausedWorkoutForToday();
   const dynamicPlan = window.__fit50Plan || null;
+  $('reviewAnswersBtn').style.display = dynamicPlan && dynamicPlan.status && dynamicPlan.status !== 'ready' ? 'block' : 'none';
 
   const dot = $('heroLabel').querySelector('.dot');
 
@@ -1231,6 +1235,8 @@ $('startBtn').onclick = () => {
   if (workout && workout.cat !== 'rest') openWorkoutPreview();
   else toast('יום מנוחה — תחזור מחר');
 };
+
+$('reviewAnswersBtn').onclick = () => { location.href = 'questionnaire.html'; };
 
 $('settingsBtn').onclick = openSettings;
 $('weekLink').onclick = openMonthPlan;

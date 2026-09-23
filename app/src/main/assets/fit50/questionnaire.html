@@ -784,6 +784,7 @@ const $$ = s => document.querySelectorAll(s);
 const TOTAL = 7;
 let current = 1;
 const answers = {};
+let questionnaireEdited = false;
 
 let toastT;
 function toast(msg, isErr){
@@ -799,6 +800,7 @@ $$('.chips').forEach(group => {
   const multi = group.dataset.multi === '1';
   group.querySelectorAll('.chip').forEach(btn => {
     btn.onclick = () => {
+      questionnaireEdited = true;
       const val = btn.dataset.val;
       if (val === 'none') {
         group.querySelectorAll('.chip').forEach(b => b.classList.remove('on'));
@@ -826,6 +828,7 @@ $$('.yn').forEach(group => {
   const name = group.dataset.group;
   group.querySelectorAll('.yn-btn').forEach(btn => {
     btn.onclick = () => {
+      questionnaireEdited = true;
       group.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('on'));
       btn.classList.add('on');
       answers[name] = btn.dataset.val === '1';
@@ -838,6 +841,7 @@ $$('.scale').forEach(group => {
   const name = group.dataset.group;
   group.querySelectorAll('.scale-btn').forEach(btn => {
     btn.onclick = () => {
+      questionnaireEdited = true;
       group.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('on'));
       btn.classList.add('on');
       answers[name] = parseInt(btn.dataset.val, 10);
@@ -849,6 +853,7 @@ $$('.scale').forEach(group => {
 const ageSlider = $('ageSlider');
 if (ageSlider) {
   ageSlider.oninput = () => {
+    questionnaireEdited = true;
     $('ageVal').textContent = ageSlider.value;
     answers.age = parseInt(ageSlider.value, 10);
     validate();
@@ -1007,6 +1012,40 @@ function renderSummary() {
 $('ackBox').onchange = validate;
 
 go(1);
+
+function applySavedAnswers(saved) {
+  if (!saved || questionnaireEdited) return;
+  Object.assign(answers, saved);
+  $$('.chips').forEach(group => {
+    const selected = answers[group.dataset.group];
+    const values = Array.isArray(selected) ? selected : [selected];
+    group.querySelectorAll('.chip').forEach(btn => btn.classList.toggle('on', values.includes(btn.dataset.val)));
+  });
+  $$('.yn').forEach(group => {
+    const selected = answers[group.dataset.group];
+    group.querySelectorAll('.yn-btn').forEach(btn =>
+      btn.classList.toggle('on', selected !== undefined && String(selected) === (btn.dataset.val === '1' ? 'true' : 'false')));
+  });
+  $$('.scale').forEach(group => {
+    group.querySelectorAll('.scale-btn').forEach(btn =>
+      btn.classList.toggle('on', String(answers[group.dataset.group]) === btn.dataset.val));
+  });
+  if (ageSlider && answers.age != null) {
+    ageSlider.value = answers.age;
+    $('ageVal').textContent = answers.age;
+  }
+  validate();
+}
+
+window.fit50QuestionnaireLoaded = function(ok, message, saved) {
+  if (ok && saved) applySavedAnswers(saved);
+  else if (message) toast('לא הצלחנו לטעון את התשובות הקודמות', true);
+};
+if (window.Fit50Native && typeof window.Fit50Native.getQuestionnaire === 'function') {
+  window.Fit50Native.getQuestionnaire();
+} else {
+  try { applySavedAnswers(JSON.parse(localStorage.getItem('fit50.health.v1') || '{}')); } catch(e) {}
+}
 </script>
 
 

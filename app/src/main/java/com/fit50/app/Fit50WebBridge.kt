@@ -192,6 +192,13 @@ class Fit50WebBridge(
     }
 
     @JavascriptInterface
+    fun getQuestionnaire() {
+        data.getQuestionnaire { ok, error, questionnaire ->
+            jsCallback("fit50QuestionnaireLoaded", ok, error ?: "", questionnaire)
+        }
+    }
+
+    @JavascriptInterface
     fun savePausedWorkout(json: String) {
         data.savePausedWorkout(json)
     }
