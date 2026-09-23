@@ -184,9 +184,16 @@ internal object WorkoutSelectionEngine {
         val prescriptions = chosen.map { ex ->
             val gentle = conservative || novice
             val sets = if(ex.phase != "main" || gentle) 1 else ex.sets.coerceAtMost(if(duration <= 20 || frequency >= 4) 2 else 3)
+            val rest = when {
+                ex.phase != "main" -> ex.rest
+                highPain -> ex.rest.coerceAtLeast(60)
+                medicalCaution -> ex.rest.coerceAtLeast(45)
+                gentle -> ex.rest.coerceAtLeast(40)
+                else -> ex.rest
+            }
             Prescription(ex, sets, if(highPain) ex.reps.coerceAtMost(6) else if(gentle) ex.reps.coerceAtMost(8) else ex.reps,
                 if(highPain) ex.hold.coerceAtMost(15) else if(gentle) ex.hold.coerceAtMost(25) else ex.hold, ex.breaths,
-                if(highPain || medicalCaution) ex.rest.coerceAtLeast(60) else if(gentle) ex.rest.coerceAtLeast(40) else ex.rest)
+                rest)
         }
         return Plan(Status.READY, "", prescriptions, duration, frequency, goal, maxDifficulty, conservative, eligible.size)
     }

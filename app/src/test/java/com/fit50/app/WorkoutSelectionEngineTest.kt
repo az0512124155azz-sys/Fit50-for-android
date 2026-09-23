@@ -84,7 +84,8 @@ class WorkoutSelectionEngineTest {
         ))
         assertEquals(ready, reviewed.status)
         assertEquals(20, reviewed.duration)
-        assertTrue(reviewed.exercises.all { it.rest >= 60 })
+        assertTrue(reviewed.exercises.filter { it.exercise.phase == "main" }.all { it.rest >= 45 })
+        assertTrue(reviewed.exercises.filter { it.exercise.phase != "main" }.all { it.rest == it.exercise.rest && it.rest <= 20 })
         val chestAtRest = plan(mapOf("chestPainRestDaily" to true, "symptomsCleared" to true))
         assertEquals(WorkoutSelectionEngine.Status.CLEARANCE_REQUIRED, chestAtRest.status)
     }
@@ -108,7 +109,9 @@ class WorkoutSelectionEngineTest {
         assertEquals(ready, result.status)
         assertEquals(20, result.duration)
         assertEquals(1, result.maxDifficulty)
-        assertTrue(result.exercises.all { it.sets == 1 && it.rest >= 60 })
+        assertTrue(result.exercises.all { it.sets == 1 })
+        assertTrue(result.exercises.filter { it.exercise.phase == "main" }.all { it.rest >= 45 })
+        assertTrue(result.exercises.filter { it.exercise.phase != "main" }.all { it.rest == it.exercise.rest && it.rest <= 20 })
     }
 
     @Test fun painAndLongBreakReduceVolumeWithoutAdvancingDifficulty() {
@@ -125,7 +128,9 @@ class WorkoutSelectionEngineTest {
         assertEquals(15, result.duration)
         assertEquals(1, result.maxDifficulty)
         assertTrue(result.exercises.none { "knees" in it.exercise.avoid })
-        assertTrue(result.exercises.all { it.sets == 1 && it.reps <= 6 && it.hold <= 15 && it.rest >= 60 })
+        assertTrue(result.exercises.all { it.sets == 1 && it.reps <= 6 && it.hold <= 15 })
+        assertTrue(result.exercises.filter { it.exercise.phase == "main" }.all { it.rest >= 60 })
+        assertTrue(result.exercises.filter { it.exercise.phase != "main" }.all { it.rest == it.exercise.rest && it.rest <= 20 })
         val withRestriction = plan(mapOf("painLevel" to 9, "restricted" to true))
         assertEquals(WorkoutSelectionEngine.Status.CLEARANCE_REQUIRED, withRestriction.status)
         for (pattern in listOf(null, "new", "unsure")) {
