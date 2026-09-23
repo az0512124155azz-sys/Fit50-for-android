@@ -1461,6 +1461,7 @@ function finishWorkout() {
         title: WORKOUT.title,
         durationMins: duration,
         exerciseCount: WORKOUT.exercises.length,
+        exerciseIds: WORKOUT.exercises.map(ex => ex.id).filter(Boolean),
         activityType: 'workout',
         planKey: 'w1d' + (dayIndex + 1) + '-' + dateKey
       }));
@@ -1518,8 +1519,23 @@ $('finishBack').onclick = () => {
 
 /* ============ INIT ============ */
 window.fit50WorkoutPlanResult = function(ok, message, plan) {
-  const resumed = loadPausedWorkout();
-  if (!resumed && ok && plan && plan.exercises && plan.exercises.length) {
+  if (!ok || !plan) {
+    alert(message || 'לא ניתן לטעון אימון כעת. אפשר לנסות שוב מאוחר יותר.');
+    location.href = 'home.html';
+    return;
+  }
+  if ((plan.status && plan.status !== 'ready') || !plan.exercises || !plan.exercises.length) {
+    clearPausedWorkout();
+    alert(plan?.message || message || 'לא ניתן להכין אימון מתאים כעת.');
+    location.href = 'home.html';
+    return;
+  }
+  let resumed = loadPausedWorkout();
+  if (resumed && !WORKOUT.exercises.every(ex => plan.exercises.some(item => item.id === ex.id))) {
+    clearPausedWorkout();
+    resumed = false;
+  }
+  if (!resumed) {
     WORKOUT = plan;
     state.exIndex = 0;
     state.setIndex = 0;
@@ -1527,12 +1543,11 @@ window.fit50WorkoutPlanResult = function(ok, message, plan) {
   }
   renderExercise();
 };
-if (loadPausedWorkout()) {
-  renderExercise();
-} else if (window.Fit50Native && typeof window.Fit50Native.getWorkoutPlan === 'function') {
+if (window.Fit50Native && typeof window.Fit50Native.getWorkoutPlan === 'function') {
   try { window.Fit50Native.getWorkoutPlan(); }
-  catch(e) { renderExercise(); }
+  catch(e) { location.href = 'home.html'; }
 } else {
+  loadPausedWorkout();
   renderExercise();
 }
 </script>

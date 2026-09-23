@@ -613,6 +613,15 @@ html,body{
         <button class="yn-btn yes" data-val="1"><span class="mark">●</span>כן</button>
       </div>
     </div>
+
+    <div class="q">
+      <label class="q-label">אם יש לך מחלת לב או עברת ניתוח, האם איש מקצוע רפואי אישר לך להתחיל פעילות גופנית?</label>
+      <div class="q-hint">אם אינך בטוח, השאר את השאלה ללא מענה. אישור אינו מחליף הנחיות אישיות שקיבלת.</div>
+      <div class="yn" data-group="clinicianApproved">
+        <button class="yn-btn no" data-val="0"><span class="mark">○</span>לא</button>
+        <button class="yn-btn yes" data-val="1"><span class="mark">●</span>כן</button>
+      </div>
+    </div>
   </div>
 
   <!-- STEP 5 -->
@@ -663,6 +672,18 @@ html,body{
         <button class="chip" data-val="20">20 דקות</button>
         <button class="chip" data-val="30">30 דקות</button>
         <button class="chip" data-val="45">45+ דקות</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">איזה ציוד זמין לך לאימון?</label>
+      <div class="q-hint">תרגילים עם ציוד ייבחרו רק אם תסמן שהוא זמין.</div>
+      <div class="chips" data-group="availableEquipment" data-multi="1">
+        <button class="chip" data-val="band">גומיית התנגדות</button>
+        <button class="chip" data-val="towel">מגבת</button>
+        <button class="chip" data-val="step">מדרגה יציבה</button>
+        <button class="chip" data-val="pillow">כרית</button>
+        <button class="chip" data-val="none">ללא ציוד נוסף</button>
       </div>
     </div>
   </div>

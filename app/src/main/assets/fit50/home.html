@@ -120,6 +120,7 @@ html,body{
 }
 .hero-cta:hover{background:var(--accent-2)}
 .hero-cta:active{transform:translateY(2px);box-shadow:0 2px 8px -4px rgba(232,90,44,.4)}
+.hero-cta:disabled{opacity:.6;cursor:not-allowed;box-shadow:none}
 .hero-cta .play{
   width:22px;height:22px;border-radius:50%;
   background:rgba(255,255,255,.25);
@@ -878,7 +879,21 @@ function setHero() {
 
   const dot = $('heroLabel').querySelector('.dot');
 
-  if (paused && paused.workout) {
+  if (dynamicPlan && dynamicPlan.status && dynamicPlan.status !== 'ready') {
+    $('heroLabelText').textContent = 'נדרשת בדיקת התאמה';
+    dot.style.background = 'var(--accent)';
+    dot.style.boxShadow = '0 0 12px var(--accent)';
+    $('heroTitle').textContent = dynamicPlan.message || 'אין אימון מתאים כרגע';
+    $('metaEx').textContent = '—';
+    $('metaDur').textContent = '—';
+    $('startBtnText').textContent = 'לא ניתן להתחיל אימון';
+    $('startBtn').disabled = true;
+    $('startBtn').dataset.resume = '0';
+    return;
+  }
+  $('startBtn').disabled = !dynamicPlan;
+
+  if (paused && paused.workout && dynamicPlan) {
     const workout = paused.workout;
     $('heroLabelText').textContent = 'אימון מושהה';
     dot.style.background = 'var(--accent)';
@@ -1028,7 +1043,7 @@ function openDayDetail(dayIdx) {
 /* ============ WORKOUT PREVIEW ============ */
 function openWorkoutPreview() {
   const today = new Date().getDay();
-  const workout = WORKOUTS[today];
+  const workout = window.__fit50Plan?.status === 'ready' ? window.__fit50Plan : WORKOUTS[today];
   if (!workout) return;
   const isRest = workout.cat === 'rest';
 
@@ -1210,8 +1225,9 @@ function openProgress() {
 
 /* ============ EVENT LISTENERS ============ */
 $('startBtn').onclick = () => {
+  if (!window.__fit50Plan || window.__fit50Plan.status !== 'ready') return;
   const today = new Date().getDay();
-  const workout = WORKOUTS[today];
+  const workout = window.__fit50Plan;
   if (workout && workout.cat !== 'rest') openWorkoutPreview();
   else toast('יום מנוחה — תחזור מחר');
 };

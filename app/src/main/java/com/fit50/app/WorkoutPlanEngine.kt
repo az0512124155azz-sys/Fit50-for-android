@@ -3,8 +3,6 @@ package com.fit50.app
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.LocalDate
-import kotlin.math.max
-import kotlin.random.Random
 
 object WorkoutPlanEngine {
     data class Ex(
@@ -22,10 +20,11 @@ object WorkoutPlanEngine {
         val hold:Int = 0,
         val breaths:Int = 0,
         val rest:Int = 45,
-        val safety:String
+        val safety:String,
+        val motionId:String = id
     )
 
-    private val baseCatalog = listOf(
+    internal val baseCatalog = listOf(
         Ex("shoulder_roll","סיבובי כתפיים","כתפיים · חימום","reps",setOf("mobility","health","posture"),setOf("mobility","yoga","garden"),difficulty=1,phase="warmup",sets=1,reps=10,rest=15,safety="תנועה איטית, ללא כאב"),
         Ex("march","הליכה במקום","רגליים · חימום","hold",setOf("health","weight","energy"),setOf("walk","garden"),difficulty=1,phase="warmup",sets=1,hold=90,rest=20,safety="קצב נוח ונשימה רציפה"),
         Ex("ankle_circle","סיבובי קרסול","קרסוליים · חימום","reps",setOf("mobility","balance"),setOf("mobility","walk"),avoid=setOf("ankles"),difficulty=1,phase="warmup",sets=1,reps=10,rest=15,safety="טווח קטן ונוח"),
@@ -96,129 +95,53 @@ object WorkoutPlanEngine {
 
     private val catalog = baseCatalog + LibraryExercises.additional(baseCatalog)
 
-    fun generate(questionnaire: Map<*, *>?, userSeed: String, date: LocalDate = LocalDate.now()): JSONObject {
-        val q = questionnaire ?: emptyMap<String,Any?>()
-        val duration = str(q["duration"]).toIntOrNull()?.coerceIn(15,45) ?: 20
-        val pain = number(q["painLevel"]).coerceIn(0,10)
-        val painAreas = stringSet(q["painAreas"]) - "none"
-        val conditions = stringSet(q["conditions"]) - "none"
-        val likes = stringSet(q["likes"])
-        val extraGoals = stringSet(q["extraGoals"])
-        val mainGoal = str(q["mainGoal"]).ifBlank { "health" }
-        val lastTrained = str(q["lastTrained"])
-        val daily = str(q["daily"])
-        val restricted = bool(q["restricted"])
-        val chestPain = bool(q["chestPain"])
-        val surgery = bool(q["surgery"])
-        val avoidMovement = bool(q["avoid"])
-
-        var maxDifficulty = when(lastTrained){
-            "now" -> 3
-            "6m" -> 2
-            "1y" -> 2
-            else -> 1
-        }
-        if(daily=="high" && maxDifficulty<3) maxDifficulty++
-        if(pain>=5 || avoidMovement) maxDifficulty = minOf(maxDifficulty,1)
-        if(restricted || chestPain || surgery || conditions.any{it in setOf("heart","bp")}) maxDifficulty = 1
-
-        val conservative = restricted || chestPain || surgery || pain >= 7
-        val targetCount = when(duration){
-            in 0..15 -> 5
-            in 16..20 -> 6
-            in 21..30 -> 8
-            else -> 10
-        }
-
-        val profileGoals = (extraGoals + mainGoal).toMutableSet()
-        if(mainGoal=="health") profileGoals += setOf("strength","mobility","balance")
-        if(conservative) profileGoals += setOf("mobility","health")
-
-        val filtered = catalog.filter { ex ->
-            ex.difficulty <= maxDifficulty &&
-            ex.avoid.intersect(painAreas).isEmpty() &&
-            (!conservative || ex.difficulty == 1)
-        }
-
-        val seed = (userSeed + "|" + date.toString() + "|" + mainGoal + "|" + painAreas.sorted()).hashCode()
-        val rng = Random(seed)
-
-        fun score(ex:Ex): Int {
-            var s=0
-            s += ex.goals.intersect(profileGoals).size * 12
-            s += ex.likes.intersect(likes).size * 7
-            if(ex.goals.contains(mainGoal)) s += 16
-            if(mainGoal=="pain" && ex.goals.contains("pain")) s += 12
-            if(mainGoal=="balance" && ex.goals.contains("balance")) s += 12
-            if(mainGoal=="mobility" && ex.goals.contains("mobility")) s += 12
-            if(mainGoal=="strength" && ex.goals.contains("strength")) s += 12
-            s += rng.nextInt(0,9)
-            return s
-        }
-
-        fun pick(phase:String, count:Int, used:MutableSet<String>): List<Ex> =
-            filtered.asSequence()
-                .filter{it.phase==phase && it.id !in used}
-                .sortedByDescending(::score)
-                .take(count)
-                .toList()
-                .also{used += it.map(Ex::id)}
-
-        val used = mutableSetOf<String>()
-        val warmCount = if(duration>=30) 2 else 1
-        val coolCount = if(duration>=30) 2 else 1
-        val mainCount = max(2,targetCount-warmCount-coolCount)
-
-        val warm = pick("warmup",warmCount,used)
-        val main = pick("main",mainCount,used)
-        val cool = pick("cooldown",coolCount,used)
-        val chosen = (warm+main+cool).ifEmpty { catalog.take(targetCount) }
-
-        val intensity = when(maxDifficulty){1->"עדין";2->"בינוני";else->"מתקדם"}
-        val title = when(mainGoal){
+    fun generate(questionnaire: Map<*, *>?, userSeed: String, date: LocalDate = LocalDate.now(),
+                 recentExerciseIds: Set<String> = emptySet()): JSONObject {
+        val plan = WorkoutSelectionEngine.select(catalog, questionnaire, userSeed, date, recentExerciseIds)
+        val title = when(plan.mainGoal){
             "strength" -> "כוח פונקציונלי"
             "mobility" -> "מוביליטי וטווחים"
             "balance" -> "יציבות ושיווי משקל"
             "pain" -> "תנועה עדינה"
             else -> "כושר מאוזן"
         }
-
-        val arr = JSONArray()
-        chosen.forEach { ex ->
-            val adjustedSets = if(duration<=15) minOf(ex.sets,2) else ex.sets
-            val adjustedRest = if(maxDifficulty==1) max(ex.rest,40) else ex.rest
-            arr.put(JSONObject()
-                .put("id",ex.id)
-                .put("n",ex.name)
-                .put("m",ex.muscle)
-                .put("type",ex.type)
-                .put("sets",adjustedSets)
-                .put("reps",ex.reps)
-                .put("hold",ex.hold)
-                .put("breaths",ex.breaths)
-                .put("inhale",4)
-                .put("exhale",4)
-                .put("repsText",when(ex.type){
-                    "hold" -> ex.hold.toString()+" שניות"
-                    "breath" -> ex.breaths.toString()+" נשימות"
-                    else -> ex.reps.toString()+" חזרות"
+        val intensity = when(plan.maxDifficulty){1 -> "עדין"; 2 -> "בינוני"; else -> "מתקדם"}
+        val exercises = JSONArray()
+        plan.exercises.forEach { item ->
+            val ex = item.exercise
+            exercises.put(JSONObject()
+                .put("id", ex.id)
+                .put("n", ex.name)
+                .put("m", ex.muscle)
+                .put("type", ex.type)
+                .put("sets", item.sets)
+                .put("reps", item.reps)
+                .put("hold", item.hold)
+                .put("breaths", item.breaths)
+                .put("inhale", 4)
+                .put("exhale", 4)
+                .put("repsText", when(ex.type){
+                    "hold" -> item.hold.toString()+" שניות"
+                    "breath" -> item.breaths.toString()+" נשימות"
+                    else -> item.reps.toString()+" חזרות"
                 })
-                .put("pace",if(maxDifficulty==1)"לאט ובשליטה" else "קצב נוח ומבוקר")
-                .put("rest",adjustedRest)
-                .put("safety",ex.safety))
+                .put("pace", if(plan.maxDifficulty == 1) "לאט ובשליטה" else "קצב נוח ומבוקר")
+                .put("rest", item.rest)
+                .put("safety", ex.safety))
         }
-
         return JSONObject()
-            .put("title",title)
-            .put("sub",intensity+" · מותאם אישית")
-            .put("week",1)
-            .put("dur",duration)
-            .put("frequency",str(q["freq"]).toIntOrNull() ?: 3)
-            .put("goal",mainGoal)
-            .put("conservative",conservative)
-            .put("requiresProfessionalClearance",restricted || chestPain)
-            .put("exercises",arr)
-            .put("combinationSpace",estimateCombinationSpace(filtered.size,targetCount))
+            .put("status", plan.status.code)
+            .put("message", plan.message)
+            .put("title", title)
+            .put("sub", intensity+" · מותאם אישית")
+            .put("week", 1)
+            .put("dur", plan.duration)
+            .put("frequency", plan.frequency)
+            .put("goal", plan.mainGoal)
+            .put("conservative", plan.conservative)
+            .put("requiresProfessionalClearance", plan.status == WorkoutSelectionEngine.Status.CLEARANCE_REQUIRED)
+            .put("exercises", exercises)
+            .put("combinationSpace", estimateCombinationSpace(plan.eligibleCount, exercises.length()))
     }
 
     private fun estimateCombinationSpace(n:Int,k:Int):Long {
@@ -226,13 +149,5 @@ object WorkoutPlanEngine {
         var r=1.0
         for(i in 1..k) r = r * (n-k+i) / i
         return r.coerceAtMost(9_000_000_000.0).toLong()
-    }
-    private fun str(v:Any?):String = v?.toString() ?: ""
-    private fun number(v:Any?):Int = when(v){is Number->v.toInt();else->v?.toString()?.toIntOrNull()?:0}
-    private fun bool(v:Any?):Boolean = when(v){is Boolean->v;is Number->v.toInt()!=0;else->v?.toString()?.lowercase() in setOf("true","1","yes")}
-    private fun stringSet(v:Any?):Set<String> = when(v){
-        is Collection<*> -> v.mapNotNull{it?.toString()}.toSet()
-        is Array<*> -> v.mapNotNull{it?.toString()}.toSet()
-        else -> emptySet()
     }
 }

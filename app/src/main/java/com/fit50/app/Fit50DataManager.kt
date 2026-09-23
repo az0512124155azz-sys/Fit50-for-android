@@ -112,6 +112,7 @@ class Fit50DataManager(private val context: Context) {
     }
 
     fun completeWorkout(json: String, done: (Boolean, String?, JSONObject?) -> Unit) {
+        val currentUid = uid() ?: return done(false, "אין משתמש מחובר", null)
         val collection = workouts() ?: return done(false, "יש להתחבר לחשבון", null)
         val obj = JSONObject(json)
         val now = Date()
@@ -120,11 +121,15 @@ class Fit50DataManager(private val context: Context) {
         val dateKey = dayKey(now)
         val defaultPlanKey = "w1d" + (dayIndex + 1) + "-" + dateKey
         val planKey = obj.optString("planKey").ifBlank { defaultPlanKey }
+        val completedIds = obj.optJSONArray("exerciseIds")?.let { array ->
+            (0 until array.length()).mapNotNull { array.optString(it).takeIf(String::isNotBlank) }
+        }.orEmpty()
 
         val data = hashMapOf<String, Any?>(
             "title" to obj.optString("title", "אימון"),
             "durationMins" to obj.optInt("durationMins", 0).coerceAtLeast(0),
             "exerciseCount" to obj.optInt("exerciseCount", 0).coerceAtLeast(0),
+            "exerciseIds" to completedIds,
             "planKey" to planKey,
             "dateKey" to dateKey,
             "activityType" to obj.optString("activityType", "workout"),
@@ -133,6 +138,13 @@ class Fit50DataManager(private val context: Context) {
 
         collection.add(data)
             .addOnSuccessListener {
+                if (completedIds.isNotEmpty()) {
+                    val key = "recentWorkouts:$currentUid"
+                    val previous = runCatching { JSONArray(prefs.getString(key, "[]")) }.getOrDefault(JSONArray())
+                    val recent = JSONArray().put(JSONObject().put("date", dateKey).put("ids", JSONArray(completedIds)))
+                    for (index in 0 until minOf(2, previous.length())) previous.optJSONObject(index)?.let { recent.put(it) }
+                    prefs.edit().putString(key, recent.toString()).apply()
+                }
                 buildProgress { ok, error, progress ->
                     done(ok, error, progress)
                 }
@@ -185,7 +197,16 @@ class Fit50DataManager(private val context: Context) {
 
         fun fromQuestionnaire(q: Map<*, *>?) {
             runCatching {
-                WorkoutPlanEngine.generate(q, user.uid)
+                val sessions = runCatching { JSONArray(prefs.getString("recentWorkouts:${user.uid}", "[]")) }.getOrDefault(JSONArray())
+                val recent = mutableSetOf<String>()
+                val today = dayKey(Date())
+                for (session in 0 until sessions.length()) {
+                    val entry = sessions.optJSONObject(session) ?: continue
+                    if (entry.optString("date") == today) continue
+                    val ids = entry.optJSONArray("ids") ?: continue
+                    for (index in 0 until ids.length()) ids.optString(index).takeIf(String::isNotBlank)?.let(recent::add)
+                }
+                WorkoutPlanEngine.generate(q, user.uid, recentExerciseIds = recent)
             }.onSuccess { done(true, null, it) }
              .onFailure { done(false, it.localizedMessage, null) }
         }
