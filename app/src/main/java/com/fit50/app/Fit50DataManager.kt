@@ -236,6 +236,10 @@ class Fit50DataManager(private val context: Context) {
             .addOnSuccessListener { snap ->
                 val q = snap.get("questionnaire") as? Map<*, *>
                 if (q != null) {
+                    val cached = q.entries.mapNotNull { (key, value) ->
+                        (key as? String)?.let { it to if (value is Timestamp) value.toDate().toInstant().toString() else value }
+                    }.toMap()
+                    prefs.edit().putString("questionnaire", JSONObject(cached).toString()).apply()
                     fromQuestionnaire(q, snap.get("questionnaireReminderShownAt"))
                 } else {
                     val cached = prefs.getString("questionnaire", null)

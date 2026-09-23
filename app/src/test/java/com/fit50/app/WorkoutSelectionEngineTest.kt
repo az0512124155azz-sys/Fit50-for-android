@@ -45,7 +45,7 @@ class WorkoutSelectionEngineTest {
     }
 
     @Test fun medicalFlagsDoNotReturnAFallbackWorkout() {
-        for(q in listOf(mapOf("chestPain" to true), mapOf("restricted" to true), mapOf("surgery" to true), mapOf("conditions" to listOf("heart")), mapOf("painLevel" to 9))) {
+        for(q in listOf(mapOf("chestPain" to true), mapOf("restricted" to true), mapOf("surgery" to true), mapOf("conditions" to listOf("heart")))) {
             val result = plan(q)
             assertEquals(WorkoutSelectionEngine.Status.CLEARANCE_REQUIRED, result.status)
             assertTrue(result.exercises.isEmpty())
@@ -56,6 +56,8 @@ class WorkoutSelectionEngineTest {
         val approved = plan(mapOf("conditions" to listOf("heart"), "clinicianApproved" to true, "lastTrained" to "now"))
         assertEquals(ready, approved.status)
         assertEquals(1, approved.maxDifficulty)
+        val symptomsDespiteApproval = plan(mapOf("conditions" to listOf("heart"), "clinicianApproved" to true, "chestPain" to true))
+        assertEquals(WorkoutSelectionEngine.Status.CLEARANCE_REQUIRED, symptomsDespiteApproval.status)
     }
 
     @Test fun painAndLongBreakReduceVolumeWithoutAdvancingDifficulty() {
@@ -64,6 +66,17 @@ class WorkoutSelectionEngineTest {
         assertTrue(result.exercises.all { it.exercise.difficulty == 1 && it.sets == 1 && it.reps <= 8 && it.hold <= 25 })
         val frequent = plan(mapOf("lastTrained" to "now", "freq" to "5", "duration" to "45"))
         assertTrue(frequent.exercises.all { it.sets <= 2 })
+    }
+
+    @Test fun highTypicalPainGetsAShortAdaptedSessionWhenNoRedFlagsAreReported() {
+        val result = plan(mapOf("painLevel" to 9, "painAreas" to listOf("knees"), "duration" to "45", "mainGoal" to "pain"))
+        assertEquals(ready, result.status)
+        assertEquals(15, result.duration)
+        assertEquals(1, result.maxDifficulty)
+        assertTrue(result.exercises.none { "knees" in it.exercise.avoid })
+        assertTrue(result.exercises.all { it.sets == 1 && it.reps <= 6 && it.hold <= 15 && it.rest >= 60 })
+        val withRestriction = plan(mapOf("painLevel" to 9, "restricted" to true))
+        assertEquals(WorkoutSelectionEngine.Status.CLEARANCE_REQUIRED, withRestriction.status)
     }
 
     @Test fun recentCompletionAndDateCanRotateTheSession() {
