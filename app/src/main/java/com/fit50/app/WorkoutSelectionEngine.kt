@@ -19,7 +19,8 @@ internal object WorkoutSelectionEngine {
         val mainGoal: String,
         val maxDifficulty: Int,
         val conservative: Boolean,
-        val eligibleCount: Int
+        val eligibleCount: Int,
+        val safetyReasons: List<String> = emptyList()
     )
 
     private val equipment = mapOf(
@@ -81,11 +82,17 @@ internal object WorkoutSelectionEngine {
         val pain = number(q["painLevel"], 0).coerceIn(0, 10)
         val highPain = pain >= 8
         val requestedDuration = number(q["duration"], 20).coerceIn(15, 45)
-        val duration = if (highPain) 15 else requestedDuration
-        val frequency = number(q["freq"], 3).coerceIn(2, 5)
-        val goal = text(q["mainGoal"]).takeIf { it in setOf("health", "pain", "strength", "balance", "mobility") } ?: "health"
         val conditions = values(q["conditions"])
         val meds = values(q["meds"])
+        val medicalCaution = conditions.isNotEmpty() || meds.any { it in setOf("heart", "bp", "thinners") } ||
+            flag(q["surgery"]) || flag(q["chestPain"])
+        val duration = when {
+            highPain -> 15
+            medicalCaution -> requestedDuration.coerceAtMost(20)
+            else -> requestedDuration
+        }
+        val frequency = number(q["freq"], 3).coerceIn(2, 5)
+        val goal = text(q["mainGoal"]).takeIf { it in setOf("health", "pain", "strength", "balance", "mobility") } ?: "health"
         val painAreas = values(q["painAreas"]) + if("back" in conditions) setOf("lowerBack") else emptySet()
         val likes = values(q["likes"])
         val goals = values(q["extraGoals"]) + goal
@@ -93,18 +100,20 @@ internal object WorkoutSelectionEngine {
         val recentMotions = recentExerciseIds.map { recent -> catalog.firstOrNull { it.id == recent }?.motionId ?: recent }.toSet()
         val trained = text(q["lastTrained"])
         val approved = flag(q["clinicianApproved"])
-        val clearanceMessage = when {
-            flag(q["chestPain"]) -> "בשאלון צוין כאב בחזה בזמן מאמץ. לפני אימון עצמאי יש לברר את הסיבה עם איש מקצוע רפואי."
-            flag(q["restricted"]) -> "בשאלון צוין שרופא הגביל פעילות גופנית. יש לפעול לפי ההנחיות שקיבלת לפני אימון עצמאי."
-            !approved && flag(q["surgery"]) -> "בשאלון צוין ניתוח בשנתיים האחרונות ללא אישור להתחיל פעילות. יש לברר את ההתאמה לפני אימון עצמאי."
-            !approved && "heart" in conditions -> "בשאלון צוין מצב לבבי ללא אישור להתחיל פעילות. יש לברר את ההתאמה לפני אימון עצמאי."
-            highPain && text(q["painPattern"]) != "stable" -> "בשאלון צוין כאב חזק שאינו מוכר ויציב, או שלא ברור אם הוא יציב. יש לברר את ההתאמה לפני אימון עצמאי."
-            else -> null
+        val safetyReasons = buildList {
+            if (flag(q["chestPain"]) && text(q["chestPainStatus"]) != "cleared")
+                add("כאב בחזה בזמן מאמץ שעדיין לא הובהר או לא חלף")
+            if (flag(q["restricted"])) add("הגבלת פעילות שניתנה על ידי רופא")
+            if (!approved && flag(q["surgery"])) add("ניתוח בשנתיים האחרונות ללא אישור לפעילות")
+            if (!approved && "heart" in conditions) add("מצב לבבי ללא אישור לפעילות")
+            if (highPain && text(q["painPattern"]) != "stable") add("כאב חזק, חדש או מחמיר, או שאינו ברור")
         }
         var maxDifficulty = when(trained) { "now" -> 3; "6m" -> 2; else -> 1 }
-        val conservative = pain >= 5 || flag(q["avoid"]) || flag(q["surgery"]) || conditions.any { it in setOf("heart", "bp", "joints", "back", "osteo") } || meds.any { it in setOf("heart", "bp", "thinners") }
+        val conservative = pain >= 5 || flag(q["avoid"]) || medicalCaution
         if(conservative) maxDifficulty = 1
-        if(clearanceMessage != null) return Plan(Status.CLEARANCE_REQUIRED, clearanceMessage, emptyList(), duration, frequency, goal, 1, true, 0)
+        if(safetyReasons.isNotEmpty()) return Plan(Status.CLEARANCE_REQUIRED,
+            "לפני אימון עצמאי יש לברר את כל הסעיפים שמופיעים כאן עם איש מקצוע רפואי.",
+            emptyList(), duration, frequency, goal, 1, true, 0, safetyReasons)
 
         val eligible = catalog.filter { ex ->
             val id = ex.motionId
@@ -163,7 +172,7 @@ internal object WorkoutSelectionEngine {
             val sets = if(ex.phase != "main" || gentle) 1 else ex.sets.coerceAtMost(if(duration <= 20 || frequency >= 4) 2 else 3)
             Prescription(ex, sets, if(highPain) ex.reps.coerceAtMost(6) else if(gentle) ex.reps.coerceAtMost(8) else ex.reps,
                 if(highPain) ex.hold.coerceAtMost(15) else if(gentle) ex.hold.coerceAtMost(25) else ex.hold, ex.breaths,
-                if(highPain) ex.rest.coerceAtLeast(60) else if(gentle) ex.rest.coerceAtLeast(40) else ex.rest)
+                if(highPain || medicalCaution) ex.rest.coerceAtLeast(60) else if(gentle) ex.rest.coerceAtLeast(40) else ex.rest)
         }
         return Plan(Status.READY, "", prescriptions, duration, frequency, goal, maxDifficulty, conservative, eligible.size)
     }

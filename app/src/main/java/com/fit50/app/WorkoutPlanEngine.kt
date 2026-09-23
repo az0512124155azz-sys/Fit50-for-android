@@ -132,6 +132,7 @@ object WorkoutPlanEngine {
         return JSONObject()
             .put("status", plan.status.code)
             .put("message", plan.message)
+            .put("safetyReasons", JSONArray(plan.safetyReasons))
             .put("title", title)
             .put("sub", intensity+" · מותאם אישית")
             .put("week", 1)

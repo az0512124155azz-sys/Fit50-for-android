@@ -95,6 +95,10 @@ html,body{
   line-height:1.05;color:var(--cream);margin-bottom:16px;
 }
 .hero-title em{font-style:normal;color:rgba(250,247,242,.55);font-weight:400}
+.safety-reasons{display:none;position:relative;z-index:1;margin:-2px 0 20px;color:var(--cream);font-size:15px;line-height:1.5}
+.safety-reasons strong{display:block;margin-bottom:5px;color:var(--lime)}
+.safety-reasons ul{margin:0;padding-inline-start:22px}
+.safety-reasons li{margin:3px 0}
 .hero-meta{
   position:relative;z-index:1;
   display:flex;align-items:center;gap:16px;
@@ -594,6 +598,7 @@ html,body{
       <span id="heroLabelText">האימון של היום</span>
     </div>
     <h2 class="hero-title" id="heroTitle">כוח גינה<br><em>יסודות</em></h2>
+    <div class="safety-reasons" id="safetyReasons"><strong>כל הסיבות שדורשות בירור:</strong><ul id="safetyReasonsList"></ul></div>
     <div class="hero-meta">
       <span>
         <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>
@@ -887,6 +892,14 @@ function setHero() {
   const isDone = state.progress.done[key];
   const paused = getPausedWorkoutForToday();
   const dynamicPlan = window.__fit50Plan || null;
+  const reasons = dynamicPlan && Array.isArray(dynamicPlan.safetyReasons) ? dynamicPlan.safetyReasons : [];
+  const showReasons = dynamicPlan && dynamicPlan.status === 'clearance_required' && reasons.length > 0;
+  $('safetyReasons').style.display = showReasons ? 'block' : 'none';
+  $('safetyReasonsList').replaceChildren(...reasons.map(reason => {
+    const item = document.createElement('li');
+    item.textContent = reason;
+    return item;
+  }));
   $('reviewAnswersBtn').style.display = dynamicPlan && dynamicPlan.status && dynamicPlan.status !== 'ready' ? 'block' : 'none';
   const showMonthlyReview = dynamicPlan && dynamicPlan.status === 'ready' && dynamicPlan.questionnaireReviewDue === true;
   $('monthlyReview').style.display = showMonthlyReview ? 'block' : 'none';

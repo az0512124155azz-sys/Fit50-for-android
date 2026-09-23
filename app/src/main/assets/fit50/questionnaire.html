@@ -638,6 +638,15 @@ html,body{
       </div>
     </div>
 
+    <div class="q" id="chestPainStatusQuestion" hidden>
+      <label class="q-label">מה מצב הכאב בחזה כיום?</label>
+      <div class="q-hint">אם הכאב חדש, חוזר, או שלא נבדק — אין להתחיל אימון עצמאי על סמך השאלון.</div>
+      <div class="chips vert" data-group="chestPainStatus">
+        <button class="chip" data-val="current">הכאב חדש, חוזר, או שטרם נבדק</button>
+        <button class="chip" data-val="cleared">הכאב חלף, נבדק, וקיבלתי אישור והנחיות לפעילות</button>
+      </div>
+    </div>
+
     <div class="q">
       <label class="q-label">אם יש לך מחלת לב או עברת ניתוח, האם איש מקצוע רפואי אישר לך להתחיל פעילות גופנית?</label>
       <div class="q-hint">אם אינך בטוח, השאר את השאלה ללא מענה. אישור אינו מחליף הנחיות אישיות שקיבלת.</div>
@@ -856,6 +865,7 @@ $$('.yn').forEach(group => {
       group.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('on'));
       btn.classList.add('on');
       answers[name] = btn.dataset.val === '1';
+      if (name === 'chestPain') updateChestPainStatusQuestion();
       validate();
     };
   });
@@ -902,7 +912,8 @@ function validate() {
   } else if (s === 4) {
     ok = answers.meds && answers.meds.length > 0
       && answers.restricted !== undefined
-      && answers.chestPain !== undefined;
+      && answers.chestPain !== undefined
+      && (!answers.chestPain || ['current', 'cleared'].includes(answers.chestPainStatus));
   } else if (s === 5) {
     ok = answers.lastTrained && answers.likes && answers.likes.length > 0
       && answers.freq && answers.duration;
@@ -918,6 +929,14 @@ function validate() {
 
 function updatePainPatternQuestion() {
   $('painPatternQuestion').hidden = Number(answers.painLevel) < 8 || answers.painLevel === undefined;
+}
+
+function updateChestPainStatusQuestion() {
+  $('chestPainStatusQuestion').hidden = answers.chestPain !== true;
+  if (answers.chestPain !== true) {
+    delete answers.chestPainStatus;
+    $$('#chestPainStatusQuestion .chip.on').forEach(button => button.classList.remove('on'));
+  }
 }
 
 function go(step) {
@@ -1030,6 +1049,9 @@ function renderSummary() {
   if (answers.chestPain !== undefined) {
     rows.push(['כאבי חזה במאמץ', answers.chestPain ? 'כן' : 'לא']);
   }
+  if (answers.chestPain && answers.chestPainStatus) {
+    rows.push(['מצב כאב בחזה', answers.chestPainStatus === 'cleared' ? 'חלף, נבדק ואושרה פעילות' : 'חדש, חוזר או לא נבדק']);
+  }
   if (answers.lastTrained) {
     rows.push(['ניסיון אחרון', trainedMap[answers.lastTrained] || '—']);
   }
@@ -1070,6 +1092,7 @@ function applySavedAnswers(saved) {
     $('ageVal').textContent = answers.age;
   }
   updatePainPatternQuestion();
+  updateChestPainStatusQuestion();
   validate();
 }
 
@@ -1083,6 +1106,7 @@ $('resetSavedAnswersBtn').onclick = function() {
   $('ackBox').checked = false;
   $('resetSavedAnswersBtn').hidden = true;
   updatePainPatternQuestion();
+  updateChestPainStatusQuestion();
   go(1);
   toast('התשובות בחשבון יוחלפו רק אחרי סיום ושמירת השאלון');
 };

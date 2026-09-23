@@ -60,6 +60,26 @@ class WorkoutSelectionEngineTest {
         assertEquals(WorkoutSelectionEngine.Status.CLEARANCE_REQUIRED, symptomsDespiteApproval.status)
     }
 
+    @Test fun listsEveryClearanceReasonAtOnce() {
+        val result = plan(mapOf(
+            "chestPain" to true, "restricted" to true, "surgery" to true,
+            "conditions" to listOf("heart"), "painLevel" to 9, "painPattern" to "new"
+        ))
+        assertEquals(WorkoutSelectionEngine.Status.CLEARANCE_REQUIRED, result.status)
+        assertEquals(5, result.safetyReasons.size)
+        assertTrue(result.exercises.isEmpty())
+    }
+
+    @Test fun resolvedAssessedChestPainReceivesConservativePlan() {
+        val result = plan(mapOf(
+            "chestPain" to true, "chestPainStatus" to "cleared", "duration" to "45", "lastTrained" to "now"
+        ))
+        assertEquals(ready, result.status)
+        assertEquals(20, result.duration)
+        assertEquals(1, result.maxDifficulty)
+        assertTrue(result.exercises.all { it.sets == 1 && it.rest >= 60 })
+    }
+
     @Test fun painAndLongBreakReduceVolumeWithoutAdvancingDifficulty() {
         val result = plan(mapOf("painLevel" to 6, "lastTrained" to "never", "mainGoal" to "strength"))
         assertEquals(1, result.maxDifficulty)
