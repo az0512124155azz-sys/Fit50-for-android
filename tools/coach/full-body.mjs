@@ -8,7 +8,88 @@ export function fullBodyPose(id,t){
   const u=repetition(t),s=Math.sin(t*Math.PI/2), side=Math.floor(t/4)%2?'R':'L';
   const p={hips:[0,.91,0],rotation:[0,0,0],feet:{L:[.14,.075,0],R:[-.14,.075,0]},hands:{L:[.29,1,.03],R:[-.29,1,.03]},knees:{L:[.14,.45,.7],R:[-.14,.45,.7]},elbows:{L:[.65,1.2,-.2],R:[-.65,1.2,-.2]},spine:0,head:0,footPitch:0};
   const both=(fn)=>['L','R'].forEach(a=>fn(a,a==='L'?1:-1));
+  const seated=()=>{p.seated=true;p.hips=[0,.53,-.27];both((a,sign)=>{p.feet[a]=[sign*.14,.075,.21];p.knees[a]=[sign*.14,.8,.35];p.hands[a]=[sign*.29,.69,-.15];p.elbows[a]=[sign*.54,.77,-.35];});};
+  const quadruped=()=>{p.hips=[0,.49,-.27];p.rotation[0]=Math.PI/2;p.head=-.2;p.palms=true;both((a,sign)=>{p.hands[a]=[sign*.20,.055,.34];p.feet[a]=[sign*.14,.075,-.73];p.knees[a]=[sign*.14,-.4,-.25];p.elbows[a]=[sign*.55,.25,.05];});};
   switch(id){
+    case 'shoulder_roll':{
+      const phase=t*Math.PI/2;p.shoulderRoll=.12*Math.sin(phase);p.spine=-.025*Math.cos(phase);
+      both((a,sign)=>{p.hands[a]=[sign*.29,1+.035*(1-Math.cos(phase)),.03+.04*Math.sin(phase)];});break;}
+    case 'deep_breath':case 'box_breath':{
+      const breath=(1-Math.cos(t*Math.PI/4))/2;p.spine=-.022*breath;
+      both((a,sign)=>p.hands[a]=[sign*(.29+.045*breath),1+.055*breath,.03+.035*breath]);break;}
+    case 'neck_side':p.headRoll=.13*u;p.hands.L=[.30,1.03,.02];break;
+    case 'chin_tuck':p.head=.09*u;p.spine=-.015*u;break;
+    case 'wrist_mobility':{
+      both((a,sign)=>{p.hands[a]=[sign*.27,1.16,.16];p.elbows[a]=[sign*.55,1.08,-.15];});
+      p.wrists={L:[.24*Math.sin(t*Math.PI/2),0,.20*Math.cos(t*Math.PI/2)],R:[.24*Math.sin(t*Math.PI/2),0,-.20*Math.cos(t*Math.PI/2)]};break;}
+    case 'side_reach':{
+      p.spineRoll=-.14*u;p.hips[0]=-.025*u;
+      p.hands.L=[.38,1.66+.10*u,.02];p.elbows.L=[.54,1.45,-.18];
+      p.hands.R=[-.27,.95,.04];break;}
+    case 'chest_wall_stretch':{
+      p.spineYaw=.14*u;p.hands.L=[.49,1.30,.06];p.elbows.L=[.62,1.14,-.15];
+      p.hands.R=[-.29,1.02,.02];break;}
+    case 'calf_wall':case 'hip_flexor_chair':{
+      p.hips=[0,.87,-.04];p.rotation[0]=.14;p.feet.L=[.17,.075,.16];p.feet.R=[-.17,.075,-.27];
+      p.knees.L=[.17,.45,.60];p.knees.R=[-.17,.43,.37];
+      both((a,sign)=>p.hands[a]=[sign*.22,1.23,.39]);break;}
+    case 'hamstring_chair':{
+      seated();p.feet.L=[.14,.075,.45];p.knees.L=[.14,.95,.40];
+      p.rotation[0]=.22*u;p.hands.L=[.25,.79,.12+.12*u];p.hands.R=[-.27,.64,-.12];break;}
+    case 'figure_four_chair':{
+      seated();p.feet.R=[.12,.50,.13];p.knees.R=[-.11,.85,.30];
+      p.hands.L=[.28,.75,.05];p.hands.R=[-.18,.68,.08];break;}
+    case 'pillow_squeeze':{
+      seated();both((a,sign)=>{p.feet[a][0]=sign*(.14-.025*u);p.knees[a][0]=sign*(.14-.075*u);});break;}
+    case 'seated_twist':{
+      seated();p.spineYaw=.22*u;p.hands.L=[.27,.85,.05];p.hands.R=[-.23,.85,.08];break;}
+    case 'thoracic_open':{
+      seated();p.spineYaw=.13*u;p.spine=-.04*u;
+      both((a,sign)=>{p.hands[a]=[sign*(.29+.19*u),.90+.10*u,-.08];p.elbows[a]=[sign*.65,1.08,-.24];});break;}
+    case 'hip_circle':{
+      p.hips=[.055*Math.sin(t*Math.PI/2),.91,.055*(1-Math.cos(t*Math.PI/2))];
+      p.rotation[2]=.055*Math.sin(t*Math.PI/2);p.rotation[0]=.05*Math.cos(t*Math.PI/2);
+      both((a,sign)=>p.hands[a]=[sign*.17+p.hips[0],.97,p.hips[2]+.08]);break;}
+    case 'toe_raise':p.ankles={L:[-.28*u,0,0],R:[-.28*u,0,0]};p.hips[2]=-.02*u;break;
+    case 'side_step':case 'band_side_step':case 'step_touch':{
+      const sign=side==='L'?1:-1,other=side==='L'?'R':'L',spread=id==='band_side_step'?.20:.27;
+      p.feet[side][0]+=sign*spread*u;p.feet[side][1]+=.055*Math.sin(Math.PI*u);
+      p.feet[other][0]+=sign*.055*u;p.hips[0]+=sign*.11*u;p.hips[1]-=.025*u;
+      p.hands.L=[.28+p.hips[0],1,.04+.12*u];p.hands.R=[-.28+p.hips[0],1,.04-.12*u];p.rotation[2]=-sign*.045*u;break;}
+    case 'low_step':{
+      const sign=side==='L'?1:-1;p.feet[side]=[sign*.14,.075+.21*u,.23*u];
+      p.hips[1]+=.015*u;p.hips[2]+=.055*u;p.hips[0]-=sign*.025*u;
+      p.hands.L[2]+=.10*u;p.hands.R[2]-=.10*u;break;}
+    case 'single_leg_support':{
+      p.hips[0]=-.045*u;p.feet.L=[.14,.075+.14*u,.14*u];p.hands.L=[.29,1.10,.02];
+      p.hands.R=[-.29,1.12,.18];break;}
+    case 'tandem_stance':p.feet.L=[.09,.075,.19];p.feet.R=[-.09,.075,-.19];p.hips[0]=.018*s;p.hands.L=[.29,1.08,.05];p.hands.R=[-.29,1.08,.05];break;
+    case 'clock_reach':{
+      const a=t*Math.PI/2;p.hips[0]=-.03;p.feet.L=[.14+.11*Math.sin(a),.075+.025*(1-Math.cos(a)),.07+.11*(1-Math.cos(a))];
+      p.hands.L=[.29,1.15,.15];break;}
+    case 'mini_lunge':case 'back_step':{
+      p.feet.L=[.16,.075,.13];p.feet.R=[-.16,.075,-.16-.19*u];
+      p.hips=[0,.91-.15*u,-.06*u];p.rotation[0]=.11*u;
+      p.hands.L=[.29,1.08,.10];p.hands.R=[-.29,1.08,-.08];break;}
+    case 'knee_push':case 'knee_plank':{
+      quadruped();const a=id==='knee_plank'?.25:u;
+      p.hips=[0,.41-.075*a,-.37+.065*a];p.rotation[0]=1.50+.06*a;
+      both((b,sign)=>{p.hands[b]=[sign*.21,.055,.39];p.feet[b]=[sign*.14,.075,-.82];p.elbows[b]=[sign*.48,.22-.1*a,.28];});
+      break;}
+    case 'clamshell':{
+      p.hips=[0,.17,0];p.rotation[2]=Math.PI/2;p.head=.12;
+      p.feet.L=[-.43,.14,.24];p.feet.R=[-.43,.075,.24];
+      p.knees.L=[-.28,.41+.17*u,.32];p.knees.R=[-.28,.055,.32];
+      p.hands.L=[-.75,.17,-.16];p.hands.R=[-.55,.08,-.24];
+      p.elbows.L=[-.75,.33,-.35];p.elbows.R=[-.55,.15,-.4];break;}
+    case 'arm_swing':{
+      both((a,sign)=>{p.hands[a]=[sign*.29,1.06+.04*Math.abs(s),.08+sign*.23*s];p.elbows[a]=[sign*.6,1.12,-.22];});
+      p.spine=-.03*u;break;}
+    case 'towel_row':case 'scap_squeeze':{
+      both((a,sign)=>{p.hands[a]=[sign*.25,1.18,.37-.28*u];p.elbows[a]=[sign*.55,1.16,-.2-.14*u];});p.spine=-.04*u;break;}
+    case 'wall_angels':case 'wall_slide':{
+      both((a,sign)=>{p.hands[a]=[sign*(.40+.12*u),1.43+.24*u,-.16];p.elbows[a]=[sign*.66,1.38,-.34];});
+      p.head=.03*u;break;}
     case 'ankle_circle':{
       const local=((t%4)+4)%4,lift=smooth(Math.min(1,local/.5,(4-local)/.5));
       const sign=side==='L'?1:-1;p.hips[0]=-.045*sign*lift;
@@ -26,7 +107,7 @@ export function fullBodyPose(id,t){
         p.elbows[a]=[sign*.6,1.1,['band_row','lateral_raise'].includes(id)?-.3:0];
       });p.spine=-.035*u;p.head=.02*u;break;}
     case 'seated_march':case 'chair_knee_lift':case 'seated_leg_extend':case 'chair_row':case 'chair_punch':{
-      p.hips=[0,.53,-.27];
+      seated();
       both((a,sign)=>{p.feet[a]=[sign*.14,.075,.21];p.hands[a]=[sign*.29,.69,-.15];p.knees[a]=[sign*.14,.45,.65];
         const phase=((t/4+(a==='L'?0:.5))%1+1)%1, lift=phase<.5?Math.sin(phase*2*Math.PI)**2:0;
         if(id==='seated_march'||id==='chair_knee_lift'){p.feet[a][1]+=.17*lift;p.hands[a][2]-=.04*lift;}
@@ -52,8 +133,7 @@ export function fullBodyPose(id,t){
       p.hips=[0,low?.79:.85,(low?-.12:0)+.13*a];p.rotation[0]=(low?.48:.16)+.12*a;p.head=-.12;
       both((b,sign)=>{p.feet[b][2]=low?-.45:-.27;p.hands[b]=[sign*(id==='triceps_wall'?.16:.23),low?1.02:1.32,.47];p.elbows[b]=[sign*.6,1,.2];});break;}
     case 'bird_dog':case 'cat_cow':case 'child_pose':{
-      p.hips=[0,.49,-.27];p.rotation[0]=Math.PI/2;p.head=-.2;p.palms=true;
-      both((a,sign)=>{p.hands[a]=[sign*.20,.055,.34];p.feet[a]=[sign*.14,.075,-.73];p.knees[a]=[sign*.14,-.4,-.25];p.elbows[a]=[sign*.55,.25,.05];});
+      quadruped();
       if(id==='bird_dog'){const other=side==='L'?'R':'L',sign=side==='L'?1:-1;
         p.hips[0]=-.025*sign*u;p.hands[side]=[sign*.20,.055+.435*u,.34+.36*u];p.feet[other]=[-sign*.14,.075+.415*u,-.73-.36*u];
         p.elbows[side]=[sign*(.55-.05*u),.25+.35*u,.05+.50*u];p.knees[other]=[-sign*.14,-.4+.45*u,-.25-.45*u];}
@@ -97,6 +177,11 @@ export function applyFullBody(rig,pose){
   for(const [name,angle]of [['spine03',pose.spine],['head',pose.head]]){
     const bone=bones.get(name);bone.rotateX(angle);bone.updateMatrixWorld(true);
   }
+  if(pose.spineYaw)bones.get('spine03').rotateY(pose.spineYaw);
+  if(pose.spineRoll)bones.get('spine03').rotateZ(pose.spineRoll);
+  if(pose.headRoll)bones.get('head').rotateZ(pose.headRoll);
+  if(pose.shoulderRoll)for(const side of ['L','R'])bones.get(key('clavicle.'+side)).rotateZ((side==='L'?1:-1)*pose.shoulderRoll);
+  pivot.updateMatrixWorld(true);
   const errors=[];
   for(const side of ['L','R']){
     errors.push(solveLimb(bones,'upperleg01.'+side,'lowerleg01.'+side,'foot.'+side,pose.feet[side],pose.knees[side]));
@@ -116,5 +201,8 @@ export function applyFullBody(rig,pose){
       const delta=new THREE.Quaternion().setFromRotationMatrix(target.multiply(source.invert()));
       const world=delta.multiply(wrist.getWorldQuaternion(new THREE.Quaternion()));
       wrist.quaternion.copy(wrist.parent.getWorldQuaternion(new THREE.Quaternion()).invert()).multiply(world);wrist.updateMatrixWorld(true);}
+    if(pose.wrists?.[side]){const wrist=bones.get(key('wrist.'+side));
+      const delta=new THREE.Quaternion().setFromEuler(new THREE.Euler(...pose.wrists[side]));
+      wrist.quaternion.copy(wrist.parent.getWorldQuaternion(new THREE.Quaternion()).invert()).multiply(delta).multiply(rest.get(key('wrist.'+side)).world);wrist.updateMatrixWorld(true);}
   }return errors;
 }

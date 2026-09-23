@@ -11,6 +11,6 @@
     "id": "knee_plank",
     "speed": 1
   },
-  "animation": "joint-pose",
+  "animation": "coordinated",
   "review": "preview-before-use"
 }

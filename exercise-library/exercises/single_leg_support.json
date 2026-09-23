@@ -11,6 +11,6 @@
     "id": "single_leg_support",
     "speed": 1
   },
-  "animation": "joint-pose",
+  "animation": "coordinated",
   "review": "preview-before-use"
 }

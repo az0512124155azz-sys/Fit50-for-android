@@ -1,9 +1,9 @@
 # Exercise motion
 
-`full-body.mjs` authors coordinated trajectories for 32 exercises, including
+`full-body.mjs` authors coordinated trajectories for all 66 base exercises, including
 marching, squats, hinges, supported pushes, seated movements, arm raises,
 bird dog, cat/cow, bridge and dead bug. These are authored animations, not
-motion capture. Remaining exercises use the existing joint poses.
+motion capture or a professional assessment of exercise form.
 
 The pelvis moves independently of the camera. World-space two-bone IK keeps
 support targets stationary and preserves limb lengths, including the rig's
@@ -24,7 +24,7 @@ node tools/coach/test-motion.mjs
 node tools/coach/build.mjs
 ```
 
-Motion tests load the actual GLB, sample all 32 cycles at 60 Hz, verify reachable
+Motion tests load the actual GLB, sample all 66 cycles at 60 Hz, verify reachable
 targets (under 5 mm), finite transforms, loop closure, joint continuity and
 planted feet during squat/hinge movements. Android WebView QA also sampled all
 66 exercises at 64 phases with no joint clipping and a stationary camera.
