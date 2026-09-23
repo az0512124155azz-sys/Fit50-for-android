@@ -234,6 +234,11 @@ class Fit50WebBridge(
     }
 
     @JavascriptInterface
+    fun markQuestionnaireReminderShown() {
+        data.markQuestionnaireReminderShown()
+    }
+
+    @JavascriptInterface
     fun playCountdownTone(kind: Int) {
         activity.runOnUiThread {
             runCatching {

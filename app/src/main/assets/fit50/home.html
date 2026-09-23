@@ -129,6 +129,9 @@ html,body{
 .hero-cta .play svg{width:12px;height:12px;fill:#FFFFFF;stroke:none;margin-right:2px}
 .review-answers{display:none;position:relative;z-index:1;width:100%;margin-top:12px;padding:13px 16px;border:1px solid rgba(250,247,242,.55);border-radius:14px;background:transparent;color:var(--cream);font:700 15px 'Assistant',sans-serif;cursor:pointer}
 .review-answers:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+.monthly-review{display:none;position:relative;z-index:1;margin-top:14px;padding:16px;border:1px solid rgba(212,232,92,.48);border-radius:14px;color:var(--cream);font-size:14px;line-height:1.5}
+.monthly-review strong{display:block;margin-bottom:4px;color:var(--lime);font-size:16px}
+.monthly-review button{margin-top:12px;padding:8px 14px;border:0;border-radius:9px;background:var(--lime);color:var(--forest);font:700 14px 'Assistant',sans-serif;cursor:pointer}
 .week-section{padding:28px 24px 8px}
 .section-head{
   display:flex;justify-content:space-between;align-items:baseline;
@@ -606,7 +609,12 @@ html,body{
       <span class="play"><svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20"/></svg></span>
       <span id="startBtnText">התחל אימון</span>
     </button>
-    <button class="review-answers" id="reviewAnswersBtn" type="button">בדוק או עדכן את תשובות שאלון הבריאות</button>
+    <button class="review-answers" id="reviewAnswersBtn" type="button">בדוק את תשובות הבריאות שדורשות בירור</button>
+    <div class="monthly-review" id="monthlyReview">
+      <strong>הגיע הזמן לרענן את שאלון הבריאות</strong>
+      <span>עבר חודש מהמילוי האחרון. אפשר להמשיך להתאמן, ולעדכן את התשובות כדי שהתוכנית תישאר מותאמת.</span>
+      <button id="monthlyReviewBtn" type="button">עדכן שאלון</button>
+    </div>
   </div>
 
   <div class="week-section">
@@ -880,6 +888,12 @@ function setHero() {
   const paused = getPausedWorkoutForToday();
   const dynamicPlan = window.__fit50Plan || null;
   $('reviewAnswersBtn').style.display = dynamicPlan && dynamicPlan.status && dynamicPlan.status !== 'ready' ? 'block' : 'none';
+  const showMonthlyReview = dynamicPlan && dynamicPlan.status === 'ready' && dynamicPlan.questionnaireReviewDue === true;
+  $('monthlyReview').style.display = showMonthlyReview ? 'block' : 'none';
+  if (showMonthlyReview && !window.__fit50ReminderMarked) {
+    window.__fit50ReminderMarked = true;
+    try { window.Fit50Native?.markQuestionnaireReminderShown?.(); } catch(e) {}
+  }
 
   const dot = $('heroLabel').querySelector('.dot');
 
@@ -1237,6 +1251,7 @@ $('startBtn').onclick = () => {
 };
 
 $('reviewAnswersBtn').onclick = () => { location.href = 'questionnaire.html'; };
+$('monthlyReviewBtn').onclick = () => { location.href = 'questionnaire.html'; };
 
 $('settingsBtn').onclick = openSettings;
 $('weekLink').onclick = openMonthPlan;

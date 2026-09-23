@@ -11,6 +11,9 @@ import com.google.firebase.firestore.Query
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -212,7 +215,7 @@ class Fit50DataManager(private val context: Context) {
         val user = auth.currentUser ?: return done(false, "אין משתמש מחובר", null)
         val ref = userDoc() ?: return done(false, "אין משתמש מחובר", null)
 
-        fun fromQuestionnaire(q: Map<*, *>?) {
+        fun fromQuestionnaire(q: Map<*, *>?, remoteReminder: Any? = null) {
             runCatching {
                 val sessions = runCatching { JSONArray(prefs.getString("recentWorkouts:${user.uid}", "[]")) }.getOrDefault(JSONArray())
                 val recent = mutableSetOf<String>()
@@ -224,6 +227,7 @@ class Fit50DataManager(private val context: Context) {
                     for (index in 0 until ids.length()) ids.optString(index).takeIf(String::isNotBlank)?.let(recent::add)
                 }
                 WorkoutPlanEngine.generate(q, user.uid, recentExerciseIds = recent)
+                    .put("questionnaireReviewDue", questionnaireReviewDue(q, user.uid, remoteReminder))
             }.onSuccess { done(true, null, it) }
              .onFailure { done(false, it.localizedMessage, null) }
         }
@@ -232,14 +236,14 @@ class Fit50DataManager(private val context: Context) {
             .addOnSuccessListener { snap ->
                 val q = snap.get("questionnaire") as? Map<*, *>
                 if (q != null) {
-                    fromQuestionnaire(q)
+                    fromQuestionnaire(q, snap.get("questionnaireReminderShownAt"))
                 } else {
                     val cached = prefs.getString("questionnaire", null)
                     if (cached != null) {
                         val obj = JSONObject(cached)
-                        fromQuestionnaire(jsonObjectToMap(obj))
+                        fromQuestionnaire(jsonObjectToMap(obj), snap.get("questionnaireReminderShownAt"))
                     } else {
-                        fromQuestionnaire(emptyMap<String, Any?>())
+                        fromQuestionnaire(emptyMap<String, Any?>(), snap.get("questionnaireReminderShownAt"))
                     }
                 }
             }
@@ -251,6 +255,37 @@ class Fit50DataManager(private val context: Context) {
                     fromQuestionnaire(emptyMap<String, Any?>())
                 }
             }
+    }
+
+    private fun questionnaireReviewDue(questionnaire: Map<*, *>?, userId: String, remoteReminder: Any?): Boolean {
+        if (questionnaire.isNullOrEmpty()) return false
+        val today = LocalDate.now()
+        val baselineKey = "questionnaireReviewBaseline:$userId"
+        val completedAt = questionnaireDate(questionnaire["completedAt"])
+            ?: prefs.getString(baselineKey, null)?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
+            ?: today.also { prefs.edit().putString(baselineKey, it.toString()).apply() }
+        val localPromptedAt = prefs.getString("questionnaireReminderShown:$userId", null)
+            ?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
+        val promptedAt = listOfNotNull(localPromptedAt, questionnaireDate(remoteReminder)).maxOrNull()
+        return QuestionnaireReviewSchedule.shouldPrompt(completedAt, promptedAt, today)
+    }
+
+    private fun questionnaireDate(value: Any?): LocalDate? = when (value) {
+        is Timestamp -> value.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+        is Date -> value.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+        is String -> runCatching { Instant.parse(value).atZone(ZoneId.systemDefault()).toLocalDate() }.getOrNull()
+            ?: runCatching { LocalDate.parse(value.take(10)) }.getOrNull()
+        else -> null
+    }
+
+    fun markQuestionnaireReminderShown() {
+        uid()?.let { userId ->
+            prefs.edit().putString("questionnaireReminderShown:$userId", LocalDate.now().toString()).apply()
+            userDoc()?.set(
+                mapOf("questionnaireReminderShownAt" to FieldValue.serverTimestamp()),
+                com.google.firebase.firestore.SetOptions.merge()
+            )
+        }
     }
 
     fun getProgress(done: (Boolean, String?, JSONObject?) -> Unit) {
