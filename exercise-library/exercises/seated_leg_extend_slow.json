@@ -1,0 +1,16 @@
+{
+  "id": "seated_leg_extend_slow",
+  "name": "יישור ברך בישיבה — קצב איטי",
+  "muscle": "ירך קדמית",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "לא לנעול את הברך",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "seated_leg_extend",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "clamshell",
+  "name": "פתיחת צד בשכיבה",
+  "muscle": "ישבן צדדי",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "אגן נשאר יציב",
+  "kind": "base",
+  "motion": {
+    "id": "clamshell",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

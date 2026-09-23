@@ -1,0 +1,16 @@
+{
+  "id": "weight_shift_slow",
+  "name": "העברת משקל — קצב איטי",
+  "muscle": "יציבות · קרסוליים",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "תנועה איטית ליד משענת",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "weight_shift",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

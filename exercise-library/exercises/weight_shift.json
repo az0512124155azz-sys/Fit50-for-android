@@ -1,0 +1,16 @@
+{
+  "id": "weight_shift",
+  "name": "העברת משקל",
+  "muscle": "יציבות · קרסוליים",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "תנועה איטית ליד משענת",
+  "kind": "base",
+  "motion": {
+    "id": "weight_shift",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

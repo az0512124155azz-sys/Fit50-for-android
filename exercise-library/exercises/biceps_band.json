@@ -1,0 +1,16 @@
+{
+  "id": "biceps_band",
+  "name": "כפיפת מרפקים עם גומיה",
+  "muscle": "יד קדמית",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "מרפקים צמודים לגוף",
+  "kind": "base",
+  "motion": {
+    "id": "biceps_band",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

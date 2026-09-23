@@ -1,0 +1,16 @@
+{
+  "id": "step_touch",
+  "name": "Step Touch",
+  "muscle": "רגליים · קצב",
+  "type": "hold",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "ללא קפיצות",
+  "kind": "base",
+  "motion": {
+    "id": "step_touch",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

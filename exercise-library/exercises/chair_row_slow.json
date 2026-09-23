@@ -1,0 +1,16 @@
+{
+  "id": "chair_row_slow",
+  "name": "חתירה בישיבה עם גומיה — קצב איטי",
+  "muscle": "גב · ידיים",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "חזה פתוח, גב נינוח",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "chair_row",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "counter_push",
+  "name": "שכיבות סמיכה על משטח",
+  "muscle": "חזה · כתפיים",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "משטח יציב ולא מחליק",
+  "kind": "base",
+  "motion": {
+    "id": "counter_push",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

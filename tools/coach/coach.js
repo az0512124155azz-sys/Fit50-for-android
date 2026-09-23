@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import modelBytes from '../../app/src/main/assets/fit50/models/fit50-coach.glb';
 import {fullBodyPose, applyFullBody} from './full-body.mjs';
 import {resolveExercise} from './resolve-exercise.mjs';
+import libraryMotions from './library-motions.json';
 
 const key = name => name.replace(/[^a-z0-9]/gi, '');
 const seated = new Set(['seated_march','chair_knee_lift','seated_leg_extend','chair_row','chair_punch','pillow_squeeze','figure_four_chair','hamstring_chair','seated_twist','thoracic_open']);
@@ -92,6 +93,7 @@ function movement(id, seconds) {
 
 class ExerciseCoach3D {
   static resolveExercise(ex){return resolveExercise(ex);}
+  static motionId(id){return libraryMotions[id]?.id||id;}
   constructor(canvas){
     this.canvas=canvas;this.card=canvas.parentElement;this.exercise=null;this.started=performance.now();this.bones=new Map();this.rest=new Map();this.failed=false;
     // The demonstration is essential exercise content and starts immediately.
@@ -123,7 +125,7 @@ class ExerciseCoach3D {
       this.frame=this.frame.bind(this);requestAnimationFrame(this.frame);
     }catch(e){this.failed=true;this.card.dataset.coachState='unavailable';console.warn('3D coach unavailable',e);}
   }
-  setExercise(id){if(id!==this.exercise)this.paused=false;this.exercise=id;this.started=performance.now();this.time=0;this.card.dataset.exercise=id||'';if(this.dialog){this.dialog.querySelector('.coach-title').textContent=document.getElementById('exName').textContent;this.dialog.querySelector('.coach-pause').textContent=this.paused?'▶':'Ⅱ';}}
+  setExercise(id){if(id!==this.card.dataset.exercise)this.paused=false;this.exercise=ExerciseCoach3D.motionId(id);this.playbackRate=libraryMotions[id]?.speed||1;this.started=performance.now();this.time=0;this.card.dataset.exercise=id||'';if(this.dialog){this.dialog.querySelector('.coach-title').textContent=document.getElementById('exName').textContent;this.dialog.querySelector('.coach-pause').textContent=this.paused?'▶':'Ⅱ';}}
   expand(){
     if(this.dialog||this.failed)return;
     const dialog=document.createElement('dialog');dialog.className='coach-dialog';
@@ -139,7 +141,7 @@ class ExerciseCoach3D {
     if(document.hidden||this.failed||!this.model||now-(this.lastFrame||0)<33)return;
     const dt=Math.min(.1,(now-(this.lastFrame||now))/1000);
     this.lastFrame=now;if(!this.paused)this.time=(this.time||0)+dt;
-    this.renderAt(this.time||0);
+    this.renderAt((this.time||0)*(this.playbackRate||1));
   }
   poseAt(time){
     const coordinated=fullBodyPose(this.exercise,time);

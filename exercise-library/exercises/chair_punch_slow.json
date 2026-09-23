@@ -1,0 +1,16 @@
+{
+  "id": "chair_punch_slow",
+  "name": "אגרופים קדימה בישיבה — קצב איטי",
+  "muscle": "כתפיים · קצב",
+  "type": "hold",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "קצב נוח, ללא נעילת מרפק",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "chair_punch",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "wall_calf_raise",
+  "name": "עליות עקב ליד קיר",
+  "muscle": "שוק · שיווי משקל",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "קיר לתמיכה",
+  "kind": "base",
+  "motion": {
+    "id": "wall_calf_raise",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

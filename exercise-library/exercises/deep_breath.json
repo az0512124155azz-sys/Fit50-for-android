@@ -1,0 +1,16 @@
+{
+  "id": "deep_breath",
+  "name": "נשימות עמוקות",
+  "muscle": "נשימה · רגיעה",
+  "type": "breath",
+  "phase": "cooldown",
+  "difficulty": 1,
+  "safety": "להפסיק אם יש סחרחורת",
+  "kind": "base",
+  "motion": {
+    "id": "deep_breath",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

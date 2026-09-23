@@ -1,0 +1,16 @@
+{
+  "id": "band_row",
+  "name": "חתירה עם גומיה",
+  "muscle": "גב · יד קדמית",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "גב ניטרלי ומשיכה מבוקרת",
+  "kind": "base",
+  "motion": {
+    "id": "band_row",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

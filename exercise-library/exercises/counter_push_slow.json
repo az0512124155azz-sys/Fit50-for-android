@@ -1,0 +1,16 @@
+{
+  "id": "counter_push_slow",
+  "name": "שכיבות סמיכה על משטח — קצב איטי",
+  "muscle": "חזה · כתפיים",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "משטח יציב ולא מחליק",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "counter_push",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "wall_sit_short",
+  "name": "ישיבת קיר קצרה",
+  "muscle": "ירכיים",
+  "type": "hold",
+  "phase": "main",
+  "difficulty": 3,
+  "safety": "זווית גבוהה, לא לרדת עמוק",
+  "kind": "base",
+  "motion": {
+    "id": "wall_sit_short",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "bird_dog",
+  "name": "Bird-dog",
+  "muscle": "ליבה · גב · יציבות",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "להאריך ולא להרים גבוה",
+  "kind": "base",
+  "motion": {
+    "id": "bird_dog",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

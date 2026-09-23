@@ -1,0 +1,16 @@
+{
+  "id": "dead_bug_slow",
+  "name": "Dead Bug מותאם — קצב איטי",
+  "muscle": "ליבה · בטן",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "גב תחתון נשאר נוח",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "dead_bug",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

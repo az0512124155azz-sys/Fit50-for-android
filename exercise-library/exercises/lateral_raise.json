@@ -1,0 +1,16 @@
+{
+  "id": "lateral_raise",
+  "name": "הרמת ידיים לצדדים ללא משקל",
+  "muscle": "כתפיים",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "טווח נוח בלבד",
+  "kind": "base",
+  "motion": {
+    "id": "lateral_raise",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

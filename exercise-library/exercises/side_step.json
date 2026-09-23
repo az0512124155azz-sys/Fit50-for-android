@@ -1,0 +1,16 @@
+{
+  "id": "side_step",
+  "name": "צעדי צד",
+  "muscle": "ירכיים · ישבן",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "צעדים קטנים וברכיים רכות",
+  "kind": "base",
+  "motion": {
+    "id": "side_step",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "glute_bridge_slow",
+  "name": "גשר אגן — קצב איטי",
+  "muscle": "ישבן · ירך אחורית",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "לא לקשת את הגב",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "glute_bridge",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

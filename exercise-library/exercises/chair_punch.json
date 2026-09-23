@@ -1,0 +1,16 @@
+{
+  "id": "chair_punch",
+  "name": "אגרופים קדימה בישיבה",
+  "muscle": "כתפיים · קצב",
+  "type": "hold",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "קצב נוח, ללא נעילת מרפק",
+  "kind": "base",
+  "motion": {
+    "id": "chair_punch",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

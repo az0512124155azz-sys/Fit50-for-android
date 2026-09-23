@@ -1,0 +1,16 @@
+{
+  "id": "chair_knee_lift_slow",
+  "name": "הרמת ברך בישיבה — קצב איטי",
+  "muscle": "ליבה · ירכיים",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "לשבת זקוף",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "chair_knee_lift",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

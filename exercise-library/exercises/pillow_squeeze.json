@@ -1,0 +1,16 @@
+{
+  "id": "pillow_squeeze",
+  "name": "לחיצת כרית בין הברכיים",
+  "muscle": "ירך פנימית · ליבה",
+  "type": "hold",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "לחיצה בינונית בלבד",
+  "kind": "base",
+  "motion": {
+    "id": "pillow_squeeze",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

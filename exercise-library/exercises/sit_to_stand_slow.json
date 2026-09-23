@@ -1,0 +1,16 @@
+{
+  "id": "sit_to_stand_slow",
+  "name": "קימה וישיבה מכיסא — קצב איטי",
+  "muscle": "ירכיים · ישבן",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "כיסא יציב, ברכיים בקו כפות הרגליים",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "sit_to_stand",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

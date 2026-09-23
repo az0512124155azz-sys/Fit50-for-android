@@ -1,0 +1,16 @@
+{
+  "id": "wall_press_iso",
+  "name": "לחיצת קיר איזומטרית",
+  "muscle": "חזה · ליבה",
+  "type": "hold",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "מאמץ בינוני, נשימה רציפה",
+  "kind": "base",
+  "motion": {
+    "id": "wall_press_iso",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

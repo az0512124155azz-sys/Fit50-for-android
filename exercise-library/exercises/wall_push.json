@@ -1,0 +1,16 @@
+{
+  "id": "wall_push",
+  "name": "שכיבות סמיכה בקיר",
+  "muscle": "חזה · כתפיים · יד אחורית",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "גוף בקו ישר, מרפקים בשליטה",
+  "kind": "base",
+  "motion": {
+    "id": "wall_push",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "hamstring_chair",
+  "name": "מתיחת ירך אחורית בכיסא",
+  "muscle": "ירך אחורית",
+  "type": "hold",
+  "phase": "cooldown",
+  "difficulty": 1,
+  "safety": "גב ארוך, לא להתכופף עמוק",
+  "kind": "base",
+  "motion": {
+    "id": "hamstring_chair",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

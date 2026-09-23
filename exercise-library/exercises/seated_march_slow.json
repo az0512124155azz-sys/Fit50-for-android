@@ -1,0 +1,16 @@
+{
+  "id": "seated_march_slow",
+  "name": "צעידה בישיבה — קצב איטי",
+  "muscle": "ירכיים · ליבה",
+  "type": "hold",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "לשבת על כיסא יציב",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "seated_march",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

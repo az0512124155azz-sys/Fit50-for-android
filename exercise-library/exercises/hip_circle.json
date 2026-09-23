@@ -1,0 +1,16 @@
+{
+  "id": "hip_circle",
+  "name": "סיבובי אגן",
+  "muscle": "ירכיים · חימום",
+  "type": "reps",
+  "phase": "warmup",
+  "difficulty": 1,
+  "safety": "ללא סיבוב חד בגב",
+  "kind": "base",
+  "motion": {
+    "id": "hip_circle",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

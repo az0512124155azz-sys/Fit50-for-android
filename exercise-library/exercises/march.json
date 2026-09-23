@@ -1,0 +1,16 @@
+{
+  "id": "march",
+  "name": "הליכה במקום",
+  "muscle": "רגליים · חימום",
+  "type": "hold",
+  "phase": "warmup",
+  "difficulty": 1,
+  "safety": "קצב נוח ונשימה רציפה",
+  "kind": "base",
+  "motion": {
+    "id": "march",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

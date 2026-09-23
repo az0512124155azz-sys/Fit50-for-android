@@ -1,0 +1,16 @@
+{
+  "id": "sit_to_stand",
+  "name": "קימה וישיבה מכיסא",
+  "muscle": "ירכיים · ישבן",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "כיסא יציב, ברכיים בקו כפות הרגליים",
+  "kind": "base",
+  "motion": {
+    "id": "sit_to_stand",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "march_slow",
+  "name": "הליכה במקום — קצב איטי",
+  "muscle": "רגליים · חימום",
+  "type": "hold",
+  "phase": "warmup",
+  "difficulty": 1,
+  "safety": "קצב נוח ונשימה רציפה",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "march",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

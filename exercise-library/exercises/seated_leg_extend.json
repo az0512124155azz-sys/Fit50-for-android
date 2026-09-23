@@ -1,0 +1,16 @@
+{
+  "id": "seated_leg_extend",
+  "name": "יישור ברך בישיבה",
+  "muscle": "ירך קדמית",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "לא לנעול את הברך",
+  "kind": "base",
+  "motion": {
+    "id": "seated_leg_extend",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "chair_row",
+  "name": "חתירה בישיבה עם גומיה",
+  "muscle": "גב · ידיים",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "חזה פתוח, גב נינוח",
+  "kind": "base",
+  "motion": {
+    "id": "chair_row",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

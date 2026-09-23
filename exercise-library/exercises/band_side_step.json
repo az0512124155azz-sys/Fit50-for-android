@@ -1,0 +1,16 @@
+{
+  "id": "band_side_step",
+  "name": "צעדי צד עם גומיה",
+  "muscle": "ישבן · ירכיים",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 3,
+  "safety": "גומיה קלה, בלי קריסת ברכיים",
+  "kind": "base",
+  "motion": {
+    "id": "band_side_step",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

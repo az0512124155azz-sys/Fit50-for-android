@@ -1,0 +1,16 @@
+{
+  "id": "heel_raise_slow",
+  "name": "עליות עקב — קצב איטי",
+  "muscle": "שוקיים · קרסול",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "להיעזר בקיר אם צריך",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "heel_raise",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

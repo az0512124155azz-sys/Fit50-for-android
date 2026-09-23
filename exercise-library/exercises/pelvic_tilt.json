@@ -1,0 +1,16 @@
+{
+  "id": "pelvic_tilt",
+  "name": "הטיית אגן עדינה",
+  "muscle": "ליבה · גב תחתון",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "ללא כאב או לחץ",
+  "kind": "base",
+  "motion": {
+    "id": "pelvic_tilt",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

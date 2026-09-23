@@ -1,0 +1,16 @@
+{
+  "id": "good_morning_slow",
+  "name": "Good Morning קל — קצב איטי",
+  "muscle": "ירך אחורית · גב",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 3,
+  "safety": "ללא משקל ובטווח קטן",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "good_morning",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

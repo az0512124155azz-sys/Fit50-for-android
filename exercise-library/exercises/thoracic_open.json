@@ -1,0 +1,16 @@
+{
+  "id": "thoracic_open",
+  "name": "פתיחת גב עליון בישיבה",
+  "muscle": "גב עליון · חזה",
+  "type": "reps",
+  "phase": "cooldown",
+  "difficulty": 1,
+  "safety": "תנועה קטנה ונשימה רגועה",
+  "kind": "base",
+  "motion": {
+    "id": "thoracic_open",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

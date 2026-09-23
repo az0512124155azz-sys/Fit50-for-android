@@ -1,0 +1,16 @@
+{
+  "id": "single_leg_support",
+  "name": "עמידה על רגל עם תמיכה",
+  "muscle": "שיווי משקל",
+  "type": "hold",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "יד ליד קיר או כיסא",
+  "kind": "base",
+  "motion": {
+    "id": "single_leg_support",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

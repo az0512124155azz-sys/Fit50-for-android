@@ -1,0 +1,16 @@
+{
+  "id": "line_walk",
+  "name": "הליכה על קו",
+  "muscle": "שיווי משקל · הליכה",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "ליד קיר לתמיכה",
+  "kind": "base",
+  "motion": {
+    "id": "line_walk",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "good_morning",
+  "name": "Good Morning קל",
+  "muscle": "ירך אחורית · גב",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 3,
+  "safety": "ללא משקל ובטווח קטן",
+  "kind": "base",
+  "motion": {
+    "id": "good_morning",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

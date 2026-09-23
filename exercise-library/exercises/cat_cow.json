@@ -1,0 +1,16 @@
+{
+  "id": "cat_cow",
+  "name": "Cat-Cow עדין",
+  "muscle": "עמוד שדרה",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "טווח קטן ללא כאב",
+  "kind": "base",
+  "motion": {
+    "id": "cat_cow",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

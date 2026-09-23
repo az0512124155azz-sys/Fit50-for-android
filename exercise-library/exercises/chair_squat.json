@@ -1,0 +1,16 @@
+{
+  "id": "chair_squat",
+  "name": "סקוואט לכיסא",
+  "muscle": "ירכיים · ישבן",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "לרדת רק עד טווח נוח",
+  "kind": "base",
+  "motion": {
+    "id": "chair_squat",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

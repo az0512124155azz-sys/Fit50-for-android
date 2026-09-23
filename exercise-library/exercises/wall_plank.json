@@ -1,0 +1,16 @@
+{
+  "id": "wall_plank",
+  "name": "פלאנק קיר",
+  "muscle": "ליבה · כתפיים",
+  "type": "hold",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "מרחק נוח מהקיר",
+  "kind": "base",
+  "motion": {
+    "id": "wall_plank",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

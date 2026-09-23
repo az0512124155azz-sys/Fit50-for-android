@@ -1,0 +1,16 @@
+{
+  "id": "box_breath",
+  "name": "נשימת 4-4",
+  "muscle": "נשימה · רגיעה",
+  "type": "breath",
+  "phase": "cooldown",
+  "difficulty": 1,
+  "safety": "נשימה נוחה ללא עצירה מאומצת",
+  "kind": "base",
+  "motion": {
+    "id": "box_breath",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

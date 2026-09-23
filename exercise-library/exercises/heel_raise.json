@@ -1,0 +1,16 @@
+{
+  "id": "heel_raise",
+  "name": "עליות עקב",
+  "muscle": "שוקיים · קרסול",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "להיעזר בקיר אם צריך",
+  "kind": "base",
+  "motion": {
+    "id": "heel_raise",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

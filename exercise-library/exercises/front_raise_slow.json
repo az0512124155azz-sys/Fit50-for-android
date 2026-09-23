@@ -1,0 +1,16 @@
+{
+  "id": "front_raise_slow",
+  "name": "הרמת ידיים קדימה ללא משקל — קצב איטי",
+  "muscle": "כתפיים",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "לא להרים מעל גובה כתף",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "front_raise",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "seated_march",
+  "name": "צעידה בישיבה",
+  "muscle": "ירכיים · ליבה",
+  "type": "hold",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "לשבת על כיסא יציב",
+  "kind": "base",
+  "motion": {
+    "id": "seated_march",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

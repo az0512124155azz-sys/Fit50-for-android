@@ -1,0 +1,16 @@
+{
+  "id": "child_pose",
+  "name": "Child's Pose מותאם",
+  "muscle": "גב · ירכיים",
+  "type": "hold",
+  "phase": "cooldown",
+  "difficulty": 1,
+  "safety": "כרית תחת הברכיים אם צריך",
+  "kind": "base",
+  "motion": {
+    "id": "child_pose",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

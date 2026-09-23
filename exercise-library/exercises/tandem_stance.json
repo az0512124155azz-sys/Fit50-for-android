@@ -1,0 +1,16 @@
+{
+  "id": "tandem_stance",
+  "name": "עמידת עקב-אצבע",
+  "muscle": "שיווי משקל",
+  "type": "hold",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "לעמוד ליד תמיכה",
+  "kind": "base",
+  "motion": {
+    "id": "tandem_stance",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

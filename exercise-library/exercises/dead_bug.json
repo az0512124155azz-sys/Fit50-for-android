@@ -1,0 +1,16 @@
+{
+  "id": "dead_bug",
+  "name": "Dead Bug מותאם",
+  "muscle": "ליבה · בטן",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "גב תחתון נשאר נוח",
+  "kind": "base",
+  "motion": {
+    "id": "dead_bug",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

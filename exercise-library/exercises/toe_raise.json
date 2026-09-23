@@ -1,0 +1,16 @@
+{
+  "id": "toe_raise",
+  "name": "הרמות אצבעות",
+  "muscle": "שוק קדמי · יציבות",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "להישען קלות על קיר",
+  "kind": "base",
+  "motion": {
+    "id": "toe_raise",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

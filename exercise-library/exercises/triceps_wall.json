@@ -1,0 +1,16 @@
+{
+  "id": "triceps_wall",
+  "name": "פשיטת מרפקים בקיר",
+  "muscle": "יד אחורית",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "כתפיים רחוקות מהאוזניים",
+  "kind": "base",
+  "motion": {
+    "id": "triceps_wall",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "back_step",
+  "name": "צעד לאחור קצר",
+  "muscle": "רגליים · יציבות",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "צעד קטן ליד כיסא",
+  "kind": "base",
+  "motion": {
+    "id": "back_step",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

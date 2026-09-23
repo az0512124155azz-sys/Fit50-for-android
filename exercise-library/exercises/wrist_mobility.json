@@ -1,0 +1,16 @@
+{
+  "id": "wrist_mobility",
+  "name": "תנועתיות שורש כף יד",
+  "muscle": "ידיים · מוביליטי",
+  "type": "reps",
+  "phase": "warmup",
+  "difficulty": 1,
+  "safety": "תנועה עדינה",
+  "kind": "base",
+  "motion": {
+    "id": "wrist_mobility",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "chair_squat_slow",
+  "name": "סקוואט לכיסא — קצב איטי",
+  "muscle": "ירכיים · ישבן",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "לרדת רק עד טווח נוח",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "chair_squat",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

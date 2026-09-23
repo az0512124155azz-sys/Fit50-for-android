@@ -1,0 +1,16 @@
+{
+  "id": "chest_wall_stretch",
+  "name": "מתיחת חזה בקיר",
+  "muscle": "חזה · כתף",
+  "type": "hold",
+  "phase": "cooldown",
+  "difficulty": 1,
+  "safety": "ללא משיכה חדה",
+  "kind": "base",
+  "motion": {
+    "id": "chest_wall_stretch",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "band_row_slow",
+  "name": "חתירה עם גומיה — קצב איטי",
+  "muscle": "גב · יד קדמית",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "גב ניטרלי ומשיכה מבוקרת",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "band_row",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

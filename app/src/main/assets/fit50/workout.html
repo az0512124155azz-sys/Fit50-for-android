@@ -961,7 +961,7 @@ const EXERCISE_GUIDES = {
 };
 
 function exerciseGuide(ex){
-  const how = EXERCISE_GUIDES[ex.id] || EXERCISE_GUIDES_BY_NAME[ex.n] || ('בצע את התרגיל "' + ex.n + '" לאט ובשליטה, בטווח תנועה שנוח לך.');
+  const how = EXERCISE_GUIDES[Fit50ExerciseCoach3D.motionId(ex.id)] || EXERCISE_GUIDES_BY_NAME[ex.n] || ('בצע את התרגיל "' + ex.n + '" לאט ובשליטה, בטווח תנועה שנוח לך.');
   let dose = '';
   if(ex.type === 'hold') dose = (ex.hold || 0) + ' שניות' + (ex.sets ? ' × ' + ex.sets + (ex.sets===1?' סט':' סטים') : '');
   else if(ex.type === 'breath') dose = (ex.breaths || 0) + ' נשימות';

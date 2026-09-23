@@ -1,0 +1,16 @@
+{
+  "id": "arm_swing",
+  "name": "פתיחת ידיים",
+  "muscle": "חזה · כתפיים",
+  "type": "reps",
+  "phase": "warmup",
+  "difficulty": 1,
+  "safety": "לא לעבור טווח נוח",
+  "kind": "base",
+  "motion": {
+    "id": "arm_swing",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

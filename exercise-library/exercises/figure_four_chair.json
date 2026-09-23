@@ -1,0 +1,16 @@
+{
+  "id": "figure_four_chair",
+  "name": "מתיחת Figure-4 בכיסא",
+  "muscle": "ישבן · ירך",
+  "type": "hold",
+  "phase": "cooldown",
+  "difficulty": 1,
+  "safety": "ללא לחץ על הברך",
+  "kind": "base",
+  "motion": {
+    "id": "figure_four_chair",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

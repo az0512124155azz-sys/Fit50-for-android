@@ -1,0 +1,16 @@
+{
+  "id": "cat_cow_slow",
+  "name": "Cat-Cow עדין — קצב איטי",
+  "muscle": "עמוד שדרה",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "טווח קטן ללא כאב",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "cat_cow",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

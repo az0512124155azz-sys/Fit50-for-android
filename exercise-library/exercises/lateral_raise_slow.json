@@ -1,0 +1,16 @@
+{
+  "id": "lateral_raise_slow",
+  "name": "הרמת ידיים לצדדים ללא משקל — קצב איטי",
+  "muscle": "כתפיים",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "טווח נוח בלבד",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "lateral_raise",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "front_raise",
+  "name": "הרמת ידיים קדימה ללא משקל",
+  "muscle": "כתפיים",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "לא להרים מעל גובה כתף",
+  "kind": "base",
+  "motion": {
+    "id": "front_raise",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

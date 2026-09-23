@@ -1,0 +1,16 @@
+{
+  "id": "low_step",
+  "name": "עלייה למדרגה נמוכה",
+  "muscle": "רגליים · סיבולת",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "מדרגה נמוכה ויציבה",
+  "kind": "base",
+  "motion": {
+    "id": "low_step",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

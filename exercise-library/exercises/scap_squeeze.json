@@ -1,0 +1,16 @@
+{
+  "id": "scap_squeeze",
+  "name": "כיווץ שכמות",
+  "muscle": "גב עליון · יציבה",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "ללא הרמת כתפיים",
+  "kind": "base",
+  "motion": {
+    "id": "scap_squeeze",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "wall_push_slow",
+  "name": "שכיבות סמיכה בקיר — קצב איטי",
+  "muscle": "חזה · כתפיים · יד אחורית",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "גוף בקו ישר, מרפקים בשליטה",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "wall_push",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

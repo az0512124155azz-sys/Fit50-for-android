@@ -1,0 +1,16 @@
+{
+  "id": "chair_knee_lift",
+  "name": "הרמת ברך בישיבה",
+  "muscle": "ליבה · ירכיים",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "לשבת זקוף",
+  "kind": "base",
+  "motion": {
+    "id": "chair_knee_lift",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

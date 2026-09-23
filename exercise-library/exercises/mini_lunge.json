@@ -1,0 +1,16 @@
+{
+  "id": "mini_lunge",
+  "name": "לאנג׳ קצר עם תמיכה",
+  "muscle": "רגליים · ישבן",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 3,
+  "safety": "טווח קצר ותמיכה קבועה",
+  "kind": "base",
+  "motion": {
+    "id": "mini_lunge",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

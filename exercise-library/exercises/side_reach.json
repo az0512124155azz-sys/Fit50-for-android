@@ -1,0 +1,16 @@
+{
+  "id": "side_reach",
+  "name": "הטיית צד בעמידה",
+  "muscle": "צד הגוף · מוביליטי",
+  "type": "hold",
+  "phase": "cooldown",
+  "difficulty": 1,
+  "safety": "לא לקרוס קדימה",
+  "kind": "base",
+  "motion": {
+    "id": "side_reach",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

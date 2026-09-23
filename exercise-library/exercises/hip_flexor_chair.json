@@ -1,0 +1,16 @@
+{
+  "id": "hip_flexor_chair",
+  "name": "מתיחת מכופפי ירך בעמידה",
+  "muscle": "ירכיים",
+  "type": "hold",
+  "phase": "cooldown",
+  "difficulty": 1,
+  "safety": "אגן ניטרלי",
+  "kind": "base",
+  "motion": {
+    "id": "hip_flexor_chair",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

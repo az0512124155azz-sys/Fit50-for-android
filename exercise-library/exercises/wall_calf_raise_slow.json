@@ -1,0 +1,16 @@
+{
+  "id": "wall_calf_raise_slow",
+  "name": "עליות עקב ליד קיר — קצב איטי",
+  "muscle": "שוק · שיווי משקל",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "קיר לתמיכה",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "wall_calf_raise",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

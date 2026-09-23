@@ -1,0 +1,16 @@
+{
+  "id": "glute_bridge",
+  "name": "גשר אגן",
+  "muscle": "ישבן · ירך אחורית",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "לא לקשת את הגב",
+  "kind": "base",
+  "motion": {
+    "id": "glute_bridge",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

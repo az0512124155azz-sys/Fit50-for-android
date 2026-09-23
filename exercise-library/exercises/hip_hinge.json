@@ -1,0 +1,16 @@
+{
+  "id": "hip_hinge",
+  "name": "Hip Hinge לקיר",
+  "muscle": "ירך אחורית · ישבן",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "גב ניטרלי, ישבן לאחור",
+  "kind": "base",
+  "motion": {
+    "id": "hip_hinge",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

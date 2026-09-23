@@ -1,0 +1,16 @@
+{
+  "id": "neck_side",
+  "name": "מתיחת צוואר צדית",
+  "muscle": "צוואר",
+  "type": "hold",
+  "phase": "cooldown",
+  "difficulty": 1,
+  "safety": "ללא משיכה ביד",
+  "kind": "base",
+  "motion": {
+    "id": "neck_side",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}

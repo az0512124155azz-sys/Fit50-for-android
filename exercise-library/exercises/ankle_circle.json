@@ -1,0 +1,16 @@
+{
+  "id": "ankle_circle",
+  "name": "סיבובי קרסול",
+  "muscle": "קרסוליים · חימום",
+  "type": "reps",
+  "phase": "warmup",
+  "difficulty": 1,
+  "safety": "טווח קטן ונוח",
+  "kind": "base",
+  "motion": {
+    "id": "ankle_circle",
+    "speed": 1
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

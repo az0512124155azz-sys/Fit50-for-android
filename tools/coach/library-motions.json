@@ -1,0 +1,452 @@
+{
+  "ankle_circle": {
+    "id": "ankle_circle",
+    "speed": 1,
+    "name": "סיבובי קרסול"
+  },
+  "arm_swing": {
+    "id": "arm_swing",
+    "speed": 1,
+    "name": "פתיחת ידיים"
+  },
+  "back_step": {
+    "id": "back_step",
+    "speed": 1,
+    "name": "צעד לאחור קצר"
+  },
+  "band_row": {
+    "id": "band_row",
+    "speed": 1,
+    "name": "חתירה עם גומיה"
+  },
+  "band_row_slow": {
+    "id": "band_row",
+    "speed": 0.7,
+    "name": "חתירה עם גומיה — קצב איטי"
+  },
+  "band_side_step": {
+    "id": "band_side_step",
+    "speed": 1,
+    "name": "צעדי צד עם גומיה"
+  },
+  "biceps_band": {
+    "id": "biceps_band",
+    "speed": 1,
+    "name": "כפיפת מרפקים עם גומיה"
+  },
+  "biceps_band_slow": {
+    "id": "biceps_band",
+    "speed": 0.7,
+    "name": "כפיפת מרפקים עם גומיה — קצב איטי"
+  },
+  "bird_dog": {
+    "id": "bird_dog",
+    "speed": 1,
+    "name": "Bird-dog"
+  },
+  "bird_dog_slow": {
+    "id": "bird_dog",
+    "speed": 0.7,
+    "name": "Bird-dog — קצב איטי"
+  },
+  "box_breath": {
+    "id": "box_breath",
+    "speed": 1,
+    "name": "נשימת 4-4"
+  },
+  "calf_wall": {
+    "id": "calf_wall",
+    "speed": 1,
+    "name": "מתיחת שוק בקיר"
+  },
+  "cat_cow": {
+    "id": "cat_cow",
+    "speed": 1,
+    "name": "Cat-Cow עדין"
+  },
+  "cat_cow_slow": {
+    "id": "cat_cow",
+    "speed": 0.7,
+    "name": "Cat-Cow עדין — קצב איטי"
+  },
+  "chair_knee_lift": {
+    "id": "chair_knee_lift",
+    "speed": 1,
+    "name": "הרמת ברך בישיבה"
+  },
+  "chair_knee_lift_slow": {
+    "id": "chair_knee_lift",
+    "speed": 0.7,
+    "name": "הרמת ברך בישיבה — קצב איטי"
+  },
+  "chair_punch": {
+    "id": "chair_punch",
+    "speed": 1,
+    "name": "אגרופים קדימה בישיבה"
+  },
+  "chair_punch_slow": {
+    "id": "chair_punch",
+    "speed": 0.7,
+    "name": "אגרופים קדימה בישיבה — קצב איטי"
+  },
+  "chair_row": {
+    "id": "chair_row",
+    "speed": 1,
+    "name": "חתירה בישיבה עם גומיה"
+  },
+  "chair_row_slow": {
+    "id": "chair_row",
+    "speed": 0.7,
+    "name": "חתירה בישיבה עם גומיה — קצב איטי"
+  },
+  "chair_squat": {
+    "id": "chair_squat",
+    "speed": 1,
+    "name": "סקוואט לכיסא"
+  },
+  "chair_squat_slow": {
+    "id": "chair_squat",
+    "speed": 0.7,
+    "name": "סקוואט לכיסא — קצב איטי"
+  },
+  "chest_wall_stretch": {
+    "id": "chest_wall_stretch",
+    "speed": 1,
+    "name": "מתיחת חזה בקיר"
+  },
+  "child_pose": {
+    "id": "child_pose",
+    "speed": 1,
+    "name": "Child's Pose מותאם"
+  },
+  "chin_tuck": {
+    "id": "chin_tuck",
+    "speed": 1,
+    "name": "הכנסת סנטר עדינה"
+  },
+  "clamshell": {
+    "id": "clamshell",
+    "speed": 1,
+    "name": "פתיחת צד בשכיבה"
+  },
+  "clock_reach": {
+    "id": "clock_reach",
+    "speed": 1,
+    "name": "נגיעות שעון"
+  },
+  "counter_push": {
+    "id": "counter_push",
+    "speed": 1,
+    "name": "שכיבות סמיכה על משטח"
+  },
+  "counter_push_slow": {
+    "id": "counter_push",
+    "speed": 0.7,
+    "name": "שכיבות סמיכה על משטח — קצב איטי"
+  },
+  "dead_bug": {
+    "id": "dead_bug",
+    "speed": 1,
+    "name": "Dead Bug מותאם"
+  },
+  "dead_bug_slow": {
+    "id": "dead_bug",
+    "speed": 0.7,
+    "name": "Dead Bug מותאם — קצב איטי"
+  },
+  "deep_breath": {
+    "id": "deep_breath",
+    "speed": 1,
+    "name": "נשימות עמוקות"
+  },
+  "figure_four_chair": {
+    "id": "figure_four_chair",
+    "speed": 1,
+    "name": "מתיחת Figure-4 בכיסא"
+  },
+  "front_raise": {
+    "id": "front_raise",
+    "speed": 1,
+    "name": "הרמת ידיים קדימה ללא משקל"
+  },
+  "front_raise_slow": {
+    "id": "front_raise",
+    "speed": 0.7,
+    "name": "הרמת ידיים קדימה ללא משקל — קצב איטי"
+  },
+  "glute_bridge": {
+    "id": "glute_bridge",
+    "speed": 1,
+    "name": "גשר אגן"
+  },
+  "glute_bridge_slow": {
+    "id": "glute_bridge",
+    "speed": 0.7,
+    "name": "גשר אגן — קצב איטי"
+  },
+  "good_morning": {
+    "id": "good_morning",
+    "speed": 1,
+    "name": "Good Morning קל"
+  },
+  "good_morning_slow": {
+    "id": "good_morning",
+    "speed": 0.7,
+    "name": "Good Morning קל — קצב איטי"
+  },
+  "hamstring_chair": {
+    "id": "hamstring_chair",
+    "speed": 1,
+    "name": "מתיחת ירך אחורית בכיסא"
+  },
+  "heel_raise": {
+    "id": "heel_raise",
+    "speed": 1,
+    "name": "עליות עקב"
+  },
+  "heel_raise_slow": {
+    "id": "heel_raise",
+    "speed": 0.7,
+    "name": "עליות עקב — קצב איטי"
+  },
+  "hip_circle": {
+    "id": "hip_circle",
+    "speed": 1,
+    "name": "סיבובי אגן"
+  },
+  "hip_flexor_chair": {
+    "id": "hip_flexor_chair",
+    "speed": 1,
+    "name": "מתיחת מכופפי ירך בעמידה"
+  },
+  "hip_hinge": {
+    "id": "hip_hinge",
+    "speed": 1,
+    "name": "Hip Hinge לקיר"
+  },
+  "hip_hinge_slow": {
+    "id": "hip_hinge",
+    "speed": 0.7,
+    "name": "Hip Hinge לקיר — קצב איטי"
+  },
+  "knee_plank": {
+    "id": "knee_plank",
+    "speed": 1,
+    "name": "פלאנק על ברכיים"
+  },
+  "knee_push": {
+    "id": "knee_push",
+    "speed": 1,
+    "name": "שכיבות סמיכה על ברכיים"
+  },
+  "lateral_raise": {
+    "id": "lateral_raise",
+    "speed": 1,
+    "name": "הרמת ידיים לצדדים ללא משקל"
+  },
+  "lateral_raise_slow": {
+    "id": "lateral_raise",
+    "speed": 0.7,
+    "name": "הרמת ידיים לצדדים ללא משקל — קצב איטי"
+  },
+  "line_walk": {
+    "id": "line_walk",
+    "speed": 1,
+    "name": "הליכה על קו"
+  },
+  "low_step": {
+    "id": "low_step",
+    "speed": 1,
+    "name": "עלייה למדרגה נמוכה"
+  },
+  "march": {
+    "id": "march",
+    "speed": 1,
+    "name": "הליכה במקום"
+  },
+  "march_slow": {
+    "id": "march",
+    "speed": 0.7,
+    "name": "הליכה במקום — קצב איטי"
+  },
+  "mini_lunge": {
+    "id": "mini_lunge",
+    "speed": 1,
+    "name": "לאנג׳ קצר עם תמיכה"
+  },
+  "neck_side": {
+    "id": "neck_side",
+    "speed": 1,
+    "name": "מתיחת צוואר צדית"
+  },
+  "pelvic_tilt": {
+    "id": "pelvic_tilt",
+    "speed": 1,
+    "name": "הטיית אגן עדינה"
+  },
+  "pillow_squeeze": {
+    "id": "pillow_squeeze",
+    "speed": 1,
+    "name": "לחיצת כרית בין הברכיים"
+  },
+  "scap_squeeze": {
+    "id": "scap_squeeze",
+    "speed": 1,
+    "name": "כיווץ שכמות"
+  },
+  "seated_leg_extend": {
+    "id": "seated_leg_extend",
+    "speed": 1,
+    "name": "יישור ברך בישיבה"
+  },
+  "seated_leg_extend_slow": {
+    "id": "seated_leg_extend",
+    "speed": 0.7,
+    "name": "יישור ברך בישיבה — קצב איטי"
+  },
+  "seated_march": {
+    "id": "seated_march",
+    "speed": 1,
+    "name": "צעידה בישיבה"
+  },
+  "seated_march_slow": {
+    "id": "seated_march",
+    "speed": 0.7,
+    "name": "צעידה בישיבה — קצב איטי"
+  },
+  "seated_twist": {
+    "id": "seated_twist",
+    "speed": 1,
+    "name": "סיבוב גב עדין בישיבה"
+  },
+  "shoulder_roll": {
+    "id": "shoulder_roll",
+    "speed": 1,
+    "name": "סיבובי כתפיים"
+  },
+  "side_reach": {
+    "id": "side_reach",
+    "speed": 1,
+    "name": "הטיית צד בעמידה"
+  },
+  "side_step": {
+    "id": "side_step",
+    "speed": 1,
+    "name": "צעדי צד"
+  },
+  "single_leg_support": {
+    "id": "single_leg_support",
+    "speed": 1,
+    "name": "עמידה על רגל עם תמיכה"
+  },
+  "sit_to_stand": {
+    "id": "sit_to_stand",
+    "speed": 1,
+    "name": "קימה וישיבה מכיסא"
+  },
+  "sit_to_stand_slow": {
+    "id": "sit_to_stand",
+    "speed": 0.7,
+    "name": "קימה וישיבה מכיסא — קצב איטי"
+  },
+  "standing_knee_drive": {
+    "id": "standing_knee_drive",
+    "speed": 1,
+    "name": "הרמת ברך בעמידה"
+  },
+  "standing_knee_drive_slow": {
+    "id": "standing_knee_drive",
+    "speed": 0.7,
+    "name": "הרמת ברך בעמידה — קצב איטי"
+  },
+  "step_touch": {
+    "id": "step_touch",
+    "speed": 1,
+    "name": "Step Touch"
+  },
+  "tandem_stance": {
+    "id": "tandem_stance",
+    "speed": 1,
+    "name": "עמידת עקב-אצבע"
+  },
+  "thoracic_open": {
+    "id": "thoracic_open",
+    "speed": 1,
+    "name": "פתיחת גב עליון בישיבה"
+  },
+  "toe_raise": {
+    "id": "toe_raise",
+    "speed": 1,
+    "name": "הרמות אצבעות"
+  },
+  "towel_row": {
+    "id": "towel_row",
+    "speed": 1,
+    "name": "משיכת מגבת איזומטרית"
+  },
+  "triceps_wall": {
+    "id": "triceps_wall",
+    "speed": 1,
+    "name": "פשיטת מרפקים בקיר"
+  },
+  "wall_angels": {
+    "id": "wall_angels",
+    "speed": 1,
+    "name": "מלאכי קיר"
+  },
+  "wall_calf_raise": {
+    "id": "wall_calf_raise",
+    "speed": 1,
+    "name": "עליות עקב ליד קיר"
+  },
+  "wall_calf_raise_slow": {
+    "id": "wall_calf_raise",
+    "speed": 0.7,
+    "name": "עליות עקב ליד קיר — קצב איטי"
+  },
+  "wall_plank": {
+    "id": "wall_plank",
+    "speed": 1,
+    "name": "פלאנק קיר"
+  },
+  "wall_press_iso": {
+    "id": "wall_press_iso",
+    "speed": 1,
+    "name": "לחיצת קיר איזומטרית"
+  },
+  "wall_push": {
+    "id": "wall_push",
+    "speed": 1,
+    "name": "שכיבות סמיכה בקיר"
+  },
+  "wall_push_slow": {
+    "id": "wall_push",
+    "speed": 0.7,
+    "name": "שכיבות סמיכה בקיר — קצב איטי"
+  },
+  "wall_sit_short": {
+    "id": "wall_sit_short",
+    "speed": 1,
+    "name": "ישיבת קיר קצרה"
+  },
+  "wall_slide": {
+    "id": "wall_slide",
+    "speed": 1,
+    "name": "החלקת ידיים על קיר"
+  },
+  "weight_shift": {
+    "id": "weight_shift",
+    "speed": 1,
+    "name": "העברת משקל"
+  },
+  "weight_shift_slow": {
+    "id": "weight_shift",
+    "speed": 0.7,
+    "name": "העברת משקל — קצב איטי"
+  },
+  "wrist_mobility": {
+    "id": "wrist_mobility",
+    "speed": 1,
+    "name": "תנועתיות שורש כף יד"
+  }
+}

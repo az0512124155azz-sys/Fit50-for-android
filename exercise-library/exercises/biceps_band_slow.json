@@ -1,0 +1,16 @@
+{
+  "id": "biceps_band_slow",
+  "name": "כפיפת מרפקים עם גומיה — קצב איטי",
+  "muscle": "יד קדמית",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 2,
+  "safety": "מרפקים צמודים לגוף",
+  "kind": "tempo-variant",
+  "motion": {
+    "id": "biceps_band",
+    "speed": 0.7
+  },
+  "animation": "coordinated",
+  "review": "preview-before-use"
+}

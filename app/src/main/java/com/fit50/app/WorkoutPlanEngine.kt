@@ -25,7 +25,7 @@ object WorkoutPlanEngine {
         val safety:String
     )
 
-    private val catalog = listOf(
+    private val baseCatalog = listOf(
         Ex("shoulder_roll","סיבובי כתפיים","כתפיים · חימום","reps",setOf("mobility","health","posture"),setOf("mobility","yoga","garden"),difficulty=1,phase="warmup",sets=1,reps=10,rest=15,safety="תנועה איטית, ללא כאב"),
         Ex("march","הליכה במקום","רגליים · חימום","hold",setOf("health","weight","energy"),setOf("walk","garden"),difficulty=1,phase="warmup",sets=1,hold=90,rest=20,safety="קצב נוח ונשימה רציפה"),
         Ex("ankle_circle","סיבובי קרסול","קרסוליים · חימום","reps",setOf("mobility","balance"),setOf("mobility","walk"),avoid=setOf("ankles"),difficulty=1,phase="warmup",sets=1,reps=10,rest=15,safety="טווח קטן ונוח"),
@@ -93,6 +93,8 @@ object WorkoutPlanEngine {
         Ex("wrist_mobility","תנועתיות שורש כף יד","ידיים · מוביליטי","reps",setOf("mobility","health"),setOf("mobility"),difficulty=1,phase="warmup",sets=1,reps=10,rest=10,safety="תנועה עדינה"),
         Ex("side_reach","הטיית צד בעמידה","צד הגוף · מוביליטי","hold",setOf("mobility","posture"),setOf("mobility","yoga"),avoid=setOf("lowerBack"),difficulty=1,phase="cooldown",sets=1,hold=20,rest=15,safety="לא לקרוס קדימה")
     )
+
+    private val catalog = baseCatalog + LibraryExercises.additional(baseCatalog)
 
     fun generate(questionnaire: Map<*, *>?, userSeed: String, date: LocalDate = LocalDate.now()): JSONObject {
         val q = questionnaire ?: emptyMap<String,Any?>()

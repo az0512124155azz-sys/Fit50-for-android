@@ -1,0 +1,16 @@
+{
+  "id": "wall_slide",
+  "name": "החלקת ידיים על קיר",
+  "muscle": "כתפיים · יציבה",
+  "type": "reps",
+  "phase": "main",
+  "difficulty": 1,
+  "safety": "לעצור לפני כאב",
+  "kind": "base",
+  "motion": {
+    "id": "wall_slide",
+    "speed": 1
+  },
+  "animation": "joint-pose",
+  "review": "preview-before-use"
+}
