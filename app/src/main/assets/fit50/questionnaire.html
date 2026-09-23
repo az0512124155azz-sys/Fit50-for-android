@@ -78,6 +78,19 @@ html,body{
   transition:width .5s cubic-bezier(.22,1,.36,1);
   width:0;
 }
+.reset-answers{
+  margin:18px 28px 0;
+  padding:11px 16px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--cream-2);
+  color:var(--ink);
+  font:inherit;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+}
+.reset-answers[hidden]{display:none}
 
 .step{
   flex:1;
@@ -465,6 +478,7 @@ html,body{
     <span class="top-count"><span id="stepNow">1</span><i> / 7</i></span>
   </div>
   <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+  <button class="reset-answers" id="resetSavedAnswersBtn" type="button" hidden>מלא שאלון מחדש בלי התשובות הקודמות</button>
 
   <!-- STEP 1 -->
   <div class="step on" data-step="1">
@@ -504,7 +518,7 @@ html,body{
   <div class="step" data-step="2">
     <div class="step-eyebrow">שלב 2 מתוך 7</div>
     <div class="step-title">מצב <em>רפואי</em></div>
-    <div class="step-sub">סמן כל מה שרלוונטי. המידע נשאר במכשיר שלך בלבד.</div>
+    <div class="step-sub">סמן כל מה שרלוונטי. התשובות נשמרות גם בחשבון שלך כדי להתאים אימונים.</div>
 
     <div class="q">
       <label class="q-label">האם אובחנו אצלך אחד מהמצבים הבאים?</label>
@@ -1036,6 +1050,7 @@ go(1);
 function applySavedAnswers(saved) {
   if (!saved || questionnaireEdited) return;
   Object.assign(answers, saved);
+  $('resetSavedAnswersBtn').hidden = Object.keys(saved).length === 0;
   $$('.chips').forEach(group => {
     const selected = answers[group.dataset.group];
     const values = Array.isArray(selected) ? selected : [selected];
@@ -1057,6 +1072,20 @@ function applySavedAnswers(saved) {
   updatePainPatternQuestion();
   validate();
 }
+
+$('resetSavedAnswersBtn').onclick = function() {
+  questionnaireEdited = true;
+  Object.keys(answers).forEach(key => delete answers[key]);
+  answers.age = 52;
+  if (ageSlider) ageSlider.value = '52';
+  $('ageVal').textContent = '52';
+  $$('.chips .chip.on, .yn .yn-btn.on, .scale .scale-btn.on').forEach(button => button.classList.remove('on'));
+  $('ackBox').checked = false;
+  $('resetSavedAnswersBtn').hidden = true;
+  updatePainPatternQuestion();
+  go(1);
+  toast('התשובות בחשבון יוחלפו רק אחרי סיום ושמירת השאלון');
+};
 
 window.fit50QuestionnaireLoaded = function(ok, message, saved) {
   if (ok && saved) applySavedAnswers(saved);
