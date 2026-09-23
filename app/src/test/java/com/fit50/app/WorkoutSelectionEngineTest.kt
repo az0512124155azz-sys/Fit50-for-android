@@ -69,7 +69,7 @@ class WorkoutSelectionEngineTest {
     }
 
     @Test fun highTypicalPainGetsAShortAdaptedSessionWhenNoRedFlagsAreReported() {
-        val result = plan(mapOf("painLevel" to 9, "painAreas" to listOf("knees"), "duration" to "45", "mainGoal" to "pain"))
+        val result = plan(mapOf("painLevel" to 9, "painPattern" to "stable", "painAreas" to listOf("knees"), "duration" to "45", "mainGoal" to "pain"))
         assertEquals(ready, result.status)
         assertEquals(15, result.duration)
         assertEquals(1, result.maxDifficulty)
@@ -77,6 +77,10 @@ class WorkoutSelectionEngineTest {
         assertTrue(result.exercises.all { it.sets == 1 && it.reps <= 6 && it.hold <= 15 && it.rest >= 60 })
         val withRestriction = plan(mapOf("painLevel" to 9, "restricted" to true))
         assertEquals(WorkoutSelectionEngine.Status.CLEARANCE_REQUIRED, withRestriction.status)
+        for (pattern in listOf(null, "new", "unsure")) {
+            val answers = mapOf<String, Any?>("painLevel" to 9, "painPattern" to pattern)
+            assertEquals(WorkoutSelectionEngine.Status.CLEARANCE_REQUIRED, plan(answers).status)
+        }
     }
 
     @Test fun recentCompletionAndDateCanRotateTheSession() {

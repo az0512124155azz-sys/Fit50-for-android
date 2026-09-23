@@ -98,6 +98,7 @@ internal object WorkoutSelectionEngine {
             flag(q["restricted"]) -> "בשאלון צוין שרופא הגביל פעילות גופנית. יש לפעול לפי ההנחיות שקיבלת לפני אימון עצמאי."
             !approved && flag(q["surgery"]) -> "בשאלון צוין ניתוח בשנתיים האחרונות ללא אישור להתחיל פעילות. יש לברר את ההתאמה לפני אימון עצמאי."
             !approved && "heart" in conditions -> "בשאלון צוין מצב לבבי ללא אישור להתחיל פעילות. יש לברר את ההתאמה לפני אימון עצמאי."
+            highPain && text(q["painPattern"]) != "stable" -> "בשאלון צוין כאב חזק שאינו מוכר ויציב, או שלא ברור אם הוא יציב. יש לברר את ההתאמה לפני אימון עצמאי."
             else -> null
         }
         var maxDifficulty = when(trained) { "now" -> 3; "6m" -> 2; else -> 1 }

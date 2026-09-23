@@ -570,6 +570,16 @@ html,body{
       <div class="scale-labels"><span>בלי כאב</span><span>כואב מאוד</span></div>
     </div>
 
+    <div class="q" id="painPatternQuestion" hidden>
+      <label class="q-label">לגבי הכאב החזק: האם הוא מוכר ויציב, או חדש/מחמיר?</label>
+      <div class="q-hint">ענה לפי מצבך הנוכחי. אם אינך בטוח, בחר "לא בטוח".</div>
+      <div class="chips vert" data-group="painPattern">
+        <button class="chip" data-val="stable">כאב מוכר ויציב, ללא שינוי לאחרונה</button>
+        <button class="chip" data-val="new">כאב חדש, מחמיר או עם נפיחות חדשה</button>
+        <button class="chip" data-val="unsure">לא בטוח</button>
+      </div>
+    </div>
+
     <div class="q">
       <label class="q-label">האם יש תנועות שאתה נמנע מהן בגלל כאב?</label>
       <div class="yn" data-group="avoid">
@@ -845,6 +855,7 @@ $$('.scale').forEach(group => {
       group.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('on'));
       btn.classList.add('on');
       answers[name] = parseInt(btn.dataset.val, 10);
+      if (name === 'painLevel') updatePainPatternQuestion();
       validate();
     };
   });
@@ -872,6 +883,7 @@ function validate() {
   } else if (s === 3) {
     ok = answers.painAreas && answers.painAreas.length > 0
       && answers.painLevel !== undefined
+      && (Number(answers.painLevel) < 8 || ['stable', 'new', 'unsure'].includes(answers.painPattern))
       && answers.avoid !== undefined;
   } else if (s === 4) {
     ok = answers.meds && answers.meds.length > 0
@@ -888,6 +900,10 @@ function validate() {
   }
 
   $('nextBtn').disabled = !ok;
+}
+
+function updatePainPatternQuestion() {
+  $('painPatternQuestion').hidden = Number(answers.painLevel) < 8 || answers.painLevel === undefined;
 }
 
 function go(step) {
@@ -987,6 +1003,10 @@ function renderSummary() {
   if (answers.painLevel !== undefined) {
     rows.push(['רמת כאב', answers.painLevel + ' מתוך 10']);
   }
+  if (Number(answers.painLevel) >= 8 && answers.painPattern) {
+    const patternMap = {stable:'מוכר ויציב', new:'חדש או מחמיר', unsure:'לא בטוח'};
+    rows.push(['אופי הכאב', patternMap[answers.painPattern] || 'לא ברור']);
+  }
   if (answers.avoid !== undefined) {
     rows.push(['הימנעות מתנועות', answers.avoid ? 'כן' : 'לא']);
   }
@@ -1034,6 +1054,7 @@ function applySavedAnswers(saved) {
     ageSlider.value = answers.age;
     $('ageVal').textContent = answers.age;
   }
+  updatePainPatternQuestion();
   validate();
 }
 
