@@ -8,7 +8,7 @@ private typealias Ex = WorkoutPlanEngine.Ex
 internal object WorkoutSelectionEngine {
 
     enum class Pattern { MOBILITY, CARDIO, LOWER, UPPER_PUSH, UPPER_PULL, CORE, BALANCE, BREATH }
-    enum class Status(val code: String) { READY("ready"), CLEARANCE_REQUIRED("clearance_required"), NO_SAFE_EXERCISES("no_safe_exercises") }
+    enum class Status(val code: String) { READY("ready"), CLEARANCE_REQUIRED("clearance_required"), SCREENING_REQUIRED("screening_required"), NO_SAFE_EXERCISES("no_safe_exercises") }
     data class Prescription(val exercise: Ex, val sets: Int, val reps: Int, val hold: Int, val breaths: Int, val rest: Int)
     data class Plan(
         val status: Status,
@@ -84,8 +84,10 @@ internal object WorkoutSelectionEngine {
         val requestedDuration = number(q["duration"], 20).coerceIn(15, 45)
         val conditions = values(q["conditions"])
         val meds = values(q["meds"])
+        val symptomsCleared = flag(q["symptomsCleared"])
         val medicalCaution = conditions.isNotEmpty() || meds.any { it in setOf("heart", "bp", "thinners") } ||
-            flag(q["surgery"]) || flag(q["chestPain"])
+            flag(q["surgery"]) || flag(q["chestPain"]) || flag(q["asthmaRecentSymptoms"]) ||
+            flag(q["dizzyLossBalance"]) || flag(q["fainted"])
         val duration = when {
             highPain -> 15
             medicalCaution -> requestedDuration.coerceAtMost(20)
@@ -100,9 +102,17 @@ internal object WorkoutSelectionEngine {
         val recentMotions = recentExerciseIds.map { recent -> catalog.firstOrNull { it.id == recent }?.motionId ?: recent }.toSet()
         val trained = text(q["lastTrained"])
         val approved = flag(q["clinicianApproved"])
+        val screeningRequired = q["completedAt"] != null && (
+            listOf("chestPainRestDaily", "dizzyLossBalance", "fainted").any { q[it] == null } ||
+                ("asthma" in conditions && listOf("asthmaRecentMeds", "asthmaRecentSymptoms").any { q[it] == null })
+            )
         val safetyReasons = buildList {
             if (flag(q["chestPain"]) && text(q["chestPainStatus"]) != "cleared")
                 add("כאב בחזה בזמן מאמץ שעדיין לא הובהר או לא חלף")
+            if (flag(q["chestPainRestDaily"])) add("כאב בחזה במנוחה או בפעילות יומיומית")
+            if (!symptomsCleared && flag(q["dizzyLossBalance"])) add("אובדן שיווי משקל בגלל סחרחורת בשנה האחרונה ללא אישור לפעילות")
+            if (!symptomsCleared && flag(q["fainted"])) add("אובדן הכרה בשנה האחרונה ללא אישור לפעילות")
+            if (!symptomsCleared && flag(q["asthmaRecentSymptoms"])) add("קוצר נשימה או צפצופים בשלושת החודשים האחרונים עם אסתמה ללא אישור לפעילות")
             if (flag(q["restricted"])) add("הגבלת פעילות שניתנה על ידי רופא")
             if (!approved && flag(q["surgery"])) add("ניתוח בשנתיים האחרונות ללא אישור לפעילות")
             if (!approved && "heart" in conditions) add("מצב לבבי ללא אישור לפעילות")
@@ -112,8 +122,12 @@ internal object WorkoutSelectionEngine {
         val conservative = pain >= 5 || flag(q["avoid"]) || medicalCaution
         if(conservative) maxDifficulty = 1
         if(safetyReasons.isNotEmpty()) return Plan(Status.CLEARANCE_REQUIRED,
-            "לפני אימון עצמאי יש לברר את כל הסעיפים שמופיעים כאן עם איש מקצוע רפואי.",
+            if (screeningRequired) "לפני אימון עצמאי יש לברר את הסעיפים שמופיעים כאן ולהשלים את שאלות הבטיחות החדשות."
+            else "לפני אימון עצמאי יש לברר את כל הסעיפים שמופיעים כאן עם איש מקצוע רפואי.",
             emptyList(), duration, frequency, goal, 1, true, 0, safetyReasons)
+        if(screeningRequired) return Plan(Status.SCREENING_REQUIRED,
+            "יש להשלים פעם אחת את שאלות הבטיחות החדשות לפני הכנת אימון מותאם.",
+            emptyList(), duration, frequency, goal, maxDifficulty, conservative, 0)
 
         val eligible = catalog.filter { ex ->
             val id = ex.motionId

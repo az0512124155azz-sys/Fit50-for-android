@@ -623,7 +623,7 @@ html,body{
     </div>
 
     <div class="q">
-      <label class="q-label">האם רופא המליץ לך בעבר להגביל פעילות גופנית?</label>
+      <label class="q-label">האם רופא הורה לך כיום להגביל פעילות גופנית או להתאמן רק בהשגחה?</label>
       <div class="yn" data-group="restricted">
         <button class="yn-btn no" data-val="0"><span class="mark">○</span>לא</button>
         <button class="yn-btn yes" data-val="1"><span class="mark">●</span>כן</button>
@@ -644,6 +644,51 @@ html,body{
       <div class="chips vert" data-group="chestPainStatus">
         <button class="chip" data-val="current">הכאב חדש, חוזר, או שטרם נבדק</button>
         <button class="chip" data-val="cleared">הכאב חלף, נבדק, וקיבלתי אישור והנחיות לפעילות</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">האם אתה חש כאב בחזה בזמן מנוחה או במהלך פעולות יומיומיות?</label>
+      <div class="yn" data-group="chestPainRestDaily">
+        <button class="yn-btn no" data-val="0"><span class="mark">○</span>לא</button>
+        <button class="yn-btn yes" data-val="1"><span class="mark">●</span>כן</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">האם בשנה האחרונה איבדת שיווי משקל בגלל סחרחורת, שלא נבעה מנשימת יתר?</label>
+      <div class="yn" data-group="dizzyLossBalance">
+        <button class="yn-btn no" data-val="0"><span class="mark">○</span>לא</button>
+        <button class="yn-btn yes" data-val="1"><span class="mark">●</span>כן</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">האם איבדת הכרה בשנה האחרונה?</label>
+      <div class="yn" data-group="fainted">
+        <button class="yn-btn no" data-val="0"><span class="mark">○</span>לא</button>
+        <button class="yn-btn yes" data-val="1"><span class="mark">●</span>כן</button>
+      </div>
+    </div>
+
+    <div class="q" id="asthmaRecentQuestion" hidden>
+      <label class="q-label">אם אובחנה אצלך אסתמה: האם נזקקת לטיפול תרופתי בשלושת החודשים האחרונים?</label>
+      <div class="yn" data-group="asthmaRecentMeds">
+        <button class="yn-btn no" data-val="0"><span class="mark">○</span>לא</button>
+        <button class="yn-btn yes" data-val="1"><span class="mark">●</span>כן</button>
+      </div>
+      <label class="q-label" style="margin-top:20px">האם בשלושת החודשים האחרונים חווית קוצר נשימה או צפצופים?</label>
+      <div class="yn" data-group="asthmaRecentSymptoms">
+        <button class="yn-btn no" data-val="0"><span class="mark">○</span>לא</button>
+        <button class="yn-btn yes" data-val="1"><span class="mark">●</span>כן</button>
+      </div>
+    </div>
+
+    <div class="q" id="symptomClearanceQuestion" hidden>
+      <label class="q-label">אם סימנת סחרחורת, אובדן הכרה או תסמיני אסתמה: האם האירוע נבדק ואיש מקצוע רפואי אישר לך פעילות גופנית?</label>
+      <div class="yn" data-group="symptomsCleared">
+        <button class="yn-btn no" data-val="0"><span class="mark">○</span>לא או לא בטוח</button>
+        <button class="yn-btn yes" data-val="1"><span class="mark">●</span>כן</button>
       </div>
     </div>
 
@@ -852,6 +897,7 @@ $$('.chips').forEach(group => {
           answers[name] = val;
         }
       }
+      if (name === 'conditions') updateAsthmaQuestion();
       validate();
     };
   });
@@ -866,6 +912,7 @@ $$('.yn').forEach(group => {
       btn.classList.add('on');
       answers[name] = btn.dataset.val === '1';
       if (name === 'chestPain') updateChestPainStatusQuestion();
+      if (['dizzyLossBalance', 'fainted', 'asthmaRecentSymptoms'].includes(name)) updateSymptomClearanceQuestion();
       validate();
     };
   });
@@ -913,7 +960,13 @@ function validate() {
     ok = answers.meds && answers.meds.length > 0
       && answers.restricted !== undefined
       && answers.chestPain !== undefined
-      && (!answers.chestPain || ['current', 'cleared'].includes(answers.chestPainStatus));
+      && (!answers.chestPain || ['current', 'cleared'].includes(answers.chestPainStatus))
+      && answers.chestPainRestDaily !== undefined
+      && answers.dizzyLossBalance !== undefined
+      && answers.fainted !== undefined
+      && (!Array.isArray(answers.conditions) || !answers.conditions.includes('asthma') ||
+          (answers.asthmaRecentMeds !== undefined && answers.asthmaRecentSymptoms !== undefined))
+      && (!(answers.dizzyLossBalance || answers.fainted || answers.asthmaRecentSymptoms) || answers.symptomsCleared !== undefined);
   } else if (s === 5) {
     ok = answers.lastTrained && answers.likes && answers.likes.length > 0
       && answers.freq && answers.duration;
@@ -936,6 +989,26 @@ function updateChestPainStatusQuestion() {
   if (answers.chestPain !== true) {
     delete answers.chestPainStatus;
     $$('#chestPainStatusQuestion .chip.on').forEach(button => button.classList.remove('on'));
+  }
+}
+
+function updateAsthmaQuestion() {
+  const hasAsthma = Array.isArray(answers.conditions) && answers.conditions.includes('asthma');
+  $('asthmaRecentQuestion').hidden = !hasAsthma;
+  if (!hasAsthma) {
+    delete answers.asthmaRecentMeds;
+    delete answers.asthmaRecentSymptoms;
+    $$('#asthmaRecentQuestion .yn-btn.on').forEach(button => button.classList.remove('on'));
+  }
+  updateSymptomClearanceQuestion();
+}
+
+function updateSymptomClearanceQuestion() {
+  const needsFollowUp = answers.dizzyLossBalance || answers.fainted || answers.asthmaRecentSymptoms;
+  $('symptomClearanceQuestion').hidden = !needsFollowUp;
+  if (!needsFollowUp) {
+    delete answers.symptomsCleared;
+    $$('#symptomClearanceQuestion .yn-btn.on').forEach(button => button.classList.remove('on'));
   }
 }
 
@@ -1052,6 +1125,12 @@ function renderSummary() {
   if (answers.chestPain && answers.chestPainStatus) {
     rows.push(['מצב כאב בחזה', answers.chestPainStatus === 'cleared' ? 'חלף, נבדק ואושרה פעילות' : 'חדש, חוזר או לא נבדק']);
   }
+  if (answers.chestPainRestDaily !== undefined) rows.push(['כאב בחזה במנוחה או בשגרה', answers.chestPainRestDaily ? 'כן' : 'לא']);
+  if (answers.dizzyLossBalance !== undefined) rows.push(['אובדן שיווי משקל מסחרחורת', answers.dizzyLossBalance ? 'כן' : 'לא']);
+  if (answers.fainted !== undefined) rows.push(['אובדן הכרה בשנה האחרונה', answers.fainted ? 'כן' : 'לא']);
+  if (answers.asthmaRecentMeds !== undefined) rows.push(['טיפול לאסתמה לאחרונה', answers.asthmaRecentMeds ? 'כן' : 'לא']);
+  if (answers.asthmaRecentSymptoms !== undefined) rows.push(['תסמיני אסתמה לאחרונה', answers.asthmaRecentSymptoms ? 'כן' : 'לא']);
+  if (answers.symptomsCleared !== undefined) rows.push(['אישור לפעילות אחרי בירור', answers.symptomsCleared ? 'כן' : 'לא']);
   if (answers.lastTrained) {
     rows.push(['ניסיון אחרון', trainedMap[answers.lastTrained] || '—']);
   }
@@ -1093,6 +1172,12 @@ function applySavedAnswers(saved) {
   }
   updatePainPatternQuestion();
   updateChestPainStatusQuestion();
+  updateAsthmaQuestion();
+  if (saved.gender && saved.daily && Array.isArray(saved.conditions) && Array.isArray(saved.meds) &&
+      (['chestPainRestDaily', 'dizzyLossBalance', 'fainted'].some(key => saved[key] === undefined) ||
+       (saved.conditions.includes('asthma') && ['asthmaRecentMeds', 'asthmaRecentSymptoms'].some(key => saved[key] === undefined)))) {
+    go(4);
+  }
   validate();
 }
 
@@ -1107,6 +1192,7 @@ $('resetSavedAnswersBtn').onclick = function() {
   $('resetSavedAnswersBtn').hidden = true;
   updatePainPatternQuestion();
   updateChestPainStatusQuestion();
+  updateAsthmaQuestion();
   go(1);
   toast('התשובות בחשבון יוחלפו רק אחרי סיום ושמירת השאלון');
 };

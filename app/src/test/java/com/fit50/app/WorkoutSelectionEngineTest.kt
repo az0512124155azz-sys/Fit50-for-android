@@ -70,6 +70,37 @@ class WorkoutSelectionEngineTest {
         assertTrue(result.exercises.isEmpty())
     }
 
+    @Test fun newScreeningSymptomsAreReviewedTogether() {
+        val result = plan(mapOf(
+            "chestPainRestDaily" to true, "dizzyLossBalance" to true,
+            "fainted" to true, "asthmaRecentSymptoms" to true
+        ))
+        assertEquals(WorkoutSelectionEngine.Status.CLEARANCE_REQUIRED, result.status)
+        assertEquals(4, result.safetyReasons.size)
+        assertTrue(result.exercises.isEmpty())
+        val reviewed = plan(mapOf(
+            "dizzyLossBalance" to true, "fainted" to true,
+            "symptomsCleared" to true, "duration" to "45"
+        ))
+        assertEquals(ready, reviewed.status)
+        assertEquals(20, reviewed.duration)
+        assertTrue(reviewed.exercises.all { it.rest >= 60 })
+        val chestAtRest = plan(mapOf("chestPainRestDaily" to true, "symptomsCleared" to true))
+        assertEquals(WorkoutSelectionEngine.Status.CLEARANCE_REQUIRED, chestAtRest.status)
+    }
+
+    @Test fun existingQuestionnaireNeedsNewScreeningOnlyOnce() {
+        val old = mapOf<String, Any?>("completedAt" to "2026-09-01T00:00:00Z", "lastTrained" to "now")
+        assertEquals(WorkoutSelectionEngine.Status.SCREENING_REQUIRED, plan(old).status)
+        val updated = old + mapOf(
+            "chestPainRestDaily" to false, "dizzyLossBalance" to false, "fainted" to false
+        )
+        assertEquals(ready, plan(updated).status)
+        val asthma = updated + mapOf("conditions" to listOf("asthma"))
+        assertEquals(WorkoutSelectionEngine.Status.SCREENING_REQUIRED, plan(asthma).status)
+        assertEquals(ready, plan(asthma + mapOf("asthmaRecentMeds" to true, "asthmaRecentSymptoms" to false)).status)
+    }
+
     @Test fun resolvedAssessedChestPainReceivesConservativePlan() {
         val result = plan(mapOf(
             "chestPain" to true, "chestPainStatus" to "cleared", "duration" to "45", "lastTrained" to "now"
