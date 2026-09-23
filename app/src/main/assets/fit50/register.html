@@ -385,6 +385,10 @@
       cursor: pointer;
     }
 
+    .legal-consent{display:flex;align-items:flex-start;gap:9px;margin:18px 0 12px;font-size:13px;line-height:1.5;color:var(--ink-2)}
+    .legal-consent input{width:18px;height:18px;flex:none;margin-top:2px;accent-color:var(--forest)}
+    .legal-consent a{color:var(--forest);text-decoration:underline}
+
     .pass-toggle {
       position: absolute;
       top: 50%;
@@ -451,6 +455,8 @@
       </div>
     </div>
 
+    <label class="legal-consent"><input type="checkbox" id="legalConsent"><span>קראתי ואני מסכים/ה ל<a href="legal.html?doc=terms&amp;from=register">תנאי השימוש והבטיחות</a>; קראתי את <a href="legal.html?doc=privacy&amp;from=register">מדיניות הפרטיות</a>.</span></label>
+
     <button class="btn-primary" id="registerNow">
       <span>צור חשבון</span>
     </button>
@@ -494,6 +500,7 @@ $('registerNow').onclick=function(){
   if(!email.includes('@')) return toast('נא להזין כתובת אימייל תקינה',true);
   if(pass.length<6) return toast('הסיסמה חייבת להכיל לפחות 6 תווים',true);
   if(pass!==confirm) return toast('הסיסמאות אינן תואמות',true);
+  if(!$('legalConsent').checked) return toast('יש לעיין בתנאים ובפרטיות ולאשר את תנאי השימוש',true);
   if(!window.Fit50Native || typeof window.Fit50Native.register!=='function') return toast('שירות ההרשמה אינו זמין',true);
   this.disabled=true;this.innerHTML='<span class="spinner"></span><span>יוצר חשבון...</span>';
   try{
