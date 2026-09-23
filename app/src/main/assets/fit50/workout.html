@@ -478,6 +478,21 @@ html[dir="ltr"] .exercise-heading{direction:ltr}
   transition:color .3s;
 }
 .rest-time.ending{color:var(--accent)}
+.pain-check{display:none;position:fixed;inset:0;z-index:220;background:rgba(13,25,19,.92);color:var(--cream);padding:24px;align-items:center;justify-content:center;overflow-y:auto}
+.pain-check.on{display:flex}
+.pain-check [hidden]{display:none!important}
+.pain-card{width:min(100%,480px);background:var(--forest-2);border:1px solid rgba(250,247,242,.18);border-radius:24px;padding:24px;max-height:90vh;overflow-y:auto}
+.pain-card h2{font-size:26px;line-height:1.2;margin:0 0 12px}
+.pain-card p{font-size:15px;line-height:1.5;margin:0 0 18px;color:rgba(250,247,242,.82)}
+.pain-fields{display:grid;gap:14px}
+.pain-fields label{display:grid;gap:6px;font-size:15px}
+.pain-fields select,.pain-fields input[type=range]{width:100%}
+.pain-fields select{background:var(--cream);color:var(--forest);border:0;border-radius:10px;padding:10px;font:inherit}
+.pain-fields .warning{display:flex;align-items:start;gap:9px}
+.pain-fields .warning input{margin-top:5px}
+.pain-actions{display:grid;gap:9px;margin-top:20px}
+.pain-actions button{border:0;border-radius:12px;padding:13px;font:inherit;font-weight:700;background:var(--lime);color:var(--forest)}
+.pain-actions button.secondary{background:transparent;border:1px solid rgba(250,247,242,.45);color:var(--cream)}
 .rest-note{
   font-family:'Frank Ruhl Libre',serif;
   font-size:17px;font-style:italic;
@@ -814,6 +829,41 @@ html[dir="ltr"] .exercise-heading{direction:ltr}
   </div>
 </div>
 
+<div class="pain-check" id="painCheck" role="dialog" aria-modal="true" aria-labelledby="painTitle">
+  <div class="pain-card">
+    <h2 id="painTitle">איך הגוף מרגיש עכשיו?</h2>
+    <p id="painIntro">במהלך ההפסקה, חשוב לבדוק אם הופיע כאב.</p>
+    <div class="pain-fields" id="painFields" hidden>
+      <label>איפה מורגש הכאב?
+        <select id="painArea">
+          <option value="">בחר אזור</option><option value="chest">חזה</option><option value="head">ראש</option>
+          <option value="neck">צוואר</option><option value="shoulders">כתפיים</option><option value="upperBack">גב עליון</option>
+          <option value="lowerBack">גב תחתון</option><option value="hips">אגן או ירך</option><option value="knees">ברכיים</option>
+          <option value="ankles">קרסול או כף רגל</option><option value="other">אזור אחר</option>
+        </select>
+      </label>
+      <label>עוצמה מ־1 עד 10: <strong id="painIntensityValue">3</strong>
+        <input id="painIntensity" type="range" min="1" max="10" value="3">
+      </label>
+      <label>האם זה כאב מוכר ויציב?
+        <select id="painPattern"><option value="usual">כן, מוכר ויציב</option><option value="new">לא, חדש או לא מוכר</option><option value="worse">הכאב מחמיר</option></select>
+      </label>
+      <label class="warning"><input id="painBreathing" type="checkbox">קוצר נשימה חריג</label>
+      <label class="warning"><input id="painDizziness" type="checkbox">סחרחורת או תחושת עילפון</label>
+      <label class="warning"><input id="painColdSweat" type="checkbox">זיעה קרה או כאב שמתפשט ליד, לגב או ללסת</label>
+    </div>
+    <div class="pain-actions" id="painActions">
+      <button id="painNo" type="button">אין כאב · ממשיכים</button>
+      <button id="painYes" type="button" class="secondary">יש כאב · תן לי לפרט</button>
+    </div>
+    <div class="pain-actions" id="painSubmitActions" hidden>
+      <button id="painSubmit" type="button">שמור וקבל הנחיה</button>
+      <button id="painBack" type="button" class="secondary">חזרה</button>
+    </div>
+    <div id="painAdvice" hidden></div>
+  </div>
+</div>
+
 <!-- EXIT -->
 <div class="exit-overlay" id="exitOverlay">
   <div class="exit-box">
@@ -1023,6 +1073,8 @@ const SHORT_REST = 10;
 const state = {
   exIndex: 0,
   setIndex: 0,
+  painChecksDone: [],
+  pendingRestSeconds: 0,
   startedAt: Date.now(),
   currentSetTime: null,
   lastSetDuration: null
@@ -1044,6 +1096,7 @@ function savePausedWorkout() {
       workout: WORKOUT,
       exIndex: state.exIndex,
       setIndex: state.setIndex,
+      painChecksDone: state.painChecksDone,
       startedAt: state.startedAt
     });
 
@@ -1082,6 +1135,7 @@ function loadPausedWorkout() {
     WORKOUT = saved.workout;
     state.exIndex = Math.max(0, Math.min(Number(saved.exIndex) || 0, WORKOUT.exercises.length - 1));
     state.setIndex = Math.max(0, Number(saved.setIndex) || 0);
+    state.painChecksDone = Array.isArray(saved.painChecksDone) ? saved.painChecksDone : [];
     state.startedAt = Number(saved.startedAt) || Date.now();
     return true;
   } catch(e) {
@@ -1333,6 +1387,88 @@ function startBreath(ex) {
 }
 
 /* ============ COMPLETE SET ============ */
+function painCheckTargets() {
+  const main = WORKOUT.exercises.map((ex, index) => ex.phase === 'main' ? index : -1).filter(index => index >= 0);
+  if (main.length < 2) return [];
+  return [...new Set([main[Math.floor((main.length - 1) / 3)], main[Math.ceil(2 * (main.length - 1) / 3)]])];
+}
+function shouldAskPain(completedIndex) {
+  return WORKOUT.painCheckEligible === true && state.painChecksDone.length < 2 && painCheckTargets().includes(completedIndex) &&
+    !state.painChecksDone.includes(completedIndex);
+}
+function showPainCheck(completedIndex, restSeconds) {
+  state.painChecksDone.push(completedIndex);
+  state.pendingRestSeconds = restSeconds;
+  $('painFields').hidden = true;
+  $('painActions').hidden = false;
+  $('painSubmitActions').hidden = true;
+  $('painAdvice').hidden = true;
+  $('painArea').value = '';
+  $('painIntensity').value = '3';
+  $('painIntensityValue').textContent = '3';
+  $('painPattern').value = 'usual';
+  $('painBreathing').checked = false;
+  $('painDizziness').checked = false;
+  $('painColdSweat').checked = false;
+  $('painTitle').textContent = 'איך הגוף מרגיש עכשיו?';
+  $('painIntro').textContent = 'זו בדיקה קצרה בזמן ההפסקה. אם הופיע כאב, נבדוק מה השתנה לפני שנמשיך.';
+  $('painCheck').classList.add('on');
+}
+function resumeAfterPainCheck() {
+  $('painCheck').classList.remove('on');
+  startRest(state.pendingRestSeconds, false);
+}
+function finishAfterPainCheck() {
+  clearPausedWorkout();
+  if (restInterval) { clearInterval(restInterval); restInterval = null; }
+  $('painCheck').classList.remove('on');
+  $('restScreen').classList.remove('on');
+  location.href = 'home.html';
+}
+function submitPainReport() {
+  const area = $('painArea').value;
+  if (!area) { $('painIntro').textContent = 'בחר היכן מורגש הכאב כדי שנוכל לשמור את הדיווח.'; return; }
+  const intensity = Number($('painIntensity').value);
+  const pattern = $('painPattern').value;
+  const warningSigns = [];
+  if ($('painBreathing').checked) warningSigns.push('breathing');
+  if ($('painDizziness').checked) warningSigns.push('dizziness');
+  if ($('painColdSweat').checked) warningSigns.push('coldSweat');
+  const report = {area, intensity, pattern, warningSigns, reportedAt:Date.now()};
+  const stop = area === 'chest' || intensity >= 7 || pattern !== 'usual' || warningSigns.length > 0;
+  try {
+    if (window.Fit50Native && typeof window.Fit50Native.saveWorkoutPainReport === 'function')
+      window.Fit50Native.saveWorkoutPainReport(JSON.stringify(report));
+    else localStorage.setItem('fit50.latestPainReport', JSON.stringify(report));
+  } catch(e) { localStorage.setItem('fit50.latestPainReport', JSON.stringify(report)); }
+  $('painFields').hidden = true;
+  $('painSubmitActions').hidden = true;
+  $('painAdvice').hidden = false;
+  if (stop) {
+    $('painTitle').textContent = 'עוצרים את האימון';
+    $('painIntro').textContent = 'הדיווח נשמר וישפיע על בדיקת הבטיחות לפני האימון הבא.';
+    $('painAdvice').innerHTML = '<p>הפסק פעילות ונוח. אם יש כאב בחזה, קוצר נשימה חריג, סחרחורת משמעותית או תחושת עילפון — פנה בדחיפות לעזרה רפואית. בכאב חדש, מחמיר או חזק, התייעץ עם איש מקצוע לפני אימון נוסף.</p><div class="pain-actions"><button id="painFinish" type="button">סיים אימון וחזור לבית</button></div>';
+    $('painFinish').onclick = finishAfterPainCheck;
+  } else {
+    $('painTitle').textContent = 'נאט את הקצב';
+    $('painIntro').textContent = 'הדיווח נשמר, והאימון הבא יותאם לאזור ולעוצמת הכאב.';
+    const remaining = WORKOUT.exercises.slice(state.exIndex).filter(ex =>
+      !Array.isArray(ex.avoidAreas) || !ex.avoidAreas.includes(area));
+    WORKOUT.exercises.splice(state.exIndex, WORKOUT.exercises.length - state.exIndex, ...remaining);
+    WORKOUT.exercises.slice(state.exIndex).forEach(ex => {
+      ex.sets = 1;
+      if (ex.type === 'reps') ex.reps = Math.min(ex.reps || 6, 6);
+      if (ex.type === 'hold') ex.hold = Math.min(ex.hold || 15, 15);
+      if (ex.phase === 'main') ex.rest = Math.max(ex.rest || 0, 45);
+      ex.repsText = ex.type === 'reps' ? ex.reps + ' חזרות' : ex.type === 'hold' ? ex.hold + ' שניות' : ex.repsText;
+    });
+    $('painAdvice').innerHTML = remaining.length
+      ? '<p>נוח עד שהכאב נרגע. תרגילים שעלולים להעמיס על האזור הוסרו. אפשר להמשיך רק אם זה כאב מוכר וקל שאינו מחמיר; הפסק אם הכאב חוזר או מתחזק. אם הכאב נמשך, פנה לאיש מקצוע.</p><div class="pain-actions"><button id="painResume" type="button">הכאב נרגע · המשך בעדינות</button><button id="painFinish" type="button" class="secondary">סיים אימון</button></div>'
+      : '<p>אין עוד תרגילים מתאימים להמשך האימון לאחר הדיווח. נוח, ואם הכאב נמשך פנה לאיש מקצוע.</p><div class="pain-actions"><button id="painFinish" type="button">סיים אימון</button></div>';
+    if (remaining.length) $('painResume').onclick = resumeAfterPainCheck;
+    $('painFinish').onclick = finishAfterPainCheck;
+  }
+}
 function completeSet() {
   const ex = WORKOUT.exercises[state.exIndex];
   if ($('setBtn').disabled) return;
@@ -1350,9 +1486,10 @@ function completeSet() {
   if (state.setIndex >= ex.sets) {
     // Done with all sets of this exercise
     if (state.exIndex < WORKOUT.exercises.length - 1) {
+      const completedIndex = state.exIndex;
       state.exIndex++;
       state.setIndex = 0;
-      startRest(ex.rest, false);
+      startRest(ex.rest, false, completedIndex);
     } else {
       finishWorkout();
     }
@@ -1363,9 +1500,13 @@ function completeSet() {
 }
 
 /* ============ REST ============ */
-function startRest(seconds, isShort) {
+function startRest(seconds, isShort, completedIndex) {
   stopAllTimers();
   restAddedOnce = false;
+  if (!isShort && shouldAskPain(completedIndex)) {
+    showPainCheck(completedIndex, seconds);
+    return;
+  }
 
   $('restScreen').classList.add('on');
   $('restAddBtn').disabled = false;
@@ -1512,6 +1653,21 @@ $('exitBtn').onclick = exitWorkout;
 $('suspendBtn').onclick = suspendWorkout;
 $('cancelBtn').onclick = cancelWorkout;
 $('restAddBtn').onclick = addRestTime;
+$('painNo').onclick = resumeAfterPainCheck;
+$('painYes').onclick = () => {
+  $('painFields').hidden = false;
+  $('painActions').hidden = true;
+  $('painSubmitActions').hidden = false;
+  $('painTitle').textContent = 'מה בדיוק אתה מרגיש?';
+};
+$('painBack').onclick = () => {
+  $('painFields').hidden = true;
+  $('painActions').hidden = false;
+  $('painSubmitActions').hidden = true;
+};
+$('painIntensity').oninput = () => { $('painIntensityValue').textContent = $('painIntensity').value; };
+$('painSubmit').onclick = submitPainReport;
+window.fit50PainReportSaved = (ok, message) => { if (!ok && message) alert(message); };
 $('finishBack').onclick = () => {
   $('finishScreen').classList.remove('on');
   alert('חזרה למסך הבית');
@@ -1539,6 +1695,7 @@ window.fit50WorkoutPlanResult = function(ok, message, plan) {
     WORKOUT = plan;
     state.exIndex = 0;
     state.setIndex = 0;
+    state.painChecksDone = [];
     state.startedAt = Date.now();
   }
   renderExercise();

@@ -87,7 +87,7 @@ internal object WorkoutSelectionEngine {
         val symptomsCleared = flag(q["symptomsCleared"])
         val medicalCaution = conditions.isNotEmpty() || meds.any { it in setOf("heart", "bp", "thinners") } ||
             flag(q["surgery"]) || flag(q["chestPain"]) || flag(q["asthmaRecentSymptoms"]) ||
-            flag(q["dizzyLossBalance"]) || flag(q["fainted"])
+            flag(q["dizzyLossBalance"]) || flag(q["fainted"]) || flag(q["recentWorkoutPain"])
         val duration = when {
             highPain -> 15
             medicalCaution -> requestedDuration.coerceAtMost(20)
@@ -107,6 +107,7 @@ internal object WorkoutSelectionEngine {
                 ("asthma" in conditions && listOf("asthmaRecentMeds", "asthmaRecentSymptoms").any { q[it] == null })
             )
         val safetyReasons = buildList {
+            if (flag(q["exercisePainClearanceRequired"])) add("כאב או תסמין אזהרה שדווח בזמן אימון קודם; יש לברר לפני אימון עצמאי נוסף")
             if (flag(q["chestPain"]) && text(q["chestPainStatus"]) != "cleared")
                 add("כאב בחזה בזמן מאמץ שעדיין לא הובהר או לא חלף")
             if (flag(q["chestPainRestDaily"])) add("כאב בחזה במנוחה או בפעילות יומיומית")

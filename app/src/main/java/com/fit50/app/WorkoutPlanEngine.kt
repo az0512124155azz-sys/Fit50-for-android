@@ -95,6 +95,11 @@ object WorkoutPlanEngine {
 
     private val catalog = baseCatalog + LibraryExercises.additional(baseCatalog)
 
+    internal fun needsPainChecks(questionnaire: Map<*, *>?): Boolean =
+        (questionnaire?.get("painLevel")?.toString()?.toDoubleOrNull() ?: 0.0) > 0.0 ||
+            (questionnaire?.get("painAreas") as? Collection<*>)?.any { it != "none" } == true ||
+            questionnaire?.get("recentWorkoutPain") == true
+
     fun generate(questionnaire: Map<*, *>?, userSeed: String, date: LocalDate = LocalDate.now(),
                  recentExerciseIds: Set<String> = emptySet()): JSONObject {
         val plan = WorkoutSelectionEngine.select(catalog, questionnaire, userSeed, date, recentExerciseIds)
@@ -114,6 +119,7 @@ object WorkoutPlanEngine {
                 .put("n", ex.name)
                 .put("m", ex.muscle)
                 .put("type", ex.type)
+                .put("phase", ex.phase)
                 .put("sets", item.sets)
                 .put("reps", item.reps)
                 .put("hold", item.hold)
@@ -127,6 +133,7 @@ object WorkoutPlanEngine {
                 })
                 .put("pace", if(plan.maxDifficulty == 1) "לאט ובשליטה" else "קצב נוח ומבוקר")
                 .put("rest", item.rest)
+                .put("avoidAreas", JSONArray(ex.avoid.toList()))
                 .put("safety", ex.safety))
         }
         return JSONObject()
@@ -140,6 +147,7 @@ object WorkoutPlanEngine {
             .put("frequency", plan.frequency)
             .put("goal", plan.mainGoal)
             .put("conservative", plan.conservative)
+            .put("painCheckEligible", needsPainChecks(questionnaire))
             .put("requiresProfessionalClearance", plan.status == WorkoutSelectionEngine.Status.CLEARANCE_REQUIRED)
             .put("exercises", exercises)
             .put("combinationSpace", estimateCombinationSpace(plan.eligibleCount, exercises.length()))

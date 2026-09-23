@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import org.json.JSONArray
 import org.json.JSONObject
+import java.time.Instant
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -128,6 +129,17 @@ class Fit50DataManager(private val context: Context) {
         prefs.edit().remove("pausedWorkout").apply()
     }
 
+    fun saveWorkoutPainReport(json: String, done: (Boolean, String?) -> Unit) {
+        val currentUid = uid() ?: return done(false, "יש להתחבר לחשבון")
+        val report = runCatching { JSONObject(json) }.getOrNull() ?: return done(false, "דיווח כאב לא תקין")
+        val data = jsonObjectToMap(report)
+        if (!WorkoutPainPolicy.valid(data)) return done(false, "דיווח כאב לא תקין")
+        prefs.edit().putString("latestPainReport:$currentUid", report.toString()).apply()
+        userDoc()?.set(mapOf("latestPainReport" to data), com.google.firebase.firestore.SetOptions.merge())
+            ?.addOnSuccessListener { done(true, null) }
+            ?.addOnFailureListener { done(false, "הדיווח נשמר במכשיר אך הסנכרון לחשבון נכשל") }
+    }
+
     fun completeWorkout(json: String, done: (Boolean, String?, JSONObject?) -> Unit) {
         val currentUid = uid() ?: return done(false, "אין משתמש מחובר", null)
         val collection = workouts() ?: return done(false, "יש להתחבר לחשבון", null)
@@ -214,6 +226,19 @@ class Fit50DataManager(private val context: Context) {
 
         fun fromQuestionnaire(q: Map<*, *>?) {
             runCatching {
+                val base = q?.entries?.mapNotNull { (key, value) -> (key as? String)?.let { it to value } }?.toMap().orEmpty()
+                val completedAtMillis = when (val completed = base["completedAt"]) {
+                    is Timestamp -> completed.toDate().time
+                    is String -> runCatching { Instant.parse(completed).toEpochMilli() }.getOrDefault(0L)
+                    else -> 0L
+                }
+                val localReport = prefs.getString("latestPainReport:${user.uid}", null)
+                    ?.let { runCatching { jsonObjectToMap(JSONObject(it)) }.getOrNull() }
+                val cloudReport = base["_latestPainReport"] as? Map<*, *>
+                val report = listOfNotNull(localReport, cloudReport).maxByOrNull {
+                    (it["reportedAt"] as? Number)?.toLong() ?: 0L
+                }
+                val adaptedQuestionnaire = WorkoutPainPolicy.applyToQuestionnaire(base, report, completedAtMillis)
                 val sessions = runCatching { JSONArray(prefs.getString("recentWorkouts:${user.uid}", "[]")) }.getOrDefault(JSONArray())
                 val recent = mutableSetOf<String>()
                 val today = dayKey(Date())
@@ -223,14 +248,16 @@ class Fit50DataManager(private val context: Context) {
                     val ids = entry.optJSONArray("ids") ?: continue
                     for (index in 0 until ids.length()) ids.optString(index).takeIf(String::isNotBlank)?.let(recent::add)
                 }
-                WorkoutPlanEngine.generate(q, user.uid, recentExerciseIds = recent)
+                WorkoutPlanEngine.generate(adaptedQuestionnaire, user.uid, recentExerciseIds = recent)
             }.onSuccess { done(true, null, it) }
              .onFailure { done(false, it.localizedMessage, null) }
         }
 
         ref.get()
             .addOnSuccessListener { snap ->
-                val q = snap.get("questionnaire") as? Map<*, *>
+                val q = (snap.get("questionnaire") as? Map<*, *>)?.toMutableMap()?.apply {
+                    put("_latestPainReport", snap.get("latestPainReport"))
+                }
                 if (q != null) {
                     val cached = q.entries.mapNotNull { (key, value) ->
                         (key as? String)?.let { it to if (value is Timestamp) value.toDate().toInstant().toString() else value }

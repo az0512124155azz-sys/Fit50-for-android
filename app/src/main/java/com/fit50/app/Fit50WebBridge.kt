@@ -192,6 +192,15 @@ class Fit50WebBridge(
     }
 
     @JavascriptInterface
+    fun saveWorkoutPainReport(json: String) {
+        activity.runOnUiThread {
+            data.saveWorkoutPainReport(json) { ok, error ->
+                jsCallback("fit50PainReportSaved", ok, error ?: "")
+            }
+        }
+    }
+
+    @JavascriptInterface
     fun getQuestionnaire() {
         data.getQuestionnaire { ok, error, questionnaire ->
             jsCallback("fit50QuestionnaireLoaded", ok, error ?: "", questionnaire)
