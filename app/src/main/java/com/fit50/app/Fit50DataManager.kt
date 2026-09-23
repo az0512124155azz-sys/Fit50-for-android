@@ -423,14 +423,14 @@ class Fit50DataManager(private val context: Context) {
             val batch = db.batch()
             qs.documents.forEach { batch.delete(it.reference) }
             userDoc()?.let { batch.delete(it) }
-            batch.commit().addOnCompleteListener {
+            batch.commit().addOnSuccessListener {
                 user.delete()
                     .addOnSuccessListener {
                         prefs.edit().clear().apply()
                         done(true, null)
                     }
                     .addOnFailureListener { done(false, it.localizedMessage) }
-            }
+            }.addOnFailureListener { done(false, it.localizedMessage) }
         }.addOnFailureListener { done(false, it.localizedMessage) }
     }
 

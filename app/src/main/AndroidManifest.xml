@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/fit50_app_icon"
         android:label="Fit50+"
         android:logo="@drawable/fit50_launcher_foreground"

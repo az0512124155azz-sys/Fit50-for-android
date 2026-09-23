@@ -476,7 +476,7 @@
     </div>
 
     <div class="legal">
-      בהתחברות אתה מאשר את <a id="termsLink">תנאי השימוש</a> ואת <a id="privacyLink">מדיניות הפרטיות</a>
+      לפני השימוש מומלץ לעיין ב<a id="termsLink" href="legal.html?doc=terms&amp;from=login">תנאי השימוש והבטיחות</a> וב<a id="privacyLink" href="legal.html?doc=privacy&amp;from=login">מדיניות הפרטיות</a>.
     </div>
   </div>
 </div>
@@ -500,8 +500,6 @@ $('passToggle').onclick = () => {
   if (inp.type === 'password') { inp.type='text'; btn.textContent='הסתר'; }
   else { inp.type='password'; btn.textContent='הצג'; }
 };
-$('termsLink').onclick = () => toast('תנאי השימוש ייפתחו מתוך האפליקציה');
-$('privacyLink').onclick = () => toast('מדיניות הפרטיות תיפתח מתוך האפליקציה');
 </script>
 
 

@@ -1164,7 +1164,14 @@ function openSettings() {
   openSheet('הגדרות', html);
 
   $$('.set-row').forEach(row => {
-    row.onclick = () => toast('פתיחת ' + row.textContent.trim());
+    row.onclick = () => {
+      const action = row.dataset.action;
+      if (action === 'privacy' || action === 'terms') {
+        location.href = 'legal.html?doc=' + action + '&from=home';
+      } else {
+        location.href = 'settings.html';
+      }
+    };
   });
 
   document.getElementById('sheetLogout').onclick = () => {

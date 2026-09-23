@@ -456,6 +456,8 @@ html,body{
 }
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.err{background:var(--accent)}
+.privacy-notice{margin:10px 28px 0;padding:10px 12px;border:1px solid rgba(31,43,36,.2);border-radius:12px;font-size:12px;line-height:1.4}
+.privacy-notice a{color:var(--forest);font-weight:700;text-decoration:underline}
 
 @media (max-height:700px){
   .step{padding:24px 28px 120px}
@@ -479,6 +481,7 @@ html,body{
   </div>
   <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
   <button class="reset-answers" id="resetSavedAnswersBtn" type="button" hidden>מלא שאלון מחדש בלי התשובות הקודמות</button>
+  <div class="privacy-notice">התשובות, כולל מידע בריאותי, ישמשו להתאמת אימון ולבדיקות בטיחות ויישמרו בחשבון ב־Firebase וגם במכשיר. <a href="legal.html?doc=privacy&amp;from=questionnaire">איך מטפלים במידע?</a></div>
 
   <!-- STEP 1 -->
   <div class="step on" data-step="1">
@@ -829,7 +832,7 @@ html,body{
     <label class="ack">
       <input type="checkbox" id="ackBox">
       <div class="ack-text">
-        קראתי והבנתי את ההנחיות. אני מתחייב/ת לעצור אם ארגיש כאב או אי-נוחות, ולהתייעץ עם איש מקצוע במידת הצורך.
+        קראתי את הנחיות הבטיחות ואת מדיניות הפרטיות. אני מסכים/ה לשמירת תשובות השאלון, כולל מידע בריאותי, בחשבון Firebase לצורך התאמת אימונים ובדיקות בטיחות. אפשר למחוק חשבון בהגדרות.
       </div>
     </label>
   </div>
@@ -1044,6 +1047,8 @@ function finish() {
   const payload = {
     ...answers,
     acknowledgedDisclaimer: true,
+    acknowledgedPrivacy: true,
+    legalNoticeVersion: '2026-09-23',
     completedAt: new Date().toISOString()
   };
 
