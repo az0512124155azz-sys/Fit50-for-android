@@ -39,4 +39,16 @@ for(const [side,offset]of [['L',0],['R',4]]){
   }
   assert.ok(quaternions[0].angleTo(quaternions[2])>.4,'Ankle must rotate, not just lift');
 }
-console.log(ids.length+' coordinated cycles: finite skeletons, loop continuity, planted feet and squat depth verified.');
+const shoulderSamples=[];
+for(let t=0;t<4;t+=.1){
+  applyFullBody(rig,fullBodyPose('shoulder_roll',t));
+  shoulderSamples.push(bones.get('upperarm01L').getWorldPosition(new THREE.Vector3()));
+}
+for(const axis of ['y','z']){
+  const values=shoulderSamples.map(p=>p[axis]);
+  assert.ok(Math.max(...values)-Math.min(...values)>.015,'Shoulder circle must move the shoulder in '+axis);
+}
+const closed=fullBodyPose('arm_swing',0),opened=fullBodyPose('arm_swing',2);
+assert.ok(opened.hands.L[0]-closed.hands.L[0]>.30,'Arm opening must have visible lateral range');
+assert.ok(opened.hands.L[2]<closed.hands.L[2]-.30,'Arm opening must move from front to sides');
+console.log(ids.length+' coordinated cycles: finite skeletons, loop continuity, planted feet, shoulder circles and arm opening verified.');

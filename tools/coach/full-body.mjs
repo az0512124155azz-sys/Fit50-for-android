@@ -12,8 +12,13 @@ export function fullBodyPose(id,t){
   const quadruped=()=>{p.hips=[0,.49,-.27];p.rotation[0]=Math.PI/2;p.head=-.2;p.palms=true;both((a,sign)=>{p.hands[a]=[sign*.20,.055,.34];p.feet[a]=[sign*.14,.075,-.73];p.knees[a]=[sign*.14,-.4,-.25];p.elbows[a]=[sign*.55,.25,.05];});};
   switch(id){
     case 'shoulder_roll':{
-      const phase=t*Math.PI/2;p.shoulderRoll=.12*Math.sin(phase);p.spine=-.025*Math.cos(phase);
-      both((a,sign)=>{p.hands[a]=[sign*.29,1+.035*(1-Math.cos(phase)),.03+.04*Math.sin(phase)];});break;}
+      const phase=t*Math.PI/2,lift=(1-Math.cos(phase))/2,sweep=Math.sin(phase);
+      // Elevation plus protraction/retraction produces a shoulder circle, not a shrug.
+      p.shoulderRoll=.22*lift;p.shoulderSweep=.18*sweep;p.spine=-.018*lift;
+      both((a,sign)=>{
+        p.hands[a]=[sign*(.29+.015*lift),1+.075*lift,.03+.065*sweep];
+        p.elbows[a]=[sign*.52,1.16+.075*lift,-.18+.065*sweep];
+      });break;}
     case 'deep_breath':case 'box_breath':{
       const breath=(1-Math.cos(t*Math.PI/4))/2;p.spine=-.022*breath;
       both((a,sign)=>p.hands[a]=[sign*(.29+.045*breath),1+.055*breath,.03+.035*breath]);break;}
@@ -83,8 +88,9 @@ export function fullBodyPose(id,t){
       p.hands.L=[-.75,.17,-.16];p.hands.R=[-.55,.08,-.24];
       p.elbows.L=[-.75,.33,-.35];p.elbows.R=[-.55,.15,-.4];break;}
     case 'arm_swing':{
-      both((a,sign)=>{p.hands[a]=[sign*.29,1.06+.04*Math.abs(s),.08+sign*.23*s];p.elbows[a]=[sign*.6,1.12,-.22];});
-      p.spine=-.03*u;break;}
+      // Open both arms together across the chest, rather than a walking arm swing.
+      both((a,sign)=>{p.hands[a]=[sign*(.23+.36*u),1.20+.12*u,.32-.34*u];p.elbows[a]=[sign*.64,1.22,-.18-.08*u];});
+      p.shoulderSweep=-.12*u;p.spine=-.035*u;break;}
     case 'towel_row':case 'scap_squeeze':{
       both((a,sign)=>{p.hands[a]=[sign*.25,1.18,.37-.28*u];p.elbows[a]=[sign*.55,1.16,-.2-.14*u];});p.spine=-.04*u;break;}
     case 'wall_angels':case 'wall_slide':{
@@ -121,7 +127,8 @@ export function fullBodyPose(id,t){
         p.feet[a]=[sign*(id==='line_walk'?.065:.14),.075+high*lift,.16*lift];
         p.hands[a]=[sign*.29,1+.045*Math.abs(s),.02+sign*.20*s];
         p.hips[0]-=sign*.04*lift;
-      });p.hips[1]+=.012*(1-Math.cos(t*Math.PI));p.rotation[1]=.055*s;p.spine=-.025*s;break;}
+      });p.hips[1]+=.012*(1-Math.cos(t*Math.PI));p.rotation[1]=.055*s;p.spineYaw=-.08*s;
+      both((a,sign)=>{p.elbows[a]=[sign*.46,1.15,-.12+sign*.14*s];});break;}
     case 'chair_squat':case 'sit_to_stand':case 'wall_sit_short':{
       const a=id==='wall_sit_short'?.8:u;p.hips=[0,.91-.31*a,-.20*a];p.rotation[0]=.30*a;p.head=-.19*a;
       both((b,sign)=>{p.feet[b][0]=sign*.18;p.hands[b]=[sign*.23,1+.22*a,.03+.42*a];});break;}
@@ -180,7 +187,15 @@ export function applyFullBody(rig,pose){
   if(pose.spineYaw)bones.get('spine03').rotateY(pose.spineYaw);
   if(pose.spineRoll)bones.get('spine03').rotateZ(pose.spineRoll);
   if(pose.headRoll)bones.get('head').rotateZ(pose.headRoll);
-  if(pose.shoulderRoll)for(const side of ['L','R'])bones.get(key('clavicle.'+side)).rotateZ((side==='L'?1:-1)*pose.shoulderRoll);
+  pivot.updateMatrixWorld(true);
+  if(pose.shoulderRoll||pose.shoulderSweep)for(const side of ['L','R']){
+    const bone=bones.get(key('clavicle.'+side)),sign=side==='L'?1:-1;
+    // Rig-local axes are tilted; articulate the shoulder girdle in body/world axes.
+    const delta=new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-sign*(pose.shoulderSweep||0),sign*(pose.shoulderRoll||0)));
+    const world=delta.multiply(bone.getWorldQuaternion(new THREE.Quaternion()));
+    bone.quaternion.copy(bone.parent.getWorldQuaternion(new THREE.Quaternion()).invert()).multiply(world);
+    bone.updateMatrixWorld(true);
+  }
   pivot.updateMatrixWorld(true);
   const errors=[];
   for(const side of ['L','R']){
