@@ -133,6 +133,7 @@ object WorkoutPlanEngine {
                 })
                 .put("pace", if(plan.maxDifficulty == 1) "לאט ובשליטה" else "קצב נוח ומבוקר")
                 .put("rest", item.rest)
+                .put("setRest", item.setRest)
                 .put("avoidAreas", JSONArray(ex.avoid.toList()))
                 .put("safety", ex.safety))
         }
@@ -143,7 +144,8 @@ object WorkoutPlanEngine {
             .put("title", title)
             .put("sub", intensity+" · מותאם אישית")
             .put("week", 1)
-            .put("dur", plan.duration)
+            .put("dur", if (plan.status == WorkoutSelectionEngine.Status.READY) WorkoutSelectionEngine.estimateMinutes(plan.exercises) else plan.duration)
+            .put("requestedDuration", plan.duration)
             .put("frequency", plan.frequency)
             .put("goal", plan.mainGoal)
             .put("conservative", plan.conservative)

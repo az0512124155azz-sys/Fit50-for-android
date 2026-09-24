@@ -1067,7 +1067,7 @@ let WORKOUT = {
 };
 
 /* Short rest between sets of same exercise (seconds) */
-const SHORT_REST = 10;
+const DEFAULT_SET_REST = 35;
 
 /* ============ STATE ============ */
 const state = {
@@ -1416,7 +1416,7 @@ function showPainCheck(completedIndex, restSeconds) {
 }
 function resumeAfterPainCheck() {
   $('painCheck').classList.remove('on');
-  startRest(state.pendingRestSeconds, false);
+  startRest(Math.min(state.pendingRestSeconds, 10), false);
 }
 function finishAfterPainCheck() {
   clearPausedWorkout();
@@ -1459,7 +1459,7 @@ function submitPainReport() {
       ex.sets = 1;
       if (ex.type === 'reps') ex.reps = Math.min(ex.reps || 6, 6);
       if (ex.type === 'hold') ex.hold = Math.min(ex.hold || 15, 15);
-      if (ex.phase === 'main') ex.rest = Math.max(ex.rest || 0, 45);
+      if (ex.phase === 'main') ex.rest = Math.min(Math.max(ex.rest || 0, 20), 30);
       ex.repsText = ex.type === 'reps' ? ex.reps + ' חזרות' : ex.type === 'hold' ? ex.hold + ' שניות' : ex.repsText;
     });
     $('painAdvice').innerHTML = remaining.length
@@ -1495,7 +1495,7 @@ function completeSet() {
     }
   } else {
     // More sets of same exercise - SHORT rest
-    startRest(SHORT_REST, true);
+    startRest(Math.max(20, Math.min(60, Number(ex.setRest || ex.rest || DEFAULT_SET_REST))), true);
   }
 }
 

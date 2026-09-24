@@ -923,7 +923,7 @@ function setHero() {
       (workout.title || 'האימון שלך') +
       (workout.sub ? '<br><em>' + workout.sub + '</em>' : '');
     $('metaEx').textContent = (workout.exercises ? workout.exercises.length : 0) + ' תרגילים';
-    $('metaDur').textContent = (workout.dur || '—') + ' דקות';
+    $('metaDur').textContent = 'כ־' + (workout.dur || '—') + ' דקות';
     $('startBtnText').textContent = 'המשך אימון';
     $('startBtn').dataset.resume = '1';
     return;
@@ -938,7 +938,7 @@ function setHero() {
       dynamicPlan.title +
       (dynamicPlan.sub ? '<br><em>' + dynamicPlan.sub + '</em>' : '');
     $('metaEx').textContent = dynamicPlan.exercises.length + ' תרגילים';
-    $('metaDur').textContent = dynamicPlan.dur + ' דקות';
+    $('metaDur').textContent = 'כ־' + dynamicPlan.dur + ' דקות';
     $('startBtnText').textContent = isDone ? 'חזור על האימון' : 'התחל אימון';
     $('startBtn').dataset.resume = '0';
     return;

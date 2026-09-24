@@ -9,7 +9,7 @@ internal object WorkoutSelectionEngine {
 
     enum class Pattern { MOBILITY, CARDIO, LOWER, UPPER_PUSH, UPPER_PULL, CORE, BALANCE, BREATH }
     enum class Status(val code: String) { READY("ready"), CLEARANCE_REQUIRED("clearance_required"), SCREENING_REQUIRED("screening_required"), NO_SAFE_EXERCISES("no_safe_exercises") }
-    data class Prescription(val exercise: Ex, val sets: Int, val reps: Int, val hold: Int, val breaths: Int, val rest: Int)
+    data class Prescription(val exercise: Ex, val sets: Int, val reps: Int, val hold: Int, val breaths: Int, val rest: Int, val setRest: Int)
     data class Plan(
         val status: Status,
         val message: String,
@@ -76,6 +76,31 @@ internal object WorkoutSelectionEngine {
         else -> listOf(Pattern.CARDIO, Pattern.LOWER, Pattern.UPPER_PUSH, Pattern.BALANCE, Pattern.UPPER_PULL)
     }
 
+    internal fun transitionRest(ex: Ex, next: Ex?, conservative: Boolean): Int {
+        if (next == null) return 0
+        if (ex.phase == "cooldown") return 5
+        if (ex.phase == "warmup" || next.phase == "cooldown") return 10
+        val target = when (patternFor(ex.motionId)) {
+            Pattern.MOBILITY, Pattern.BREATH -> 15
+            Pattern.BALANCE -> 20
+            Pattern.CARDIO -> if (ex.hold >= 60) 30 else 25
+            else -> when (ex.difficulty) { 1 -> 25; 2 -> 30; else -> 40 }
+        }
+        return (target + if (conservative) 5 else 0).coerceAtMost(ex.rest.coerceAtLeast(10))
+    }
+
+    internal fun estimateMinutes(items: List<Prescription>): Int {
+        val seconds = items.sumOf { item ->
+            val work = when (item.exercise.type) {
+                "hold" -> item.hold
+                "breath" -> item.breaths * 8
+                else -> item.reps * 4
+            }
+            12 + work * item.sets + item.setRest * (item.sets - 1) + item.rest
+        }
+        return (seconds + 59) / 60
+    }
+
     fun select(catalog: List<Ex>, questionnaire: Map<*, *>?, userSeed: String, date: LocalDate,
                recentExerciseIds: Set<String> = emptySet()): Plan {
         val q = questionnaire ?: emptyMap<String, Any?>()
@@ -138,7 +163,7 @@ internal object WorkoutSelectionEngine {
                 !(conservative && id in floorExercises)
         }
         val empty = Plan(Status.NO_SAFE_EXERCISES, "לא נמצאו מספיק תרגילים מתאימים לתשובות בשאלון. כדאי לעדכן את השאלון או להתייעץ עם איש מקצוע.", emptyList(), duration, frequency, goal, maxDifficulty, conservative, eligible.size)
-        val targetCount = when(duration) { 15 -> 5; in 16..20 -> 6; in 21..30 -> 8; else -> 10 }
+        val targetCount = if (highPain) 5 else when(duration) { 15 -> 8; in 16..20 -> 10; in 21..30 -> 13; else -> 15 }
         val warmCount = if(duration >= 30) 2 else 1
         val coolCount = if(duration >= 30) 2 else 1
         val mainCount = targetCount - warmCount - coolCount
@@ -182,19 +207,26 @@ internal object WorkoutSelectionEngine {
         if(chosen.none { it.phase == "warmup" } || chosen.count { it.phase == "main" } < 2 || chosen.none { it.phase == "cooldown" }) return empty
 
         val novice = trained !in setOf("now", "6m")
-        val prescriptions = chosen.map { ex ->
+        val prescriptions = chosen.mapIndexed { index, ex ->
             val gentle = conservative || novice
-            val sets = if(ex.phase != "main" || gentle) 1 else ex.sets.coerceAtMost(if(duration <= 20 || frequency >= 4) 2 else 3)
-            val rest = when {
-                ex.phase != "main" -> ex.rest
-                highPain -> ex.rest.coerceAtLeast(60)
-                medicalCaution -> ex.rest.coerceAtLeast(45)
-                gentle -> ex.rest.coerceAtLeast(40)
-                else -> ex.rest
+            val sets = if (ex.phase != "main" || conservative) 1
+                else ex.sets.coerceAtMost(if (novice || duration <= 30 || frequency >= 4) 2 else 3)
+            val rest = transitionRest(ex, chosen.getOrNull(index + 1), conservative)
+            val setRest = ex.rest.coerceIn(25, 60)
+            val reps = when {
+                ex.phase != "main" -> ex.reps
+                highPain -> ex.reps.coerceAtMost(6)
+                gentle -> ex.reps.coerceAtMost(8)
+                else -> ex.reps
             }
-            Prescription(ex, sets, if(highPain) ex.reps.coerceAtMost(6) else if(gentle) ex.reps.coerceAtMost(8) else ex.reps,
-                if(highPain) ex.hold.coerceAtMost(15) else if(gentle) ex.hold.coerceAtMost(25) else ex.hold, ex.breaths,
-                rest)
+            val hold = when {
+                ex.phase != "main" && highPain -> ex.hold.coerceAtMost(30)
+                ex.phase != "main" -> ex.hold
+                highPain -> ex.hold.coerceAtMost(15)
+                gentle -> ex.hold.coerceAtMost(25)
+                else -> ex.hold
+            }
+            Prescription(ex, sets, reps, hold, ex.breaths, rest, setRest)
         }
         return Plan(Status.READY, "", prescriptions, duration, frequency, goal, maxDifficulty, conservative, eligible.size)
     }
